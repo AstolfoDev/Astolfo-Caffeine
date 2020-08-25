@@ -1,0 +1,130 @@
+package tech.Astolfo.AstolfoCaffeine;
+
+import com.jagrosh.jdautilities.command.CommandClient;
+import com.jagrosh.jdautilities.command.CommandClientBuilder;
+import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
+import com.mongodb.ConnectionString;
+import com.mongodb.MongoClientSettings;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.entities.Message;
+
+import org.bson.Document;
+
+import tech.Astolfo.AstolfoCaffeine.main.cmd.ancap.Buyorder;
+import tech.Astolfo.AstolfoCaffeine.main.cmd.ancap.Market;
+import tech.Astolfo.AstolfoCaffeine.main.cmd.ancap.Portfolio;
+import tech.Astolfo.AstolfoCaffeine.main.cmd.ancap.Sellorder;
+import tech.Astolfo.AstolfoCaffeine.main.cmd.business.Create;
+import tech.Astolfo.AstolfoCaffeine.main.cmd.business.Info;
+import tech.Astolfo.AstolfoCaffeine.main.cmd.business.Hire;
+import tech.Astolfo.AstolfoCaffeine.main.cmd.business.Kick;
+import tech.Astolfo.AstolfoCaffeine.main.cmd.business.Leave;
+import tech.Astolfo.AstolfoCaffeine.main.cmd.business.SetImage;
+import tech.Astolfo.AstolfoCaffeine.main.cmd.business.Join;
+import tech.Astolfo.AstolfoCaffeine.main.cmd.economy.Balance;
+import tech.Astolfo.AstolfoCaffeine.main.cmd.economy.Pay;
+import tech.Astolfo.AstolfoCaffeine.main.cmd.economy.Work;
+import tech.Astolfo.AstolfoCaffeine.main.cmd.gambling.Casino;
+import tech.Astolfo.AstolfoCaffeine.main.cmd.gambling.Coinflip;
+import tech.Astolfo.AstolfoCaffeine.main.cmd.info.Help;
+import tech.Astolfo.AstolfoCaffeine.main.cmd.info.Invite;
+import tech.Astolfo.AstolfoCaffeine.main.cmd.info.Stats;
+import tech.Astolfo.AstolfoCaffeine.main.db.Database;
+import tech.Astolfo.AstolfoCaffeine.main.event.Listener;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
+import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.security.auth.login.LoginException;
+
+public class App {
+    public static ConnectionString conStr = new ConnectionString(System.getenv("CON_URL"));
+    public static MongoClientSettings settings = MongoClientSettings.builder()
+            .applyConnectionString(conStr)
+            .retryWrites(true)
+            .build();
+    public static MongoClient mongoClient = MongoClients.create(settings);
+    public static MongoDatabase db = mongoClient.getDatabase("Economy");
+    public static MongoCollection<Document> col = db.getCollection("wallets");
+    public static MongoCollection<Document> stocks = db.getCollection("stocks");
+    public static MongoCollection<Document> company = db.getCollection("company");
+
+    public static HashMap<Long,Long> cooldown = new HashMap<>();
+
+    public static double round(double value, int places) {
+        BigDecimal bd = BigDecimal.valueOf(value);
+        bd = bd.setScale(places, RoundingMode.HALF_UP);
+        return bd.doubleValue();
+    }
+
+    public static EmbedBuilder embed(Message msg) {
+        return new EmbedBuilder()
+                .setFooter(System.getenv("VERSION_ID"), msg.getJDA().getSelfUser().getAvatarUrl())
+                .setColor(0xde1073);
+    }
+
+    public static void main(String[] args) throws LoginException {
+        Logger.getLogger("org.mongodb.driver").setLevel(Level.WARNING);
+
+        EventWaiter workWaiter = new EventWaiter();
+        EventWaiter createWaiter = new EventWaiter();
+        EventWaiter infoWaiter = new EventWaiter();
+        EventWaiter helpWaiter = new EventWaiter();
+        EventWaiter setImageWaiter = new EventWaiter();
+
+        JDA jda = new JDABuilder()
+                .setToken(System.getenv("TOKEN"))
+                .setActivity(Activity.watching("pokimane"))
+                .addEventListeners(new Listener())
+                .build();
+
+        CommandClientBuilder builder = new CommandClientBuilder()
+                .setPrefix(System.getenv("PREFIX"))
+                .setOwnerId(System.getenv("OWNER"))
+                .setActivity(Activity.streaming("with pokimane", "https://www.twitch.tv/team_astolfo"))
+                .setHelpWord("globglogabgalab")
+                .addCommand(new Balance())
+                .addCommand(new Pay())
+                .addCommand(new Work(workWaiter))
+                .addCommand(new Market())
+                .addCommand(new Buyorder())
+                .addCommand(new Sellorder())
+                .addCommand(new Portfolio())
+                .addCommand(new Create(createWaiter))
+                .addCommand(new Hire())
+                .addCommand(new Kick())
+                .addCommand(new Join())
+                .addCommand(new Info(infoWaiter))
+                .addCommand(new SetImage(setImageWaiter))
+                .addCommand(new Leave())
+                .addCommand(new Casino())
+                .addCommand(new Coinflip())
+                .addCommand(new Help(helpWaiter))
+                .addCommand(new Invite())
+                .addCommand(new Stats());
+
+        CommandClient client = builder.build();
+        
+        jda.addEventListener(client);
+        jda.addEventListener(workWaiter);
+        jda.addEventListener(createWaiter);
+        jda.addEventListener(infoWaiter);
+        jda.addEventListener(helpWaiter);
+        jda.addEventListener(setImageWaiter);
+
+        new Database().clear_unused();
+        new Database().clear_stocks();
+    }
+}
