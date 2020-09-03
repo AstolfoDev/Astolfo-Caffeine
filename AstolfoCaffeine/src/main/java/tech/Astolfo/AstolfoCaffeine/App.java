@@ -22,13 +22,7 @@ import tech.Astolfo.AstolfoCaffeine.main.cmd.ancap.Buyorder;
 import tech.Astolfo.AstolfoCaffeine.main.cmd.ancap.Market;
 import tech.Astolfo.AstolfoCaffeine.main.cmd.ancap.Portfolio;
 import tech.Astolfo.AstolfoCaffeine.main.cmd.ancap.Sellorder;
-import tech.Astolfo.AstolfoCaffeine.main.cmd.business.Create;
-import tech.Astolfo.AstolfoCaffeine.main.cmd.business.Info;
-import tech.Astolfo.AstolfoCaffeine.main.cmd.business.Hire;
-import tech.Astolfo.AstolfoCaffeine.main.cmd.business.Kick;
-import tech.Astolfo.AstolfoCaffeine.main.cmd.business.Leave;
-import tech.Astolfo.AstolfoCaffeine.main.cmd.business.SetImage;
-import tech.Astolfo.AstolfoCaffeine.main.cmd.business.Join;
+import tech.Astolfo.AstolfoCaffeine.main.cmd.business.*;
 import tech.Astolfo.AstolfoCaffeine.main.cmd.economy.Balance;
 import tech.Astolfo.AstolfoCaffeine.main.cmd.economy.Pay;
 import tech.Astolfo.AstolfoCaffeine.main.cmd.economy.Work;
@@ -51,6 +45,7 @@ import java.util.logging.Logger;
 import javax.security.auth.login.LoginException;
 
 public class App {
+
     public static ConnectionString conStr = new ConnectionString(System.getenv("CON_URL"));
     public static MongoClientSettings settings = MongoClientSettings.builder()
             .applyConnectionString(conStr)
@@ -116,7 +111,8 @@ public class App {
                 .addCommand(new Help(helpWaiter))
                 .addCommand(new Invite())
                 .addCommand(new Leaderboard(leaderboardWaiter))
-                .addCommand(new Stats());
+                .addCommand(new Stats())
+                .addCommand(new Transfer());
 
         CommandClient client = builder.build();
         
