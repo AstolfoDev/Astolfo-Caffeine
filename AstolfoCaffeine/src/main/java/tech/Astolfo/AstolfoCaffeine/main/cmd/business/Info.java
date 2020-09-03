@@ -60,6 +60,7 @@ public class Info extends Command {
 
         List<Long> members = (List<Long>) docs.get("members");
         List<Long> admins = (List<Long>) docs.get("admins");
+        int bank = docs.getInteger("bank");
 
         final MessageEmbed p1;
         final MessageEmbed p2;
@@ -107,6 +108,7 @@ public class Info extends Command {
                 .addField("CEO", Objects.requireNonNull(e.getJDA().getUserById(docs.getLong("owner"))).getAsMention(), true)
                 .addField("Employees", String.valueOf(members.size()), true)
                 .addField("Sales", docs.get("xp").toString(), true)
+                .addField("Bank", String.valueOf(bank), true)
                 .build();
 
         MessageEmbed page2 = App.embed(msg)
