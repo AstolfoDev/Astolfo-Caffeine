@@ -14,10 +14,14 @@ import com.mongodb.BasicDBObject;
 import tech.Astolfo.AstolfoCaffeine.App;
 
 public class Database {
+
     public Document get_account(long id) {
         Bson filter = eq("userID", id);
         Document info = App.col.find(filter).first();
-        assert info != null;
+        if (info == null) {
+            create_account(id);
+            return get_account(id);
+        }
         return info;
     }
 
@@ -29,7 +33,6 @@ public class Database {
     }
 
     public void create_account(long id) {
-        if (get_account(id) != null) return;
         Document doc = new Document("userID", id)
                 .append("credits", 0D)
                 .append("trapcoins", 0D)
@@ -58,7 +61,9 @@ public class Database {
                .append("members", Arrays.asList(id))
                .append("invites", new ArrayList<Long>())
                .append("industry", "none")
-               .append("xp", 0);
+               .append("xp", 10)
+                .append("bank", 0)
+                .append("cut", 0);
         App.company.insertOne(doc);
     }
 
