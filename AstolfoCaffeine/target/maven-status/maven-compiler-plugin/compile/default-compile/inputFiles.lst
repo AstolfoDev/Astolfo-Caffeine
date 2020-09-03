@@ -1,13 +1,17 @@
+/home/runner/Astolfo-Caffeine/AstolfoCaffeine/src/main/java/tech/Astolfo/AstolfoCaffeine/main/cmd/info/Leaderboard.java
 /home/runner/Astolfo-Caffeine/AstolfoCaffeine/src/main/java/tech/Astolfo/AstolfoCaffeine/main/db/Database.java
 /home/runner/Astolfo-Caffeine/AstolfoCaffeine/src/main/java/tech/Astolfo/AstolfoCaffeine/main/cmd/business/Create.java
 /home/runner/Astolfo-Caffeine/AstolfoCaffeine/src/main/java/tech/Astolfo/AstolfoCaffeine/main/cmd/business/Join.java
 /home/runner/Astolfo-Caffeine/AstolfoCaffeine/src/main/java/tech/Astolfo/AstolfoCaffeine/main/cmd/economy/Balance.java
 /home/runner/Astolfo-Caffeine/AstolfoCaffeine/src/main/java/tech/Astolfo/AstolfoCaffeine/main/web/webAPI.java
 /home/runner/Astolfo-Caffeine/AstolfoCaffeine/src/main/java/tech/Astolfo/AstolfoCaffeine/main/cmd/gambling/Coinflip.java
+/home/runner/Astolfo-Caffeine/AstolfoCaffeine/src/main/java/tech/Astolfo/AstolfoCaffeine/main/cmd/info/compare/currency/sort_tc.java
 /home/runner/Astolfo-Caffeine/AstolfoCaffeine/src/main/java/tech/Astolfo/AstolfoCaffeine/main/cmd/info/Stats.java
+/home/runner/Astolfo-Caffeine/AstolfoCaffeine/src/main/java/tech/Astolfo/AstolfoCaffeine/main/cmd/info/compare/currency/sort_cr.java
 /home/runner/Astolfo-Caffeine/AstolfoCaffeine/src/main/java/tech/Astolfo/AstolfoCaffeine/main/cmd/info/Invite.java
 /home/runner/Astolfo-Caffeine/AstolfoCaffeine/src/main/java/tech/Astolfo/AstolfoCaffeine/main/cmd/ancap/Market.java
 /home/runner/Astolfo-Caffeine/AstolfoCaffeine/src/main/java/tech/Astolfo/AstolfoCaffeine/main/cmd/info/Help.java
+/home/runner/Astolfo-Caffeine/AstolfoCaffeine/src/main/java/tech/Astolfo/AstolfoCaffeine/main/cmd/info/compare/currency/sort_at.java
 /home/runner/Astolfo-Caffeine/AstolfoCaffeine/src/main/java/tech/Astolfo/AstolfoCaffeine/main/cmd/economy/Pay.java
 /home/runner/Astolfo-Caffeine/AstolfoCaffeine/src/main/java/tech/Astolfo/AstolfoCaffeine/main/cmd/ancap/Buyorder.java
 /home/runner/Astolfo-Caffeine/AstolfoCaffeine/src/main/java/tech/Astolfo/AstolfoCaffeine/main/cmd/business/Leave.java

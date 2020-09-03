@@ -37,21 +37,7 @@ public class SetImage extends Command {
 
         if (!permitted.get()) return;
 
-        AtomicReference<String> kitkat = new AtomicReference<>();
-        kitkat.set(hazelnut(e).get());
-        System.out.println(kitkat.get());
-        if (kitkat.get().equals("false")) return;
-
-        BasicDBObject filter = new BasicDBObject("members", new BasicDBObject("$in", Collections.singletonList(e.getMessage().getAuthor().getIdLong())));
-
-        Document comp = almonds(kitkat, filter);
-        e.reply(
-                App.embed(e.getMessage())
-                        .setAuthor("Company Updated!", "https://astolfo.tech", e.getAuthor().getAvatarUrl())
-                        .setThumbnail(comp.getString("logo"))
-                        .setDescription("Successfully updated the logo for `"+comp.getString("name")+"`")
-                        .build()
-        );
+        hazelnut(e);
     }
 
     private boolean pistachio(CommandEvent e) {
@@ -76,7 +62,7 @@ public class SetImage extends Command {
     }
 
     private AtomicReference<String> hazelnut(CommandEvent e) {
-        e.reply("oi dickhead gimme the image\nto cancel type `cancel`");
+        e.reply("hoiiiiii gimme the image *(as a png/jpg/gif plssZzz)*\nto cancel type `cancel`");
 
         AtomicReference<String> kitkat = new AtomicReference<>("false");
         List<String> cadbury = Arrays.asList("png","jpeg","jpg","gif");
@@ -88,6 +74,15 @@ public class SetImage extends Command {
                     if (ev.getMessage().getAttachments().size() >= 1) {
                         if (cadbury.contains(ev.getMessage().getAttachments().get(0).getFileExtension())) {
                             kitkat.set(ev.getMessage().getAttachments().get(0).getUrl());
+                            BasicDBObject filter = new BasicDBObject("members", new BasicDBObject("$in", Collections.singletonList(e.getMessage().getAuthor().getIdLong())));
+                            Document comp = almonds(kitkat, filter);
+                            e.reply(
+                                    App.embed(e.getMessage())
+                                            .setAuthor("Company Updated!", "https://astolfo.tech", e.getAuthor().getAvatarUrl())
+                                            .setThumbnail(comp.getString("logo"))
+                                            .setDescription("Successfully updated the logo for `"+comp.getString("name")+"`")
+                                            .build()
+                            );
                         } else {
                             hazelnut(e);
                         }
@@ -104,7 +99,7 @@ public class SetImage extends Command {
     }
 
     private Document almonds(AtomicReference<String> kitkat, BasicDBObject filter) {
-        Bson update = set("bson", kitkat.get());
+        Bson update = set("logo", kitkat.get());
         App.company.updateOne(filter, update);
         return App.company.find(filter).first();
     }

@@ -8,6 +8,7 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
 import tech.Astolfo.AstolfoCaffeine.App;
+import tech.Astolfo.AstolfoCaffeine.main.cmd.business.Hire;
 
 public class Invite extends Command {
 
@@ -20,6 +21,10 @@ public class Invite extends Command {
 
     @Override
     protected void execute(CommandEvent e) {
+        if (!e.getArgs().isBlank()) {
+          new Hire().run(e);
+          return;
+        }
         Message msg = e.getMessage();
         User author = msg.getAuthor();
 

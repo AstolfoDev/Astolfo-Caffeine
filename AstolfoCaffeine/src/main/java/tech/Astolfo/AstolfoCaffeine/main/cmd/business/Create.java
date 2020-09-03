@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
@@ -59,7 +60,7 @@ public class Create extends Command {
                         return;
                     }
                     final String name = e2.getMessage().getContentRaw();
-                    final Bson filter = eq("name", name);
+                    final Bson filter = eq("name", Pattern.compile(name, Pattern.CASE_INSENSITIVE));
 
                     if (App.company.find(filter).first() != null) {
                         e.reply(new Logging().error(e.getSelfUser(), "**EEhhHHhh!!** u sorta like canz choose that name cuzzzz some1 else alreadyyyy haz it ;( ;( ;("));

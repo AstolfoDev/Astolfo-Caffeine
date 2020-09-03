@@ -94,7 +94,7 @@ public class Pay extends Command {
                 .addField(mentions.get(0).getName(), new Database().get_account(mentions.get(0).getIdLong()).get("credits")+" <:credit:738537190652510299>", true)
                 .build();
             msg.getChannel().sendMessage(embed).queue();
-
+  
         } catch (NumberFormatException err) {
           e.getChannel().sendMessage(new Logging().error(e.getJDA().getSelfUser(), "HeyyYYy! That's not a valid number ovvvv cwedits to send!!!")).queue();
         }

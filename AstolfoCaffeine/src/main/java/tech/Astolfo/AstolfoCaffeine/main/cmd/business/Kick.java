@@ -54,6 +54,11 @@ public class Kick extends Command {
 
 
     String args = e.getArgs();
+    if (args == "") {
+      e.reply("nuuuuuuuuuuuuu u didnt tag anyonezzzzzz");
+      return;
+    }
+
     if (args.contains(" ")) {
       e.reply(new Logging().error(e.getSelfUser(), "eeeeeeeeeeeeehhh u sorta errrm put too many arguments... just @mention them plzzz!!"));
       return;
@@ -61,6 +66,11 @@ public class Kick extends Command {
 
     String id = args.replaceAll("<", "").replaceAll("!", "").replaceAll("@", "").replaceAll(">", "");
     User target = e.getJDA().getUserById(id);
+
+    if (target.isBot()) {
+      e.reply("BEEEEP BOOOOOOOOOP!!!!!!!! no robo time today thxxxxxxxx~ <3");
+      return;
+    }
 
     if (target.getIdLong() == comp.getLong("owner")) {
       e.reply("no...");

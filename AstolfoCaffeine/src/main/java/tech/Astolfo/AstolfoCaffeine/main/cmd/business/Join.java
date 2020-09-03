@@ -3,6 +3,7 @@ package tech.Astolfo.AstolfoCaffeine.main.cmd.business;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
@@ -55,7 +56,7 @@ public class Join extends Command {
     }
 
     BasicDBObject filter1 = new BasicDBObject("invites", new BasicDBObject("$in",Arrays.asList(author.getIdLong())))
-      .append("name", name);
+      .append("name", Pattern.compile(name, Pattern.CASE_INSENSITIVE));
     
     Document doc = App.company.find(filter1).first();
     if (doc == null) {

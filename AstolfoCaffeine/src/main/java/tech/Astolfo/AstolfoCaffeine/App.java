@@ -36,6 +36,7 @@ import tech.Astolfo.AstolfoCaffeine.main.cmd.gambling.Casino;
 import tech.Astolfo.AstolfoCaffeine.main.cmd.gambling.Coinflip;
 import tech.Astolfo.AstolfoCaffeine.main.cmd.info.Help;
 import tech.Astolfo.AstolfoCaffeine.main.cmd.info.Invite;
+import tech.Astolfo.AstolfoCaffeine.main.cmd.info.Leaderboard;
 import tech.Astolfo.AstolfoCaffeine.main.cmd.info.Stats;
 import tech.Astolfo.AstolfoCaffeine.main.db.Database;
 import tech.Astolfo.AstolfoCaffeine.main.event.Listener;
@@ -83,6 +84,7 @@ public class App {
         EventWaiter infoWaiter = new EventWaiter();
         EventWaiter helpWaiter = new EventWaiter();
         EventWaiter setImageWaiter = new EventWaiter();
+        EventWaiter leaderboardWaiter = new EventWaiter();
 
         JDA jda = new JDABuilder()
                 .setToken(System.getenv("TOKEN"))
@@ -113,6 +115,7 @@ public class App {
                 .addCommand(new Coinflip())
                 .addCommand(new Help(helpWaiter))
                 .addCommand(new Invite())
+                .addCommand(new Leaderboard(leaderboardWaiter))
                 .addCommand(new Stats());
 
         CommandClient client = builder.build();
@@ -123,6 +126,7 @@ public class App {
         jda.addEventListener(infoWaiter);
         jda.addEventListener(helpWaiter);
         jda.addEventListener(setImageWaiter);
+        jda.addEventListener(leaderboardWaiter);
 
         new Database().clear_unused();
         new Database().clear_stocks();

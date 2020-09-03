@@ -3,6 +3,7 @@ package tech.Astolfo.AstolfoCaffeine.main.cmd.business;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
+
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
@@ -15,6 +16,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
 
 import javax.annotation.Nullable;
 
@@ -43,7 +45,7 @@ public class Info extends Command {
             return;
         }
 
-        Bson filter = eq("name", name);
+        Bson filter = eq("name", Pattern.compile(name, Pattern.CASE_INSENSITIVE));
         Document docs = App.company.find(filter).first();
 
         if (name.length() > 16) {
