@@ -21,7 +21,7 @@ import static com.mongodb.client.model.Updates.*;
 public class Pay extends Command {
     public Pay() {
         super.name = "pay";
-        super.aliases = new String[]{"send","give","sendmoney","givemoney","transfer"};
+        super.aliases = new String[]{"send","give","sendmoney","givemoney"};
         super.help = "send credits to another user";
         super.arguments = "<@user> <item>";
         super.category = new Category("economy");
@@ -36,7 +36,7 @@ public class Pay extends Command {
             List<User> mentions = msg.getMentionedUsers();
 
             if (args.length < 1) {
-                msg.getChannel().sendMessage(new Logging().error(msg.getJDA().getSelfUser(), "Sowwy! You fOwOgot to mention the user you want to pay...\n*(Ex: "+System.getenv("PREFIX")+"pay <@682220266901733381> 10)*")).queue();;
+                msg.getChannel().sendMessage(new Logging().error(msg.getJDA().getSelfUser(), "Sowwy! You fOwOgot to mention the user you want to pay...\n*(Ex: "+System.getenv("PREFIX")+"pay <@682220266901733381> 10)*")).queue();
                 return;
             } else if (mentions.size() < 1) {
                 msg.getChannel().sendMessage(new Logging().error(msg.getJDA().getSelfUser(), "Sowwy! You fOwOgot to mention the user you want to pay...\n*(Ex: "+System.getenv("PREFIX")+"pay <@682220266901733381> 10)*")).queue();
