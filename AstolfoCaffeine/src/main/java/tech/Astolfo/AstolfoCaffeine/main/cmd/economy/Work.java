@@ -37,7 +37,7 @@ public class Work extends Command {
     @Override
     protected void execute(CommandEvent e) throws NumberFormatException {
         Message msg = e.getMessage();
-        int cooldown = 300;
+        int cooldown = 300; // TODO: Set to 300
         if (App.cooldown.containsKey(msg.getAuthor().getIdLong())) {
           long time = (System.currentTimeMillis()-App.cooldown.get(msg.getAuthor().getIdLong()))/1000;
           if (time < cooldown) {
@@ -49,19 +49,19 @@ public class Work extends Command {
         }
         App.cooldown.put(msg.getAuthor().getIdLong(), System.currentTimeMillis());
 
-        BasicDBObject filter1 = new BasicDBObject()
-            .append("members", new BasicDBObject("$in",Arrays.asList(e.getMessage().getAuthor().getIdLong())));
+        BasicDBObject filter1 = new BasicDBObject().append("members", new BasicDBObject("$in", Arrays.asList(e.getMessage().getAuthor().getIdLong())));
 
         Document comp = App.company.find(filter1).first();
 
         if (comp != null) {
-          Float num = Float.parseFloat(String.valueOf(0.01*comp.getInteger("xp")));
-          Bson up = set("xp", comp.getInteger("xp")+1);
+          float num = Float.parseFloat(String.valueOf(0.01 * comp.getInteger("xp")));
+          float cut = Float.parseFloat(String.valueOf(0.01 * comp.getInteger("cut")));
+          Bson up = set("xp", comp.getInteger("xp") + 1);
           App.company.updateOne(filter1, up);
-          success(msg, num);
+          success(msg, num, cut);
           return;
         }
-        success(msg, null);
+        success(msg, null, 1);
         return;
     }
     
@@ -80,32 +80,37 @@ public class Work extends Command {
 
     }
 
-    private void success(Message msg, @Nullable Float extra) {
-        new Database().create_account(msg.getAuthor().getIdLong());
+    private void success(Message msg, @Nullable Float extra, float cut) {
         Document doc = new Database().get_account(msg.getAuthor().getIdLong());
 
-        int rand = Math.round((float) Math.random()*5)+1;
+        int rand = (int) Math.round(Math.random() * 5) + 1;
         int tax = rand/4;
-
         int pay = rand-tax;
 
         if (extra != null) {
-          pay = Math.round((float) rand+extra);
+          pay = Math.round(rand + extra);
         }
-      
-        Bson filter = eq("userID", msg.getAuthor().getIdLong());
-        Bson update = set("credits", doc.getDouble("credits")+pay);
 
-        App.col.updateOne(filter, update);
+        int user_cut = (int) (pay * cut);
+        int comp_cut = pay - user_cut;
+
+        BasicDBObject filter1 = new BasicDBObject().append("members", new BasicDBObject("$in", Arrays.asList(msg.getAuthor().getIdLong())));
+        Document comp = App.company.find(filter1).first();
+        App.company.updateOne(filter1, set("bank", comp.getInteger("bank") + comp_cut));
+
+        Bson filter2 = eq("userID", msg.getAuthor().getIdLong());
+        Bson update = set("credits", doc.getDouble("credits") + user_cut);
+
+        App.col.updateOne(filter2, update);
 
         EmbedBuilder eb = App.embed(msg)
             .setAuthor("Work Complete!", "https://astolfo.tech", msg.getAuthor().getAvatarUrl())
-            .setDescription("You earned "+pay+" <:credit:738537190652510299> from working!\nYou now have **"+(doc.getDouble("credits")+pay)+"** <:credit:738537190652510299>");
+            .setDescription("You earned "+user_cut+" <:credit:738537190652510299> from working!\nYou now have **"+(doc.getDouble("credits")+user_cut)+"** <:credit:738537190652510299>");
         if (tax > 0) {
-            eb.setDescription("You earned "+pay+" <:credit:738537190652510299> *(taxed at 25%)* from working!\nYou now have **"+(doc.getDouble("credits")+pay)+"** <:credit:738537190652510299>");
+            eb.setDescription("You earned "+user_cut+" <:credit:738537190652510299> *(taxed at 25%)* from working!\nYou now have **"+(doc.getDouble("credits")+user_cut)+"** <:credit:738537190652510299>");
         }
         if (extra != null) {
-          eb.appendDescription("\nCompany Bonus: `"+extra+"`");
+          eb.appendDescription("\nCompany Bonus: `"+extra+"`\nCompany Cut: `"+cut+"`");
         }
 
         msg.getChannel().sendMessage(eb.build()).queue();
