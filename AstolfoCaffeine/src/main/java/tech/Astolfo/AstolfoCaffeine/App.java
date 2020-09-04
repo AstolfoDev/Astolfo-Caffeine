@@ -26,6 +26,7 @@ import tech.Astolfo.AstolfoCaffeine.main.cmd.business.Create;
 import tech.Astolfo.AstolfoCaffeine.main.cmd.business.Info;
 import tech.Astolfo.AstolfoCaffeine.main.cmd.business.Hire;
 import tech.Astolfo.AstolfoCaffeine.main.cmd.business.Kick;
+import tech.Astolfo.AstolfoCaffeine.main.cmd.business.Transfer;
 import tech.Astolfo.AstolfoCaffeine.main.cmd.business.Leave;
 import tech.Astolfo.AstolfoCaffeine.main.cmd.business.SetImage;
 import tech.Astolfo.AstolfoCaffeine.main.cmd.business.Join;
@@ -116,7 +117,8 @@ public class App {
                 .addCommand(new Help(helpWaiter))
                 .addCommand(new Invite())
                 .addCommand(new Leaderboard(leaderboardWaiter))
-                .addCommand(new Stats());
+                .addCommand(new Stats())
+                .addCommand(new Transfer());
 
         CommandClient client = builder.build();
         
