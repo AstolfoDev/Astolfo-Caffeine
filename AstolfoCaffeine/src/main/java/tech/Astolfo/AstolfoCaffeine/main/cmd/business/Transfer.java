@@ -33,10 +33,10 @@ public class Transfer extends Command  {
         String[] args = e.getArgs().split("\\s+");
 
         if  (!new ParamChecker()
-                .addCheck(0, "Sowwy! You fOwOgot to mention the user you want to pay...\n*(Ex: "+System.getenv("PREFIX")+"pay <@682220266901733381> 10)*")
-                .addCheck(1, "Sowwy! You fOwOgot to put the amount you want to send...\n*(Ex: "+System.getenv("PREFIX")+"pay <@682220266901733381> 10)*")
+                .addCheck(0, "Sowwy! You fOwOgot to mention the user you want to transfer capital tuuuuuuu...\n*(Ex: "+System.getenv("PREFIX")+"transfer <@682220266901733381> 10)*")
+                .addCheck(1, "Sowwy! You fOwOgot to put the amount you want to send...\n*(Ex: "+System.getenv("PREFIX")+"transfer <@682220266901733381> 10)*")
                 .addCheck(2, "VALID")
-                .addCheck(3, "sozzzzz! You entered too many arguwuments...\n*(Ex: "+System.getenv("PREFIX")+"pay <@682220266901733381> 10)*")
+                .addCheck(3, "sozzzzz! You entered too many arguwuments...\n*(Ex: "+System.getenv("PREFIX")+"transfer <@682220266901733381> 10)*")
                 .parse(e)) return;
 
         List<User> mentions = msg.getMentionedUsers();
@@ -62,6 +62,10 @@ public class Transfer extends Command  {
             return;
         }
 
+        if (company.get("bank") == null) {
+          e.reply("nah bruv, dont be returning null like a wasteman");
+          return;
+        }
         int bank = company.getInteger("bank");
 
         if (amount > bank) {

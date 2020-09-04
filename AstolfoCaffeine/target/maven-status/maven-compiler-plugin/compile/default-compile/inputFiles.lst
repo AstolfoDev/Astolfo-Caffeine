@@ -2,6 +2,7 @@
 /home/runner/Astolfo-Caffeine/AstolfoCaffeine/src/main/java/tech/Astolfo/AstolfoCaffeine/main/db/Database.java
 /home/runner/Astolfo-Caffeine/AstolfoCaffeine/src/main/java/tech/Astolfo/AstolfoCaffeine/main/cmd/business/Create.java
 /home/runner/Astolfo-Caffeine/AstolfoCaffeine/src/main/java/tech/Astolfo/AstolfoCaffeine/main/cmd/business/Join.java
+/home/runner/Astolfo-Caffeine/AstolfoCaffeine/src/main/java/tech/Astolfo/AstolfoCaffeine/main/cmd/business/Transfer.java
 /home/runner/Astolfo-Caffeine/AstolfoCaffeine/src/main/java/tech/Astolfo/AstolfoCaffeine/main/cmd/economy/Balance.java
 /home/runner/Astolfo-Caffeine/AstolfoCaffeine/src/main/java/tech/Astolfo/AstolfoCaffeine/main/web/webAPI.java
 /home/runner/Astolfo-Caffeine/AstolfoCaffeine/src/main/java/tech/Astolfo/AstolfoCaffeine/main/cmd/gambling/Coinflip.java
@@ -24,6 +25,7 @@
 /home/runner/Astolfo-Caffeine/AstolfoCaffeine/src/main/java/tech/Astolfo/AstolfoCaffeine/main/cmd/business/Hire.java
 /home/runner/Astolfo-Caffeine/AstolfoCaffeine/src/main/java/tech/Astolfo/AstolfoCaffeine/main/cmd/ancap/Portfolio.java
 /home/runner/Astolfo-Caffeine/AstolfoCaffeine/src/main/java/tech/Astolfo/AstolfoCaffeine/main/msg/Logging.java
+/home/runner/Astolfo-Caffeine/AstolfoCaffeine/src/main/java/tech/Astolfo/AstolfoCaffeine/main/util/ParamChecker.java
 /home/runner/Astolfo-Caffeine/AstolfoCaffeine/src/main/java/tech/Astolfo/AstolfoCaffeine/main/cmd/business/Kick.java
 /home/runner/Astolfo-Caffeine/AstolfoCaffeine/src/main/java/tech/Astolfo/AstolfoCaffeine/main/cmd/ancap/Sellorder.java
 /home/runner/Astolfo-Caffeine/AstolfoCaffeine/src/main/java/tech/Astolfo/AstolfoCaffeine/main/cmd/gambling/Casino.java
