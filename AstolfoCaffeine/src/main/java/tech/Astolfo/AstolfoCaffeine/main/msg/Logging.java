@@ -10,6 +10,9 @@ public class Logging {
     private EmbedBuilder embed;
     private CommandEvent ctx;
     
+    public Logging() {
+    }
+    
     public Logging(CommandEvent _ctx) {
         ctx = _ctx;
         embed = new EmbedBuilder()
