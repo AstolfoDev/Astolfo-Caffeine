@@ -4,7 +4,12 @@ import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import com.mongodb.BasicDBObject;
+
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
+
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import tech.Astolfo.AstolfoCaffeine.App;
@@ -23,9 +28,9 @@ public class SetImage extends Command {
 
     private final EventWaiter waiter;
     public SetImage(EventWaiter waiter) {
-        super.name = "setimage";
-        super.aliases = new String[]{"si","image"};
-        super.help = "set a new image for your business";
+        super.name = "editcompany";
+        super.aliases = new String[]{"edit","setimage","modify","settings"};
+        super.help = "set new details for your business";
         super.category = new Category("business");
         this.waiter = waiter;
     }
@@ -37,7 +42,44 @@ public class SetImage extends Command {
 
         if (!permitted.get()) return;
 
-        hazelnut(e);
+        start(e);
+    }
+
+    private void start(CommandEvent e) {
+        MessageEmbed embed = App.embed(e.getMessage())
+            .setAuthor("Company Settings ⚙️", "https://astolfo.tech", e.getAuthor().getAvatarUrl())
+            .setDescription("u canz modify various stuffz about ur company riiiiiight here :3")
+            .addField("🖼 Logo", "The image associated with your brand!", true)
+            .addField("📝 Slogan", "The description to go with your brand!", true)
+            .build();
+        e.getChannel().sendMessage(embed).queue(
+            m -> {
+              m.addReaction("🖼").queue();
+              m.addReaction("📝").queue();
+              menuOption(m, e);
+            }
+        );
+    }
+
+    private void menuOption(Message msg, CommandEvent e) {
+      waiter.waitForEvent(
+          GuildMessageReactionAddEvent.class, 
+          check -> e.getMessage().getAuthor().getIdLong() == check.getUser().getIdLong() && msg.getIdLong() == check.getMessageIdLong(),
+          action -> {
+            if(action.getReactionEmote().getName().equals("🖼")) {
+              msg.delete().queue();
+              hazelnut(e);
+            } else if (action.getReactionEmote().getName().equals("📝")) {
+              msg.delete().queue();
+              description(msg, e);
+            } else {
+              action.getReaction().removeReaction(action.getUser()).queue();
+              menuOption(msg, e);
+            }
+          },
+          60, TimeUnit.SECONDS,
+          () -> {}
+      );
     }
 
     private boolean pistachio(CommandEvent e) {
@@ -102,5 +144,44 @@ public class SetImage extends Command {
         Bson update = set("logo", kitkat.get());
         App.company.updateOne(filter, update);
         return App.company.find(filter).first();
+    }
+
+
+    private void description(Message msg, CommandEvent e) {
+        String pattern = "(http(s)?:\\/\\/.)?(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{2,256}\\.[a-z]{2,6}\\b([-a-zA-Z0-9@:%_\\+.~#?&//=]*)";
+        e.reply("oi oi gimme dat dessssscription dat u want plezzzzzz <3\nto cancel type `cancel`");
+
+        AtomicReference<String> description = new AtomicReference<>();
+        waiter.waitForEvent(
+                    GuildMessageReceivedEvent.class,
+                    check -> e.getMessage().getAuthor().getIdLong() == check.getAuthor().getIdLong() && e.getChannel().getIdLong() == check.getMessage().getChannel().getIdLong(),
+                    action -> {
+                        final String desc = action.getMessage().getContentRaw().replaceAll(pattern, "");
+                        if (desc.equalsIgnoreCase("cancel")) {
+                          e.reply("understandable. have a nice day! uwu~ <3");
+                          return;
+                        }
+                        if (desc.length() > 140) {
+                            e.reply(new Logging().error(e.getSelfUser(), "**sozZz!** ur desc can only be 140 characterz long!!! ;P"));
+                            return;
+                        } 
+                        description.set(desc);
+                        BasicDBObject filter = new BasicDBObject("members", new BasicDBObject("$in", Collections.singletonList(e.getMessage().getAuthor().getIdLong())));
+                        Bson update = set("description", description.get());
+                        App.company.updateOne(filter, update);
+                        Document comp = App.company.find(filter).first();
+                        e.reply(
+                                    App.embed(e.getMessage())
+                                            .setAuthor("Company Updated!", "https://astolfo.tech", e.getAuthor().getAvatarUrl())
+                                            .setThumbnail(comp.getString("logo"))
+                                            .setDescription("Successfully updated the description for `"+comp.getString("name")+"`\n\n"+comp.getString("description"))
+                                            .build()
+                        );
+                    },
+                    60, TimeUnit.SECONDS,
+                    () -> {
+                    }
+        );
+        
     }
 }
