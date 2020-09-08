@@ -25,6 +25,7 @@ public class MCgame {
 
     public void runThen(Runnable callback) {
         this.callback = callback;
+        block.startTimer();
         inventory.addToMessage(host);
         Message new_content = new MessageBuilder(" ").setEmbed(block.render()).build();
         host.editMessage(new_content).queue((msg) -> mainLoop());
@@ -46,7 +47,10 @@ public class MCgame {
                     mainLoop();
                 },
                 block.leftTime(), TimeUnit.SECONDS,
-                () -> host.editMessage("You are too slow").queue()
+                () -> {
+                    block.state = Block.State.EXPIRED;
+                    callback.run();
+                }
         );
     }
 }
