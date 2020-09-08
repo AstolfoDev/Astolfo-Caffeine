@@ -65,11 +65,11 @@ public class Block {
         return (int) (max_time - (System.currentTimeMillis() / 1000 - start_time));
     }
 
-    public MessageEmbed render() {
-        return App.embed().setTitle(name + " - " + leftTime() + " seconds left").setImage(String.format(url_template, stage)).build();
-    }
-
     public void startTimer() {
         start_time = System.currentTimeMillis() / 1000;
+    }
+
+    public MessageEmbed render() {
+        return App.embed().setTitle(name + " - " + leftTime() + " seconds left").setImage(String.format(url_template, stage)).build();
     }
 }
