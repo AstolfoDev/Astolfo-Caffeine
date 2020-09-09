@@ -71,11 +71,19 @@ public class App {
         return bd.doubleValue();
     }
 
+   // TODO: Providing message shouldn't be necessary to include an avatar here. Avatar can be cached.
     public static EmbedBuilder embed(Message msg) {
         return new EmbedBuilder()
                 .setFooter(System.getenv("VERSION_ID"), msg.getJDA().getSelfUser().getAvatarUrl())
                 .setColor(0xde1073);
     }
+
+    public static EmbedBuilder embed() {
+        return new EmbedBuilder()
+                .setFooter(System.getenv("VERSION_ID"))
+                .setColor(0xde1073);
+    }
+
 
     public static void main(String[] args) throws LoginException {
         Logger.getLogger("org.mongodb.driver").setLevel(Level.WARNING);
