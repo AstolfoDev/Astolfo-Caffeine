@@ -70,6 +70,8 @@ public class App {
         bd = bd.setScale(places, RoundingMode.HALF_UP);
         return bd.doubleValue();
     }
+    
+    public static String avatarURL;
 
    // TODO: Providing message shouldn't be necessary to include an avatar here. Avatar can be cached.
     public static EmbedBuilder embed(Message msg) {
@@ -83,6 +85,7 @@ public class App {
                 .setFooter(System.getenv("VERSION_ID"))
                 .setColor(0xde1073);
     }
+    
 
 
     public static void main(String[] args) throws LoginException {
