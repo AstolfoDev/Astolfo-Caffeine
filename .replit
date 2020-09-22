@@ -1,3 +1,0 @@
-language="Java"
-run="cd AstolfoCaffeine && mvn install && cd target && java -cp AstolfoCaffeine-1.0-SNAPSHOT.jar tech.Astolfo.AstolfoCaffeine.App"
-launch="cd AstolfoCaffeine/target && java -cp AstolfoCaffeine-1.0-SNAPSHOT.jar tech.Astolfo.AstolfoCaffeine.App"
