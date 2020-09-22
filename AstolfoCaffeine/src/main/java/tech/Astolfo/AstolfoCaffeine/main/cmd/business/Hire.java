@@ -97,7 +97,7 @@ public class Hire extends Command {
 
     App.company.updateOne(filter1, up);
 
-    MessageEmbed embed = App.embed(msg)
+    MessageEmbed embed = App.embed()
       .setAuthor("Invited "+mentions.get(0).getName(), "https://astolfo.tech", msg.getAuthor().getAvatarUrl())
       .setThumbnail(mentions.get(0).getAvatarUrl())
       .setDescription("SuccessfOwOlly sent an invite to "+mentions.get(0).getName()+" :3\nAwaiiiiiiting reply!!! :D")
@@ -105,7 +105,7 @@ public class Hire extends Command {
 
     e.reply(embed);
 
-    MessageEmbed emb = App.embed(msg)
+    MessageEmbed emb = App.embed()
         .setAuthor("wagwan mah g", "https://astolfo.tech", msg.getAuthor().getAvatarUrl())
         .setDescription("you've just been invited to join `"+comp.get("name")+"` (O꒳O)\nto accept the invite just do `"+System.getenv("PREFIX")+"join "+comp.get("name")+"`")
         .setThumbnail(comp.getString("logo"))

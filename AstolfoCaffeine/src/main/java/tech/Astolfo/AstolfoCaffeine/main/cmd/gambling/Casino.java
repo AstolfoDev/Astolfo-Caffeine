@@ -22,7 +22,7 @@ public class Casino extends Command {
         User author = msg.getAuthor();
 
         e.reply(
-            App.embed(msg)
+            App.embed()
                 .setAuthor("Astolfo Casino", "https://astolfo.tech", author.getAvatarUrl())
                 .setThumbnail("https://cdn.discordapp.com/attachments/738514936338055178/747059545154650122/Screenshot_2020-08-23_at_12.46.40.png")
                 .setDescription("Currently under construction, check back later!")

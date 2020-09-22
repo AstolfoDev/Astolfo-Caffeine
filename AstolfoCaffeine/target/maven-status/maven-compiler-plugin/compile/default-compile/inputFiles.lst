@@ -3,11 +3,16 @@
 /home/runner/Astolfo-Caffeine/AstolfoCaffeine/src/main/java/tech/Astolfo/AstolfoCaffeine/main/cmd/business/Create.java
 /home/runner/Astolfo-Caffeine/AstolfoCaffeine/src/main/java/tech/Astolfo/AstolfoCaffeine/main/cmd/business/Join.java
 /home/runner/Astolfo-Caffeine/AstolfoCaffeine/src/main/java/tech/Astolfo/AstolfoCaffeine/main/cmd/business/Transfer.java
+/home/runner/Astolfo-Caffeine/AstolfoCaffeine/src/main/java/tech/Astolfo/AstolfoCaffeine/main/util/minecraft/MCgame.java
 /home/runner/Astolfo-Caffeine/AstolfoCaffeine/src/main/java/tech/Astolfo/AstolfoCaffeine/main/cmd/economy/Balance.java
 /home/runner/Astolfo-Caffeine/AstolfoCaffeine/src/main/java/tech/Astolfo/AstolfoCaffeine/main/web/webAPI.java
 /home/runner/Astolfo-Caffeine/AstolfoCaffeine/src/main/java/tech/Astolfo/AstolfoCaffeine/main/cmd/gambling/Coinflip.java
+/home/runner/Astolfo-Caffeine/AstolfoCaffeine/src/main/java/tech/Astolfo/AstolfoCaffeine/main/util/minecraft/Tool.java
 /home/runner/Astolfo-Caffeine/AstolfoCaffeine/src/main/java/tech/Astolfo/AstolfoCaffeine/main/cmd/info/compare/currency/sort_tc.java
 /home/runner/Astolfo-Caffeine/AstolfoCaffeine/src/main/java/tech/Astolfo/AstolfoCaffeine/main/cmd/info/Stats.java
+/home/runner/Astolfo-Caffeine/AstolfoCaffeine/src/main/java/tech/Astolfo/AstolfoCaffeine/main/event/list/Message.java
+/home/runner/Astolfo-Caffeine/AstolfoCaffeine/src/main/java/tech/Astolfo/AstolfoCaffeine/main/util/minecraft/Block.java
+/home/runner/Astolfo-Caffeine/AstolfoCaffeine/src/main/java/tech/Astolfo/AstolfoCaffeine/main/util/minecraft/Toolbox.java
 /home/runner/Astolfo-Caffeine/AstolfoCaffeine/src/main/java/tech/Astolfo/AstolfoCaffeine/main/cmd/info/compare/currency/sort_cr.java
 /home/runner/Astolfo-Caffeine/AstolfoCaffeine/src/main/java/tech/Astolfo/AstolfoCaffeine/main/cmd/info/Invite.java
 /home/runner/Astolfo-Caffeine/AstolfoCaffeine/src/main/java/tech/Astolfo/AstolfoCaffeine/main/cmd/ancap/Market.java
@@ -28,5 +33,6 @@
 /home/runner/Astolfo-Caffeine/AstolfoCaffeine/src/main/java/tech/Astolfo/AstolfoCaffeine/main/util/ParamChecker.java
 /home/runner/Astolfo-Caffeine/AstolfoCaffeine/src/main/java/tech/Astolfo/AstolfoCaffeine/main/cmd/business/Kick.java
 /home/runner/Astolfo-Caffeine/AstolfoCaffeine/src/main/java/tech/Astolfo/AstolfoCaffeine/main/cmd/ancap/Sellorder.java
+/home/runner/Astolfo-Caffeine/AstolfoCaffeine/src/main/java/tech/Astolfo/AstolfoCaffeine/main/event/list/SelfAvatar.java
 /home/runner/Astolfo-Caffeine/AstolfoCaffeine/src/main/java/tech/Astolfo/AstolfoCaffeine/main/cmd/gambling/Casino.java
 /home/runner/Astolfo-Caffeine/AstolfoCaffeine/src/main/java/tech/Astolfo/AstolfoCaffeine/main/cmd/business/Info.java

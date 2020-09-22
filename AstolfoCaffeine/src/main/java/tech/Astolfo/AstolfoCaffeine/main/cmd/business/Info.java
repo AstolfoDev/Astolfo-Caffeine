@@ -86,7 +86,7 @@ public class Info extends Command {
                 }
             }
             assert highest != null;
-            MessageEmbed page3 = App.embed(msg)
+            MessageEmbed page3 = App.embed()
                     .setAuthor(docs.getString("name")+" (3/"+pages+")", "https://astolfo.tech", docs.getString("logo"))
                     .setThumbnail(docs.getString("logo"))
                     .setDescription("AstolfoEx Stats")
@@ -100,7 +100,7 @@ public class Info extends Command {
             pages = 2;
         }
 
-        MessageEmbed page1 = App.embed(msg)
+        MessageEmbed page1 = App.embed()
                 .setAuthor(docs.getString("name")+" (1/"+pages+")", "https://astolfo.tech", docs.getString("logo"))
                 .setThumbnail(docs.getString("logo"))
                 .setDescription(docs.getString("description"))
@@ -109,7 +109,7 @@ public class Info extends Command {
                 .addField("Sales", docs.get("xp").toString(), true)
                 .build();
 
-        MessageEmbed page2 = App.embed(msg)
+        MessageEmbed page2 = App.embed()
                 .setAuthor(docs.getString("name")+" (2/"+pages+")", "https://astolfo.tech", docs.getString("logo"))
                 .setThumbnail(docs.getString("logo"))
                 .setDescription("Board of Directors")

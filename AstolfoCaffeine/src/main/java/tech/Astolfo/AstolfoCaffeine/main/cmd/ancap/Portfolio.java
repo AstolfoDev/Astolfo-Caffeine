@@ -46,7 +46,7 @@ public class Portfolio extends Command {
             new Database().create_stocks(id);
             Document doc = new Database().get_stocks(id);
 
-            EmbedBuilder eb = App.embed(msg)
+            EmbedBuilder eb = App.embed()
                 .setAuthor(user.getAsTag()+" AstolfoEx Portfolio", "https://astolfo.tech", user.getAvatarUrl());
             
             if (doc.getInteger("astf") >= 1) {

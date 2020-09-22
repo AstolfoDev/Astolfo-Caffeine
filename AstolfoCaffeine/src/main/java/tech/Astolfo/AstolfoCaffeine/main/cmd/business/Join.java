@@ -89,7 +89,7 @@ public class Join extends Command {
     App.company.updateOne(filt, up2);
     App.company.updateOne(filt, up);
 
-    MessageEmbed embed = App.embed(msg)
+    MessageEmbed embed = App.embed()
         .setAuthor("SuccessfOwOlly joined!", "https://astolfo.tech", author.getAvatarUrl())
         .setDescription("You've joined the `"+doc.getString("name")+"` company!!1 ;3\n```\n"+doc.getString("description")+"\n```")
         .build();

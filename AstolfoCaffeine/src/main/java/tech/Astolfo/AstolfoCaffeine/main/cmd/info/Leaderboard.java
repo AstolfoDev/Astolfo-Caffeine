@@ -74,7 +74,8 @@ public class Leaderboard extends Command
                 }
               );
             } else if (action.getReactionEmote().getName().equals("🏢")) {
-              e.reply("uhhhh yeah this doesnt exactly exist yet.... (｡•́︿•̀｡)");
+              msg.clearReactions().queue();
+              msg.editMessage(underConstruction(e)).queue();
             } else {
               action.getReaction().removeReaction(action.getUser()).queue();
               menuOption(msg, e);
@@ -208,7 +209,7 @@ public class Leaderboard extends Command
     }
 
     private MessageEmbed menu(CommandEvent e) {
-      MessageEmbed embed = App.embed(e.getMessage())
+      MessageEmbed embed = App.embed()
           .setAuthor("Super Duper LeaderboardzZz", "https://astolfo.tech", e.getAuthor().getAvatarUrl())
           .setThumbnail("https://cdn.discordapp.com/attachments/738514936338055178/750055125757722694/xui4vc3dipsz.png")
           .addField(":busts_in_silhouette: Users", "check out da top playerz on da bot!", false)
@@ -218,7 +219,7 @@ public class Leaderboard extends Command
     }
     
     private MessageEmbed userMenu(CommandEvent e) {
-      MessageEmbed embed = App.embed(e.getMessage())
+      MessageEmbed embed = App.embed()
           .setAuthor("Da User LeaderboardzZz", "https://astolfo.tech", e.getAuthor().getAvatarUrl())
           .setThumbnail("https://cdn.discordapp.com/attachments/738514936338055178/750055125757722694/xui4vc3dipsz.png")
           .addField("<:credit:738537190652510299>  Credits", "", true)
@@ -228,13 +229,21 @@ public class Leaderboard extends Command
       return embed;
     }
 
+    private MessageEmbed underConstruction(CommandEvent e) {
+      MessageEmbed embed = App.embed()
+          .setAuthor("Under constwuctuwution 🏗️", "https://astolfo.tech", e.getAuthor().getAvatarUrl())
+          .setThumbnail("https://cdn.discordapp.com/attachments/738514936338055178/755885044748517466/325-3256608_new-wip-haunted-astolfo-bean-plushie.png")
+          .setDescription("heY funny story this isn't done\ncheck back laterrrrzZz")
+          .build();
+      return embed;
+    }
 
     private MessageEmbed cr(List<Document> wallet_list, CommandEvent e, int page)
     {
       Comparator<Document> descCR = Collections.reverseOrder(new sort_cr());
       wallet_list.sort(descCR);
       int pages = (int) Math.ceil((double) wallet_list.size()/5D);
-      EmbedBuilder cr = App.embed(e.getMessage()).setAuthor("Credits Leaderboard (Page "+page+"/"+pages+")");
+      EmbedBuilder cr = App.embed().setAuthor("Credits Leaderboard (Page "+page+"/"+pages+")");
       
       int[] p = {page*5-5, page*5-4, page*5-3, page*5-2, page*5-1, page*5};
 
@@ -256,7 +265,7 @@ public class Leaderboard extends Command
       Comparator<Document> descTC = Collections.reverseOrder(new sort_tc());
       wallet_list.sort(descTC);
       int pages = (int) Math.ceil((double) wallet_list.size()/5D);
-      EmbedBuilder embed = App.embed(e.getMessage()).setAuthor("Trap Coins Leaderboard (Page "+page+"/"+pages+")");
+      EmbedBuilder embed = App.embed().setAuthor("Trap Coins Leaderboard (Page "+page+"/"+pages+")");
       
       int[] p = {page*5-5, page*5-4, page*5-3, page*5-2, page*5-1, page*5};
 
@@ -278,7 +287,7 @@ public class Leaderboard extends Command
       Comparator<Document> descAT = Collections.reverseOrder(new sort_at());
       wallet_list.sort(descAT);
       int pages = (int) Math.ceil((double) wallet_list.size()/5D);
-      EmbedBuilder embed = App.embed(e.getMessage()).setAuthor("Apocrypha Tokens Leaderboard (Page "+page+"/"+pages+")");
+      EmbedBuilder embed = App.embed().setAuthor("Apocrypha Tokens Leaderboard (Page "+page+"/"+pages+")");
       
       int[] p = {page*5-5, page*5-4, page*5-3, page*5-2, page*5-1, page*5};
 
@@ -294,5 +303,4 @@ public class Leaderboard extends Command
 
       return embed.build();
     }
-
 }

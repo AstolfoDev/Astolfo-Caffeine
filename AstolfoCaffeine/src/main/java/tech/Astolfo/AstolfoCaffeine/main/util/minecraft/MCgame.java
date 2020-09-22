@@ -3,7 +3,6 @@ package tech.Astolfo.AstolfoCaffeine.main.util.minecraft;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
 import java.util.concurrent.TimeUnit;
 
@@ -27,7 +26,7 @@ public class MCgame {
         this.callback = callback;
         block.startTimer();
         inventory.addToMessage(host);
-        Message new_content = new MessageBuilder(" ").setEmbed(block.render()).build();
+        Message new_content = new MessageBuilder(block.render(host.getJDA())).build();
         host.editMessage(new_content).queue((msg) -> mainLoop());
     }
 
@@ -37,7 +36,7 @@ public class MCgame {
                 ev -> host.getId().equals(ev.getMessageId()) && !ev.getUser().isBot() && inventory.getTool(ev.getReaction()) != null,
                 ev -> {
                     Tool tool = inventory.getTool(ev.getReaction());
-                    MessageEmbed block_render = block.hitWith(tool);
+                    String block_render = block.hitWith(tool, host.getJDA());
                     if (block_render != null) {
                         host.editMessage(block_render).queue();
                     } if (block.state != Block.State.ACTIVE) {

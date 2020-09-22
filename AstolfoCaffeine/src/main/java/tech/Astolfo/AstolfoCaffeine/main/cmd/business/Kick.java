@@ -108,7 +108,7 @@ public class Kick extends Command {
 
     App.company.updateOne(filter1, up);
     e.reply(
-            App.embed(msg)
+            App.embed()
                     .setAuthor("Employee fired!", "https://astolfo.tech", author.getAvatarUrl())
                     .setThumbnail(target.getAvatarUrl()).setDescription("i hazzz fired da employee "+target.getAsMention()+" from das Company 4 u!! ;3")
                     .build()
@@ -117,7 +117,7 @@ public class Kick extends Command {
     target
             .openPrivateChannel()
             .flatMap(ch -> ch.sendMessage(
-                    App.embed(msg)
+                    App.embed()
                             .setThumbnail(comp.getString("logo"))
                             .setAuthor("Lé Pink Slip", "https://astolfo.tech", comp.getString("logo"))
                             .setDescription("hewWWo, u haz been fired from... `"+comp.getString("name")+"`\nby: "+author.getAsMention()+" ("+author.getAsTag()+")"+"\nvewwwy sad ;(")

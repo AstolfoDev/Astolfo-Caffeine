@@ -29,7 +29,7 @@ public class Invite extends Command {
         User author = msg.getAuthor();
 
         String invite = e.getJDA().getInviteUrl(Permission.getPermissions(2080374975));
-        MessageEmbed embed = App.embed(msg)
+        MessageEmbed embed = App.embed()
             .setAuthor("Get Astolfo!", invite, author.getAvatarUrl())
             .setDescription("heWwwwo! i'm Astolfo, the cute and quirky Discord bot for all your needs!")
             .addField("Invitation Link", "[Click me! :3]("+invite+")", false)

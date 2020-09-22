@@ -58,7 +58,7 @@ public class Help extends Command {
         if (!found.get()) {
             e.reply(new Logging().error(e.getSelfUser(), "**h-huh!?** i canz find dat command!!!"));
         } else {
-            EmbedBuilder eb = App.embed(e.getMessage())
+            EmbedBuilder eb = App.embed()
                     .setAuthor(command.get().getName().substring(0, 1).toUpperCase()+command.get().getName().substring(1)+" Command", "https://astolfo.tech", e.getAuthor().getAvatarUrl())
                     .setDescription(command.get().getHelp().substring(0, 1).toUpperCase()+command.get().getHelp().substring(1))
                     .addField("Aliases", String.join(", ", command.get().getAliases()), false);
@@ -115,7 +115,7 @@ public class Help extends Command {
         page.set(1);
         pages.set(5);
 
-        EmbedBuilder infoPage = App.embed(e.getMessage())
+        EmbedBuilder infoPage = App.embed()
                 .setAuthor("Help Command (1/"+pages.get()+")", "https://astolfo.tech", e.getAuthor().getAvatarUrl())
                 .setThumbnail("https://cdn.discordapp.com/attachments/738514936338055178/746872226527182848/Screenshot_2020-08-23_at_00.23.22.png")
                 .setDescription("Info Category");
@@ -124,7 +124,7 @@ public class Help extends Command {
         );
         MessageEmbed inf = infoPage.build();
 
-        EmbedBuilder gamblingPage = App.embed(e.getMessage())
+        EmbedBuilder gamblingPage = App.embed()
                 .setAuthor("Help Command (2/"+pages.get()+")", "https://astolfo.tech", e.getAuthor().getAvatarUrl())
                 .setThumbnail("https://cdn.discordapp.com/attachments/738514936338055178/746868751353511976/image0.png")
                 .setDescription("Gambling Category");
@@ -133,7 +133,7 @@ public class Help extends Command {
         );
         MessageEmbed gam = gamblingPage.build();
 
-        EmbedBuilder economyPage = App.embed(e.getMessage())
+        EmbedBuilder economyPage = App.embed()
                 .setAuthor("Help Command (3/"+pages.get()+")", "https://astolfo.tech", e.getAuthor().getAvatarUrl())
                 .setThumbnail("https://cdn.discordapp.com/attachments/738514936338055178/746869445342920824/Screenshot_2020-08-23_at_00.12.19.png")
                 .setDescription("Economy Category");
@@ -142,7 +142,7 @@ public class Help extends Command {
         );
         MessageEmbed eco = economyPage.build();
 
-        EmbedBuilder businessPage = App.embed(e.getMessage())
+        EmbedBuilder businessPage = App.embed()
                 .setAuthor("Help Command (4/"+pages.get()+")", "https://astolfo.tech", e.getAuthor().getAvatarUrl())
                 .setThumbnail("https://cdn.discordapp.com/attachments/738514936338055178/746869868581879879/Screenshot_2020-08-23_at_00.14.00.png")
                 .setDescription("Business Category");
@@ -151,7 +151,7 @@ public class Help extends Command {
         );
         MessageEmbed bus = businessPage.build();
 
-        EmbedBuilder ancapPage = App.embed(e.getMessage())
+        EmbedBuilder ancapPage = App.embed()
                 .setAuthor("Help Command (5/"+pages.get()+")", "https://astolfo.tech", e.getAuthor().getAvatarUrl())
                 .setThumbnail("https://cdn.discordapp.com/attachments/738514936338055178/746872045085786143/Screenshot_2020-08-23_at_00.22.28.png")
                 .setDescription("Capitalism Category");

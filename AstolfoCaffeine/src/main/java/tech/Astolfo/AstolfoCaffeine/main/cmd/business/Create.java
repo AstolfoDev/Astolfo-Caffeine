@@ -119,7 +119,7 @@ public class Create extends Command {
 
     private void finalCalc(Message msg, String name, String desc, String logo) {
         new Database().create_company(name, desc, logo, msg.getAuthor().getIdLong());
-        EmbedBuilder eb = App.embed(msg);
+        EmbedBuilder eb = App.embed();
         MessageEmbed embed = eb
                 .setAuthor("Company created!", "https://astolfo.tech", msg.getAuthor().getAvatarUrl())
                 .setThumbnail(logo)

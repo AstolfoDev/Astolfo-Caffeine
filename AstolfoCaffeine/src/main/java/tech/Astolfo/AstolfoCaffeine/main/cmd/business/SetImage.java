@@ -46,7 +46,7 @@ public class SetImage extends Command {
     }
 
     private void start(CommandEvent e) {
-        MessageEmbed embed = App.embed(e.getMessage())
+        MessageEmbed embed = App.embed()
             .setAuthor("Company Settings ⚙️", "https://astolfo.tech", e.getAuthor().getAvatarUrl())
             .setDescription("u canz modify various stuffz about ur company riiiiiight here :3")
             .addField("🖼 Logo", "The image associated with your brand!", true)
@@ -119,7 +119,7 @@ public class SetImage extends Command {
                             BasicDBObject filter = new BasicDBObject("members", new BasicDBObject("$in", Collections.singletonList(e.getMessage().getAuthor().getIdLong())));
                             Document comp = almonds(kitkat, filter);
                             e.reply(
-                                    App.embed(e.getMessage())
+                                    App.embed()
                                             .setAuthor("Company Updated!", "https://astolfo.tech", e.getAuthor().getAvatarUrl())
                                             .setThumbnail(comp.getString("logo"))
                                             .setDescription("Successfully updated the logo for `"+comp.getString("name")+"`")
@@ -171,7 +171,7 @@ public class SetImage extends Command {
                         App.company.updateOne(filter, update);
                         Document comp = App.company.find(filter).first();
                         e.reply(
-                                    App.embed(e.getMessage())
+                                    App.embed()
                                             .setAuthor("Company Updated!", "https://astolfo.tech", e.getAuthor().getAvatarUrl())
                                             .setThumbnail(comp.getString("logo"))
                                             .setDescription("Successfully updated the description for `"+comp.getString("name")+"`\n\n"+comp.getString("description"))

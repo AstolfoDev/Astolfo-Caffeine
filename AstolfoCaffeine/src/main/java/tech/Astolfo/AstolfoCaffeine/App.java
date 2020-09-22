@@ -73,16 +73,9 @@ public class App {
     
     public static String avatarURL;
 
-   // TODO: Providing message shouldn't be necessary to include an avatar here. Avatar can be cached.
-    public static EmbedBuilder embed(Message msg) {
-        return new EmbedBuilder()
-                .setFooter(System.getenv("VERSION_ID"), msg.getJDA().getSelfUser().getAvatarUrl())
-                .setColor(0xde1073);
-    }
-
     public static EmbedBuilder embed() {
         return new EmbedBuilder()
-                .setFooter(System.getenv("VERSION_ID"))
+                .setFooter(System.getenv("VERSION_ID"), App.avatarURL)
                 .setColor(0xde1073);
     }
     
