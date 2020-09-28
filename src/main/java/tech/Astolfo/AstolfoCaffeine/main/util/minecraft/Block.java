@@ -7,7 +7,8 @@ import java.util.Map;
 
 import net.dv8tion.jda.api.JDA;
 
-import static java.util.Map.entry;
+//TODO: ERROR CANNOT FIND SYMBOL
+// import static java.util.Map.entry;
 
 public class Block {
 
@@ -51,6 +52,9 @@ public class Block {
         startTimer();
     }
 
+    //TODO: Make this work on Vim's PC
+    /*
+
     public Map<Material, Map<Short, List<String>>> blockState = Map.ofEntries(
             entry(
                     Material.STONE,
@@ -73,6 +77,7 @@ public class Block {
                     )
             )
     );
+    */
 
     public String hitWith(Tool tool, JDA jda) {
         int damage = tool.damageTo(mat);
@@ -103,9 +108,10 @@ public class Block {
 
     public String render(JDA jda) {
         if (hits == 0) {
-            return jda.getGuildById("512594569263579147").getEmoteById(blockState.get(mat).get(data).get(0)).getAsMention();
+
+            return jda.getGuildById("512594569263579147").getEmoteById("738014582555279460").getAsMention();
         } else {
-            return jda.getGuildById("512594569263579147").getEmoteById(blockState.get(mat).get(data).get(9-stage)).getAsMention();
+            return jda.getGuildById("512594569263579147").getEmoteById("738014582555279460").getAsMention();
         }
     }
 }

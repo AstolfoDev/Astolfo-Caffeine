@@ -21,10 +21,14 @@ public class Invite extends Command {
 
     @Override
     protected void execute(CommandEvent e) {
+
+        //TODO: Make this work on Vim's PC
+        /*
         if (!e.getArgs().isBlank()) {
           new Hire().run(e);
           return;
         }
+         */
         Message msg = e.getMessage();
         User author = msg.getAuthor();
 
