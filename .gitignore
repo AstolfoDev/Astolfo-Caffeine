@@ -283,6 +283,7 @@ Temporary Items
 .apdisk
 
 ### Maven ###
+.target/
 target/
 pom.xml.tag
 pom.xml.releaseBackup
