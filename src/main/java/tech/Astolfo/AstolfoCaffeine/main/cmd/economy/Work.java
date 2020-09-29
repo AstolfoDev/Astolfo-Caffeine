@@ -17,7 +17,7 @@ import tech.Astolfo.AstolfoCaffeine.main.util.minecraft.Tool;
 import tech.Astolfo.AstolfoCaffeine.main.util.minecraft.Toolbox;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.Random;
 
 import static com.mongodb.client.model.Filters.eq;
@@ -26,7 +26,7 @@ import static com.mongodb.client.model.Updates.set;
 public class Work extends Command {
 
 
-    ArrayList<Block> blocks = new ArrayList<Block>() {{
+    ArrayList<Block> blocks = new ArrayList<>() {{
         add(new Block("a%d", Block.Material.STONE, 3, 3, 10, 10)); //????
         //TODO: ADD MORE
     }};
@@ -93,7 +93,7 @@ public class Work extends Command {
     private void success(Message msg) {
 
         // TODO: This might have a bug, where it always returns null, even when you're in a company
-        BasicDBObject filter1 = new BasicDBObject().append("members", new BasicDBObject("$in", Arrays.asList(msg.getAuthor().getIdLong())));
+        BasicDBObject filter1 = new BasicDBObject().append("members", new BasicDBObject("$in", Collections.singletonList(msg.getAuthor().getIdLong())));
         Document comp = App.company.find(filter1).first();
 
         float extra = 0;
