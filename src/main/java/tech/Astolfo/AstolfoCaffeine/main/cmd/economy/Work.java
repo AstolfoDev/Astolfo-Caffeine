@@ -26,7 +26,7 @@ import static com.mongodb.client.model.Updates.set;
 public class Work extends Command {
 
 
-    ArrayList<Block> blocks = new ArrayList<>() {{
+    ArrayList<Block> blocks = new ArrayList<Block>() {{
         add(new Block("a%d", Block.Material.STONE, 3, 3, 10, 10)); //????
         //TODO: ADD MORE
     }};
