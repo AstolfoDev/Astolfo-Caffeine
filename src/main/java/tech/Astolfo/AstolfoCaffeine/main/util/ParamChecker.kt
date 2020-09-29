@@ -1,21 +1,17 @@
 package tech.Astolfo.AstolfoCaffeine.main.util
-
 import com.jagrosh.jdautilities.command.CommandEvent
 import tech.Astolfo.AstolfoCaffeine.main.msg.Logging
-
 import java.util.Collections
-import java.util.HashMap
 
 class ParamCheckerKotlin {
 
-    private val checks: HashMap<Int, String> = HashMap()
 
+    private val checks = mutableMapOf<Int, String>()
 
     fun addCheck(count: Int, err_message: String): ParamCheckerKotlin {
         checks[count] = err_message
         return this
     }
-
 
     fun parse(ctx: CommandEvent): Boolean {
         val params = ctx.args.split("\\s+")
