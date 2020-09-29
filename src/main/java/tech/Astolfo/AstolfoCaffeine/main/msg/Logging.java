@@ -37,7 +37,7 @@ public class Logging {
         Arrays.stream(params).forEach(
                 elem -> {
                     // Checks if element is null
-                    if (elem == null || elem.length < 3) return;
+                    if (elem == null || elem.length != 3) return;
 
                     // Adds field to EmbedBuilder
                     builder.addField(elem[0], elem[1], Boolean.parseBoolean(elem[2]));
