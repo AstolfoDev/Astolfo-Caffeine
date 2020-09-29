@@ -35,9 +35,7 @@ public class Logging {
 
         // Creates new fields for all the field parameters
         Arrays.stream(params).forEach(
-                elem -> {
-                    builder.addField(elem[0], elem[1], Boolean.parseBoolean(elem[2]));
-                }
+                elem -> builder.addField(elem[0], elem[1], Boolean.parseBoolean(elem[2]))
         );
 
 
