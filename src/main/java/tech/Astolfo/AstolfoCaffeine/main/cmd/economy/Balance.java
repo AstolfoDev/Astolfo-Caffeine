@@ -2,13 +2,9 @@ package tech.Astolfo.AstolfoCaffeine.main.cmd.economy;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
-
-import org.bson.Document;
-
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
+import org.bson.Document;
 import tech.Astolfo.AstolfoCaffeine.main.db.Database;
 import tech.Astolfo.AstolfoCaffeine.main.msg.Logging;
 
@@ -31,25 +27,25 @@ public class Balance extends Command {
 
         if (u.isBot()) {
           msg.getChannel().sendMessage("beep boop! nuu robot overlords pls thx~ <3").queue();
-          return;
+            return;
         }
 
         new Database().create_account(u.getIdLong());
         Document doc = new Database().get_account(u.getIdLong());
-        
+
         if (doc == null) {
-          msg.getChannel().sendMessage(new Logging().error("Balance for the selected user was not found!")).queue();
-          return;
+            msg.getChannel().sendMessage(new Logging().error("Balance for the selected user was not found!")).queue();
+            return;
         }
-        
-        MessageEmbed embed = new EmbedBuilder()
-            .setAuthor(u.getAsTag(), "https://astolfo.tech", u.getAvatarUrl())
-            .setFooter(System.getenv("VERSION_ID"), msg.getJDA().getSelfUser().getAvatarUrl())
-            .setColor(0xde1073)
-            .addField("Credits", doc.get("credits")+" <:credit:738537190652510299>", true)
-            .addField("Trap Coins", doc.get("trapcoins")+" <:trapcoin:738537189884821606>", true)
-            .addField("Tokens", doc.get("tokens")+" <:token:738537180003172354>", true)
-            .build();
-        msg.getChannel().sendMessage(embed).queue();
+
+        new Logging().send(
+                msg,
+                null,
+                u.getAsTag(),
+                null,
+                new String[]{"Credits", doc.get("credits").toString() + " <:credit:738537190652510299>", "true"},
+                new String[]{"Trap Coins", doc.get("trapcoins").toString() + " <:trapcoin:738537189884821606>", "true"},
+                new String[]{"Tokens", doc.get("tokens").toString() + " <:token:738537180003172354>", "true"}
+        );
     }
 }
