@@ -1,14 +1,12 @@
 package tech.Astolfo.AstolfoCaffeine.main.util.minecraft;
-import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Emote;
-import net.dv8tion.jda.api.entities.MessageEmbed;
-import tech.Astolfo.AstolfoCaffeine.App;
-
-import java.util.*;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
+import static tech.Astolfo.AstolfoCaffeine.App.jda;
 
 public class Block {
 
@@ -24,27 +22,23 @@ public class Block {
         DIRT
     }
 
-    private String emote_template;
-    private Material mat;
+    private final String emote_template;
+    private final Material mat;
     public State state;
     private int hits;
     public int stage;
-    private int num_stages;
-    private int hits_per_stage;
+    private final int num_stages;
+    private final int hits_per_stage;
     public int value;
-    private int max_time;
+    private final int max_time;
     private long start_time;
-    private static JDA jda;
     public static String emote_server = "457645193202499586";
 
-    //TODO: Make this work on Vim's PC
-    /*
-
-    public Map<Material, Map<Short, List<String>>> blockState = Map.ofEntries(
-            entry(
+    public Map <Material, Map<Short, List<String>>> blockState = Map.ofEntries(
+            Map.entry(
                     Material.STONE,
                     Map.ofEntries(
-                            entry(
+                            Map.entry(
                                     (short) 0,
                                     Arrays.asList(
                                             "738014582555279460", // 1
@@ -62,7 +56,6 @@ public class Block {
                     )
             )
     );
-    */
 
 
     public Block(String _emote_template, Material _material, int _num_stages, int _hits_per_stage, int _value, int _max_time) {
@@ -111,7 +104,4 @@ public class Block {
         return emote.getAsMention();
     }
 
-    public static void setJda(JDA jda) {
-        Block.jda = jda;
-    }
 }

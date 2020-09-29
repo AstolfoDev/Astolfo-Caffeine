@@ -4,17 +4,18 @@ import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.mongodb.BasicDBObject;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.MessageEmbed;
-import tech.Astolfo.AstolfoCaffeine.main.db.Database;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import tech.Astolfo.AstolfoCaffeine.App;
+import tech.Astolfo.AstolfoCaffeine.main.db.Database;
 import tech.Astolfo.AstolfoCaffeine.main.msg.Logging;
 import tech.Astolfo.AstolfoCaffeine.main.util.ParamCheckerKotlin;
 
 import java.util.List;
+
 import static com.mongodb.client.model.Updates.set;
 
 public class Transfer extends Command  {

@@ -1,14 +1,14 @@
 package tech.Astolfo.AstolfoCaffeine.main.util.minecraft;
-import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Emote;
 
 import java.util.HashMap;
 
+import static tech.Astolfo.AstolfoCaffeine.App.jda;
+
 public class Tool {
 
-    private HashMap<Block.Material, Integer> specs;
+    private final HashMap<Block.Material, Integer> specs;
     public Emote emote;
-    static private JDA jda;
 
     public Tool(int stone_dmg, int wood_dmg, int dirt_dmg, String emote_str) {
         emote = jda.getEmoteById(emote_str);
@@ -20,10 +20,6 @@ public class Tool {
 
     public int damageTo(Block.Material type) {
         return specs.get(type);
-    }
-
-    public static void setJda(JDA jda) {
-        Tool.jda = jda;
     }
 
 }

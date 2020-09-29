@@ -1,29 +1,27 @@
 package tech.Astolfo.AstolfoCaffeine.main.cmd.economy;
 
+import com.jagrosh.jdautilities.command.Command;
+import com.jagrosh.jdautilities.command.CommandEvent;
+import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
+import com.mongodb.BasicDBObject;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import org.bson.Document;
 import org.bson.conversions.Bson;
-
-import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.Message;
 import tech.Astolfo.AstolfoCaffeine.App;
 import tech.Astolfo.AstolfoCaffeine.main.db.Database;
-
-import static com.mongodb.client.model.Filters.eq;
-import static com.mongodb.client.model.Updates.*;
+import tech.Astolfo.AstolfoCaffeine.main.util.minecraft.Block;
+import tech.Astolfo.AstolfoCaffeine.main.util.minecraft.MCgame;
+import tech.Astolfo.AstolfoCaffeine.main.util.minecraft.Tool;
+import tech.Astolfo.AstolfoCaffeine.main.util.minecraft.Toolbox;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 
-import com.jagrosh.jdautilities.command.Command;
-import com.jagrosh.jdautilities.command.CommandEvent;
-import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
-import com.mongodb.BasicDBObject;
-import tech.Astolfo.AstolfoCaffeine.main.util.minecraft.Block;
-import tech.Astolfo.AstolfoCaffeine.main.util.minecraft.MCgame;
-import tech.Astolfo.AstolfoCaffeine.main.util.minecraft.Tool;
-import tech.Astolfo.AstolfoCaffeine.main.util.minecraft.Toolbox;
+import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Updates.set;
 
 public class Work extends Command {
 
@@ -56,10 +54,6 @@ public class Work extends Command {
     @Override
     protected void execute(CommandEvent e) throws NumberFormatException {
         Message msg = e.getMessage();
-
-        //TODO: This should be done in app.java, but when I try I just can't get it to work
-        Block.setJda(msg.getJDA());
-        Tool.setJda(msg.getJDA());
 
         MessageChannel channel = msg.getChannel();
         int cooldown = 3; // TODO: Set to 300
