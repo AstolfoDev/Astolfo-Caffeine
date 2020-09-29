@@ -16,6 +16,7 @@ class ParamCheckerKotlin {
         return this
     }
 
+
     fun parse(ctx: CommandEvent): Boolean {
         val params = ctx.args.split("\\s+")
         val errors = Logging()
@@ -29,6 +30,7 @@ class ParamCheckerKotlin {
         println("Failed to catch case")
         return false
     }
+
 
     private fun check(index: Int, errors: Logging): Boolean {
         return if (checks[index] == "VALID") {
