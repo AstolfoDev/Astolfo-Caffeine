@@ -8,11 +8,7 @@ import java.util.HashMap
 
 class ParamCheckerKotlin {
 
-    private val checks: HashMap<Int, String>
-
-    init {
-        checks = HashMap()
-    }
+    private val checks: HashMap<Int, String> = HashMap()
 
 
     fun addCheck(count: Int, err_message: String): ParamCheckerKotlin {
@@ -35,11 +31,11 @@ class ParamCheckerKotlin {
     }
 
     private fun check(index: Int, errors: Logging): Boolean {
-        if (checks[index] == "VALID") {
-            return true
+        return if (checks[index] == "VALID") {
+            true
         } else {
             errors.error(checks[index])
-            return false
+            false
         }
     }
 }
