@@ -14,6 +14,7 @@ class ParamCheckerKotlin {
         checks = HashMap()
     }
 
+
     fun addCheck(count: Int, err_message: String): ParamCheckerKotlin {
         checks[count] = err_message
         return this
