@@ -35,7 +35,13 @@ public class Logging {
 
         // Creates new fields for all the field parameters
         Arrays.stream(params).forEach(
-                elem -> builder.addField(elem[0], elem[1], Boolean.parseBoolean(elem[2]))
+                elem -> {
+                    // Checks if element is null
+                    if (elem == null || elem.length < 3) return;
+
+                    // Adds field to EmbedBuilder
+                    builder.addField(elem[0], elem[1], Boolean.parseBoolean(elem[2]));
+                }
         );
 
 
@@ -48,6 +54,7 @@ public class Logging {
 
             // Replaces the embed author's icon with the avatar URL of the command issuer
             MessageEmbed.AuthorInfo info = embed.getAuthor();
+            assert info != null;
             embed = builder.setAuthor(info.getName(), info.getUrl(), msg.getAuthor().getAvatarUrl()).build();
 
             // Sends the embed in the channel where the command was issued
