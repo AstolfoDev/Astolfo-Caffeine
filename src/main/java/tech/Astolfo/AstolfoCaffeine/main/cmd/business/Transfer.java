@@ -6,13 +6,14 @@ import com.mongodb.BasicDBObject;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import tech.Astolfo.AstolfoCaffeine.main.db.Database;
-import tech.Astolfo.AstolfoCaffeine.main.util.ParamChecker;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import tech.Astolfo.AstolfoCaffeine.App;
 import tech.Astolfo.AstolfoCaffeine.main.msg.Logging;
+import tech.Astolfo.AstolfoCaffeine.main.util.ParamCheckerKotlin;
+
 import java.util.List;
 import static com.mongodb.client.model.Updates.set;
 
@@ -32,7 +33,7 @@ public class Transfer extends Command  {
         Message msg = e.getMessage();
         String[] args = e.getArgs().split("\\s+");
 
-        if  (!new ParamChecker()
+        if  (!new ParamCheckerKotlin()
                 .addCheck(0, "Sowwy! You fOwOgot to mention the user you want to transfer capital tuuuuuuu...\n*(Ex: "+System.getenv("PREFIX")+"transfer <@682220266901733381> 10)*")
                 .addCheck(1, "Sowwy! You fOwOgot to put the amount you want to send...\n*(Ex: "+System.getenv("PREFIX")+"transfer <@682220266901733381> 10)*")
                 .addCheck(2, "VALID")
