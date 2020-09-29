@@ -1,5 +1,6 @@
 package tech.Astolfo.AstolfoCaffeine.main.cmd.economy;
 
+import net.dv8tion.jda.api.entities.MessageChannel;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 
@@ -11,7 +12,9 @@ import tech.Astolfo.AstolfoCaffeine.main.db.Database;
 import static com.mongodb.client.model.Filters.eq;
 import static com.mongodb.client.model.Updates.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Random;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
@@ -24,7 +27,21 @@ import tech.Astolfo.AstolfoCaffeine.main.util.minecraft.Toolbox;
 
 public class Work extends Command {
 
-  private EventWaiter waiter;
+
+    ArrayList<Block> blocks = new ArrayList<Block>() {{
+        add(new Block("a%d", Block.Material.STONE, 3, 3, 10, 10)); //????
+        //TODO: ADD MORE
+    }};
+
+    ArrayList<Tool> tools = new ArrayList<Tool>() {{
+        add(new Tool(2, 0, 0, "737855791171895308")); //Pickaxe
+        add(new Tool(1, 1, 0, "703305007264694394")); //Sword
+        //TODO: ADD MORE
+    }};
+
+
+
+    private EventWaiter waiter;
 
 
 
@@ -39,31 +56,40 @@ public class Work extends Command {
     @Override
     protected void execute(CommandEvent e) throws NumberFormatException {
         Message msg = e.getMessage();
-        int cooldown = 5; // TODO: Set to 300
+
+        //TODO: This should be done in app.java, but when I try I just can't get it to work
+        Block.setJda(msg.getJDA());
+        Tool.setJda(msg.getJDA());
+
+        MessageChannel channel = msg.getChannel();
+        int cooldown = 3; // TODO: Set to 300
         if (App.cooldown.containsKey(msg.getAuthor().getIdLong())) {
-          long time = (System.currentTimeMillis() - App.cooldown.get(msg.getAuthor().getIdLong()))/1000;
-          if (time < cooldown) {
-            msg.getChannel().sendMessage("oi! u gotta wait 4 da cooldown 2 expire before workin' again ;P\n*("+(cooldown-time)+" seconds leftzZzz...)*").queue();
-            return;
-          } else {
-            App.cooldown.remove(msg.getAuthor().getIdLong());
-          }
+            long time = (System.currentTimeMillis() - App.cooldown.get(msg.getAuthor().getIdLong()))/1000;
+            if (time < cooldown) {
+                channel.sendMessage("oi! u gotta wait 4 da cooldown 2 expire before workin' again ;P\n*("+(cooldown-time)+" seconds leftzZzz...)*").queue();
+                return;
+            } else {
+                App.cooldown.remove(msg.getAuthor().getIdLong());
+            }
         }
         App.cooldown.put(msg.getAuthor().getIdLong(), System.currentTimeMillis());
 
+
         Toolbox toolbox = new Toolbox();
-        toolbox.addTool(new Tool(2, 0, 0, msg.getGuild().getEmoteById("737855791171895308")));
-        toolbox.addTool(new Tool(0, 0, 1, msg.getGuild().getEmotes().get(1)));
-        Block block = new Block("Imo-Imo", "https://cloud.orz.cx/public/ImoImo/%d.jpg", Block.Material.STONE, (short) 0, 2, 3, 10, 10);
-        msg.getChannel().sendMessage("Loading...").queue(
-                (message) -> new MCgame(block, toolbox, message, waiter).runThen(
-                        () -> {
-                            if (block.state == Block.State.BROKEN) {
-                                message.editMessage("Nice you broke it").queue();
-                            } else if (block.state == Block.State.EXPIRED) {
-                                message.editMessage("You are too slow").queue();
-                            }
-                        }
+        //TODO: Read from mongodb the tools and add to user
+        Random rnd = new Random();
+        Block block = blocks.get(rnd.nextInt(blocks.size()));
+        channel.sendMessage("**MINEEEEEEEEEEE**").queue(
+                (react_msg) -> channel.sendMessage("temp").queue(
+                        (block_msg) ->  new MCgame(block, toolbox, block_msg, react_msg, waiter).runThen(
+                                () -> {
+                                    if (block.state == Block.State.BROKEN) {
+                                        react_msg.editMessage("Nice you broke it").queue();
+                                    } else if (block.state == Block.State.EXPIRED) {
+                                        react_msg.editMessage("You are too slow").queue();
+                                    }
+                                }
+                        )
                 )
         );
     }

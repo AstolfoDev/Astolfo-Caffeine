@@ -79,7 +79,6 @@ public class App {
     }
     
 
-
     public static JDA jda;
 
     static {

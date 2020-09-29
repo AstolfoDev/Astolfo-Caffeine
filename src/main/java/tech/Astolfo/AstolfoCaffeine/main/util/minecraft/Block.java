@@ -1,14 +1,14 @@
 package tech.Astolfo.AstolfoCaffeine.main.util.minecraft;
+import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.entities.Emote;
+import net.dv8tion.jda.api.entities.MessageEmbed;
+import tech.Astolfo.AstolfoCaffeine.App;
+
+import java.util.*;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import net.dv8tion.jda.api.JDA;
-
-//TODO: ERROR CANNOT FIND SYMBOL
-// import static java.util.Map.entry;
 
 public class Block {
 
@@ -24,10 +24,8 @@ public class Block {
         DIRT
     }
 
-    private String url_template;
-    private String name;
+    private String emote_template;
     private Material mat;
-    private Short data;
     public State state;
     private int hits;
     public int stage;
@@ -36,21 +34,8 @@ public class Block {
     public int value;
     private int max_time;
     private long start_time;
-
-    public Block(String _name, String _url_template, Material _material, short _data, int _num_stages, int _hits_per_stage, int _value, int _max_time) {
-        url_template = _url_template;
-        name = _name;
-        mat = _material;
-        data = _data;
-        num_stages = _num_stages;
-        hits_per_stage = _hits_per_stage;
-        value = _value;
-        max_time = _max_time;
-        stage = 0;
-        hits = 0;
-        state = State.ACTIVE;
-        startTimer();
-    }
+    private static JDA jda;
+    public static String emote_server = "457645193202499586";
 
     //TODO: Make this work on Vim's PC
     /*
@@ -79,7 +64,21 @@ public class Block {
     );
     */
 
-    public String hitWith(Tool tool, JDA jda) {
+
+    public Block(String _emote_template, Material _material, int _num_stages, int _hits_per_stage, int _value, int _max_time) {
+        emote_template = _emote_template;
+        mat = _material;
+        num_stages = _num_stages;
+        hits_per_stage = _hits_per_stage;
+        value = _value;
+        max_time = _max_time;
+        stage = 0;
+        hits = 0;
+        state = State.ACTIVE;
+        startTimer();
+    }
+
+    public String hitWith(Tool tool) {
         int damage = tool.damageTo(mat);
         hits += damage;
         if (leftTime() < 1) {
@@ -93,7 +92,7 @@ public class Block {
                 state = State.BROKEN;
                 return null;
             }
-            return render(jda);
+            return render();
         }
         return null;
     }
@@ -106,12 +105,13 @@ public class Block {
         start_time = System.currentTimeMillis() / 1000;
     }
 
-    public String render(JDA jda) {
-        if (hits == 0) {
+    public String render() {
+        Emote emote = Objects.requireNonNull(jda.getGuildById(emote_server)).getEmotesByName(String.format(emote_template, stage), false).get(0);
+        //Emote emote = Objects.requireNonNull(jda.getGuildById(emote_server)).getEmoteById(emote_map.get(mat).get(stage));
+        return emote.getAsMention();
+    }
 
-            return jda.getGuildById("512594569263579147").getEmoteById("738014582555279460").getAsMention();
-        } else {
-            return jda.getGuildById("512594569263579147").getEmoteById("738014582555279460").getAsMention();
-        }
+    public static void setJda(JDA jda) {
+        Block.jda = jda;
     }
 }
