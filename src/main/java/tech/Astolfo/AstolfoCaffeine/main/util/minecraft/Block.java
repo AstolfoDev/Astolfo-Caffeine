@@ -1,9 +1,6 @@
 package tech.Astolfo.AstolfoCaffeine.main.util.minecraft;
 import net.dv8tion.jda.api.entities.Emote;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 import static tech.Astolfo.AstolfoCaffeine.App.jda;
@@ -34,6 +31,10 @@ public class Block {
     private long start_time;
     public static String emote_server = "457645193202499586";
 
+    /*
+
+    [DEPRECATED] unusable until VimV– *COUGH* i mean, Zyra gets gud
+
     public Map <Material, Map<Short, List<String>>> blockState = Map.ofEntries(
             Map.entry(
                     Material.STONE,
@@ -57,6 +58,7 @@ public class Block {
             )
     );
 
+    */
 
     public Block(String _emote_template, Material _material, int _num_stages, int _hits_per_stage, int _value, int _max_time) {
         emote_template = _emote_template;
