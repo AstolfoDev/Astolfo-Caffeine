@@ -1,16 +1,14 @@
 package tech.Astolfo.AstolfoCaffeine.main.cmd.gambling;
 
-import java.util.Arrays;
-import java.util.List;
-
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
-
 import org.bson.Document;
 import org.bson.conversions.Bson;
-
 import tech.Astolfo.AstolfoCaffeine.App;
 import tech.Astolfo.AstolfoCaffeine.main.msg.Logging;
+
+import java.util.Arrays;
+import java.util.List;
 
 import static com.mongodb.client.model.Filters.eq;
 import static com.mongodb.client.model.Updates.set;
@@ -112,8 +110,8 @@ public class Coinflip extends Command {
             App.col.updateOne(filter, win);
             e.reply("**WINNER!** u just wonzzzz "+bet+" cweditzzZz by landing on "+face+"!!!");
           } else {
-            App.col.updateOne(filter, lose);
-            e.reply("**LOSER!** u just wonn't "+bet+" credDDDdditz by landing on "+face+" instead of "+choice);
+              App.col.updateOne(filter, lose);
+              e.reply("**LOSER!** u just lost " + bet + " credDDDdditz by landing on " + face + " instead of " + choice);
           }
         } catch (NumberFormatException err) {
           e.reply("HUAHAHH!?! dat aint no numberrrrr TF!?!??! HELP???1");

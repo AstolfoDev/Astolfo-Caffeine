@@ -27,7 +27,7 @@ public class Work extends Command {
 
 
     ArrayList<Block> blocks = new ArrayList<Block>() {{
-        add(new Block("a%d", Block.Material.STONE, 3, 3, 10, 10)); //????
+        add(new Block(Block.Material.STONE, (short) 0, 3, 3, 10, 10)); //????
         //TODO: ADD MORE
     }};
 

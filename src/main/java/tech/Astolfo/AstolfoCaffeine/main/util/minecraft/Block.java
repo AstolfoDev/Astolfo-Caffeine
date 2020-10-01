@@ -1,7 +1,8 @@
 package tech.Astolfo.AstolfoCaffeine.main.util.minecraft;
+
 import net.dv8tion.jda.api.entities.Emote;
 
-import java.util.Objects;
+import java.util.*;
 
 import static tech.Astolfo.AstolfoCaffeine.App.jda;
 
@@ -19,8 +20,9 @@ public class Block {
         DIRT
     }
 
-    private final String emote_template;
+    //private final String emote_template;
     private final Material mat;
+    private final Short data;
     public State state;
     private int hits;
     public int stage;
@@ -29,7 +31,7 @@ public class Block {
     public int value;
     private final int max_time;
     private long start_time;
-    public static String emote_server = "457645193202499586";
+    public static String emote_server = "512594569263579147";
 
     /*
 
@@ -60,9 +62,38 @@ public class Block {
 
     */
 
-    public Block(String _emote_template, Material _material, int _num_stages, int _hits_per_stage, int _value, int _max_time) {
-        emote_template = _emote_template;
+    public HashMap<Material, HashMap<Short, List<String>>> blockState = new HashMap<>() {
+        {
+            put(
+                    Material.STONE,
+                    new HashMap<>() {
+                        {
+                            put(
+                                    (short) 0,
+                                    Arrays.asList(
+                                            "738014582555279460", // 1
+                                            "738014591988138045", // 2
+                                            "738014594911698996", // 3
+                                            "738014598862733422", // 4
+                                            "738015059070156830", // 5
+                                            "738015060949205083", // 6
+                                            "738015063960584222", // 7
+                                            "738015063025123360", // 8
+                                            "738015061922021437", // 9
+                                            "738015062274342939"  // 10
+                                    )
+                            );
+                        }
+                    }
+            );
+        }
+    };
+
+
+    public Block(Material _material, Short _data, int _num_stages, int _hits_per_stage, int _value, int _max_time) {
+        //emote_template = _emote_template;
         mat = _material;
+        data = _data;
         num_stages = _num_stages;
         hits_per_stage = _hits_per_stage;
         value = _value;
@@ -101,8 +132,9 @@ public class Block {
     }
 
     public String render() {
-        Emote emote = Objects.requireNonNull(jda.getGuildById(emote_server)).getEmotesByName(String.format(emote_template, stage), false).get(0);
-        //Emote emote = Objects.requireNonNull(jda.getGuildById(emote_server)).getEmoteById(emote_map.get(mat).get(stage));
+        //Emote emote = Objects.requireNonNull(jda.getGuildById(emote_server)).getEmotesByName(String.format(emote_template, stage), false).get(0);
+        Emote emote = Objects.requireNonNull(jda.getGuildById(emote_server)).getEmoteById(blockState.get(mat).get(data).get(stage));
+        assert emote != null;
         return emote.getAsMention();
     }
 
