@@ -25,7 +25,6 @@ public class Block {
         ASTOLFO
     }
 
-    //private final String emote_template;
     private final Material mat;
     public State state;
     private int hits;
@@ -36,37 +35,8 @@ public class Block {
     private final int max_time;
     private long start_time;
     public static String emote_server = "512594569263579147";
-
-    /*
-
-    [DEPRECATED] unusable until VimV– *COUGH* i mean, Zyra gets gud
-
-    public Map <Material, Map<Short, List<String>>> blockState = Map.ofEntries(
-            Map.entry(
-                    Material.STONE,
-                    Map.ofEntries(
-                            Map.entry(
-                                    (short) 0,
-                                    Arrays.asList(
-                                            "738014582555279460", // 1
-                                            "738014591988138045", // 2
-                                            "738014594911698996", // 3
-                                            "738014598862733422", // 4
-                                            "738015059070156830", // 5
-                                            "738015060949205083", // 6
-                                            "738015063960584222", // 7
-                                            "738015063025123360", // 8
-                                            "738015061922021437", // 9
-                                            "738015062274342939"  // 10
-                                    )
-                            )
-                    )
-            )
-    );
-
-    */
-
-    public static HashMap<Material, List<String>> blockState = new HashMap<Material, List<String>>() {
+  
+    public static HashMap<Material, List<String>> blockState = new HashMap<>() {
         {
 
 
@@ -157,9 +127,7 @@ public class Block {
         }
     };
 
-
     public Block(Material _material, int _num_stages, int _hits_per_stage, int _value, int _max_time) {
-        //emote_template = _emote_template;
         mat = _material;
         num_stages = _num_stages;
         hits_per_stage = _hits_per_stage;
@@ -199,7 +167,6 @@ public class Block {
     }
 
     public String render() {
-        //Emote emote = Objects.requireNonNull(jda.getGuildById(emote_server)).getEmotesByName(String.format(emote_template, stage), false).get(0);
         Emote emote = Objects.requireNonNull(jda.getGuildById(emote_server)).getEmoteById(blockState.get(mat).get(stage));
         assert emote != null;
         return emote.getAsMention();
