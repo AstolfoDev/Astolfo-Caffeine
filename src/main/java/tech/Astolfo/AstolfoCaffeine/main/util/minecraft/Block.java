@@ -66,7 +66,7 @@ public class Block {
 
     */
 
-    public static HashMap<Material, List<String>> blockState = new HashMap<Material, List<String>>() {
+    public static HashMap<Material, List<String>> blockState = new HashMap<>() {
         {
 
 
