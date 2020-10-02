@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 public class Toolbox {
 
+
     private ArrayList<Tool> tools;
 
     public Toolbox() {
@@ -31,4 +32,11 @@ public class Toolbox {
         }
         return null;
     }
+
+    public static final Toolbox DefaultTools = new Toolbox() {{
+        addTool(new Tool(2, 0, 0, "737855791171895308"));
+        addTool(new Tool(2, 0, 0, "737855791171895308")); //Pickaxe
+        addTool(new Tool(1, 1, 0, "703305007264694394")); //Sword
+    }};
+
 }
