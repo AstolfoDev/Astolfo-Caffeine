@@ -35,7 +35,7 @@ public class Block {
     private final int max_time;
     private long start_time;
     public static String emote_server = "512594569263579147";
-
+  
     public static HashMap<Material, List<String>> blockState = new HashMap<>() {
         {
 
