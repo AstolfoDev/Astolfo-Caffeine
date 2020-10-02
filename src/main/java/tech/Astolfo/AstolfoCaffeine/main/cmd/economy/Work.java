@@ -23,13 +23,9 @@ import java.util.Random;
 import static com.mongodb.client.model.Filters.eq;
 import static com.mongodb.client.model.Updates.set;
 
+import static tech.Astolfo.AstolfoCaffeine.main.util.minecraft.Block.blockState;
+
 public class Work extends Command {
-
-
-    ArrayList<Block> blocks = new ArrayList<Block>() {{
-        add(new Block(Block.Material.STONE, (short) 0, 3, 3, 10, 10)); //????
-        //TODO: ADD MORE
-    }};
 
     ArrayList<Tool> tools = new ArrayList<Tool>() {{
         add(new Tool(2, 0, 0, "737855791171895308")); //Pickaxe
@@ -53,14 +49,21 @@ public class Work extends Command {
 
     @Override
     protected void execute(CommandEvent e) throws NumberFormatException {
-        Message msg = e.getMessage();
 
+        Message msg = e.getMessage();
         MessageChannel channel = msg.getChannel();
+
+        ArrayList<Block> blocks = new ArrayList<>() {{
+            add(new Block(Block.Material.STONE, (short) Math.floor(Math.random() * blockState.get(Block.Material.STONE).size()), 3, 3, 10, 10)); //????
+            //TODO: ADD MORE
+        }};
+
+
         int cooldown = 3; // TODO: Set to 300
         if (App.cooldown.containsKey(msg.getAuthor().getIdLong())) {
-            long time = (System.currentTimeMillis() - App.cooldown.get(msg.getAuthor().getIdLong()))/1000;
+            long time = (System.currentTimeMillis() - App.cooldown.get(msg.getAuthor().getIdLong())) / 1000;
             if (time < cooldown) {
-                channel.sendMessage("oi! u gotta wait 4 da cooldown 2 expire before workin' again ;P\n*("+(cooldown-time)+" seconds leftzZzz...)*").queue();
+                channel.sendMessage("oi! u gotta wait 4 da cooldown 2 expire before workin' again ;P\n*(" + (cooldown - time) + " seconds leftzZzz...)*").queue();
                 return;
             } else {
                 App.cooldown.remove(msg.getAuthor().getIdLong());
@@ -74,8 +77,8 @@ public class Work extends Command {
         Random rnd = new Random();
         Block block = blocks.get(rnd.nextInt(blocks.size()));
         channel.sendMessage("**MINEEEEEEEEEEE**").queue(
-                (react_msg) -> channel.sendMessage("temp").queue(
-                        (block_msg) ->  new MCgame(block, toolbox, block_msg, react_msg, waiter).runThen(
+                (react_msg) -> channel.sendMessage("Loading...").queue(
+                        (block_msg) -> new MCgame(block, toolbox, block_msg, react_msg, waiter).runThen(
                                 () -> {
                                     if (block.state == Block.State.BROKEN) {
                                         react_msg.editMessage("Nice you broke it").queue();

@@ -17,7 +17,8 @@ public class Block {
     public enum Material {
         STONE,
         WOOD,
-        DIRT
+        DIRT,
+        ASTOLFO
     }
 
     //private final String emote_template;
@@ -62,22 +63,20 @@ public class Block {
 
     */
 
-    public HashMap<Material, HashMap<Short, List<String>>> blockState = new HashMap<>() {
-        {
-            put(
-                    Material.STONE,
-                    new HashMap<>() {
-                        {
-                            put(
-                                    // Emerald Ore
-                                    (short) 0,
-                                    Arrays.asList(
-                                            "738014582555279460", // 1
-                                            "738014591988138045", // 2
-                                            "738014594911698996", // 3
-                                            "738014598862733422", // 4
-                                            "738015059070156830", // 5
-                                            "738015060949205083", // 6
+    public static HashMap<Material, HashMap<Short, List<String>>> blockState = new HashMap<>() {{
+        put(
+                Material.STONE,
+                new HashMap<>() {{
+                    put(
+                            // Emerald Ore
+                            (short) 0,
+                            Arrays.asList(
+                                    "738014582555279460", // 1
+                                    "738014591988138045", // 2
+                                    "738014594911698996", // 3
+                                    "738014598862733422", // 4
+                                    "738015059070156830", // 5
+                                    "738015060949205083", // 6
                                             "738015063960584222", // 7
                                             "738015063025123360", // 8
                                             "738015061922021437", // 9
@@ -135,11 +134,31 @@ public class Block {
                                             "761586946308308992" // 10
                                     )
                             );
-                        }
-                    }
-            );
-        }
-    };
+                }}
+        );
+
+
+        put(
+                Material.ASTOLFO,
+                new HashMap<>() {{
+                    put(
+                            (short) 0,
+                            Arrays.asList(
+                                    "761598965253799946", // 1
+                                    "761598360846729236", // 2
+                                    "761598361156583424", // 3
+                                    "761598361505628200", // 4
+                                    "761598361606160455", // 5
+                                    "761598361374687302", // 6
+                                    "761598361274023956", // 7
+                                    "761598361013977099", // 8
+                                    "761598360469241876", // 9
+                                    "761598360360190012"  // 10
+                            )
+                    );
+                }}
+        );
+    }};
 
 
     public Block(Material _material, Short _data, int _num_stages, int _hits_per_stage, int _value, int _max_time) {
