@@ -14,18 +14,23 @@ public class Block {
         BROKEN
     }
 
-    public enum Material {
-        STONE,
+    public enum BlockStyle {
         EMERALD_ORE,
         DIAMOND_ORE,
         GOLD_ORE,
         IRON_ORE,
-        WOOD,
-        DIRT,
         ASTOLFO
     }
 
+
+    public enum Material {
+        STONE,
+        WOOD,
+        DIRT
+    }
+
     private final Material mat;
+    public final BlockStyle style;
     public State state;
     private int hits;
     public int stage;
@@ -36,14 +41,14 @@ public class Block {
     private long start_time;
     public static String emote_server = "512594569263579147";
 
-    public static HashMap<Material, List<String>> blockState = new HashMap<>() {
+    public static HashMap<BlockStyle, List<String>> blockState = new HashMap<BlockStyle, List<String>>() {
         {
 
 
             // Ores
 
             put(
-                    Material.EMERALD_ORE,
+                    BlockStyle.EMERALD_ORE,
                     Arrays.asList(
                             "738014582555279460", // 1
                             "738014591988138045", // 2
@@ -59,7 +64,7 @@ public class Block {
             );
 
             put(
-                    Material.DIAMOND_ORE,
+                    BlockStyle.DIAMOND_ORE,
                     Arrays.asList(
                             "761581882109853706", // 1
                             "761581882206715934", // 2
@@ -75,7 +80,7 @@ public class Block {
             );
 
             put(
-                    Material.GOLD_ORE,
+                    BlockStyle.GOLD_ORE,
                     Arrays.asList(
                             "761585001925967872", // 1
                             "761585001862004776", // 2
@@ -91,7 +96,7 @@ public class Block {
             );
 
             put(
-                    Material.IRON_ORE,
+                    BlockStyle.IRON_ORE,
                     Arrays.asList(
                             "761587111388250152", // 1
                             "761586946241462353", // 2
@@ -110,7 +115,7 @@ public class Block {
             // Miscellaneous
 
             put(
-                    Material.ASTOLFO,
+                    BlockStyle.ASTOLFO,
                     Arrays.asList(
                             "761598965253799946", // 1
                             "761598360846729236", // 2
@@ -127,7 +132,8 @@ public class Block {
         }
     };
 
-    public Block(Material _material, int _num_stages, int _hits_per_stage, int _value, int _max_time) {
+    public Block(Material _material, BlockStyle _style, int _num_stages, int _hits_per_stage, int _value, int _max_time) {
+        style = _style;
         mat = _material;
         num_stages = _num_stages;
         hits_per_stage = _hits_per_stage;
@@ -167,7 +173,7 @@ public class Block {
     }
 
     public String render() {
-        Emote emote = Objects.requireNonNull(jda.getGuildById(emote_server)).getEmoteById(blockState.get(mat).get(stage));
+        Emote emote = Objects.requireNonNull(jda.getGuildById(emote_server)).getEmoteById(blockState.get(style).get(stage));
         assert emote != null;
         return emote.getAsMention();
     }
