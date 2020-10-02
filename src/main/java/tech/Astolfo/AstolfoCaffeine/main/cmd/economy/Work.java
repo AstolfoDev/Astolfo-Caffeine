@@ -53,8 +53,10 @@ public class Work extends Command {
         Message msg = e.getMessage();
         MessageChannel channel = msg.getChannel();
 
+        Block.Material mat = new ArrayList<Block.Material>(blockState.keySet()).get(new Random().nextInt(blockState.keySet().size()));
+
         ArrayList<Block> blocks = new ArrayList<>() {{
-            add(new Block(Block.Material.STONE, (short) Math.floor(Math.random() * blockState.get(Block.Material.STONE).size()), 3, 3, 10, 10)); //????
+            add(new Block(mat, 3, 3, 10, 10)); //????
             //TODO: ADD MORE
         }};
 
