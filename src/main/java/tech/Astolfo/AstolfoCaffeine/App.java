@@ -9,46 +9,31 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
-
 import org.bson.Document;
-
 import tech.Astolfo.AstolfoCaffeine.main.cmd.ancap.Buyorder;
 import tech.Astolfo.AstolfoCaffeine.main.cmd.ancap.Market;
 import tech.Astolfo.AstolfoCaffeine.main.cmd.ancap.Portfolio;
 import tech.Astolfo.AstolfoCaffeine.main.cmd.ancap.Sellorder;
-import tech.Astolfo.AstolfoCaffeine.main.cmd.business.Create;
-import tech.Astolfo.AstolfoCaffeine.main.cmd.business.Info;
-import tech.Astolfo.AstolfoCaffeine.main.cmd.business.Hire;
-import tech.Astolfo.AstolfoCaffeine.main.cmd.business.Kick;
-import tech.Astolfo.AstolfoCaffeine.main.cmd.business.Transfer;
-import tech.Astolfo.AstolfoCaffeine.main.cmd.business.Leave;
-import tech.Astolfo.AstolfoCaffeine.main.cmd.business.SetImage;
-import tech.Astolfo.AstolfoCaffeine.main.cmd.business.Join;
+import tech.Astolfo.AstolfoCaffeine.main.cmd.business.*;
 import tech.Astolfo.AstolfoCaffeine.main.cmd.economy.Balance;
 import tech.Astolfo.AstolfoCaffeine.main.cmd.economy.Pay;
 import tech.Astolfo.AstolfoCaffeine.main.cmd.economy.Work;
 import tech.Astolfo.AstolfoCaffeine.main.cmd.gambling.Casino;
 import tech.Astolfo.AstolfoCaffeine.main.cmd.gambling.Coinflip;
-import tech.Astolfo.AstolfoCaffeine.main.cmd.info.Help;
-import tech.Astolfo.AstolfoCaffeine.main.cmd.info.Invite;
-import tech.Astolfo.AstolfoCaffeine.main.cmd.info.Leaderboard;
-import tech.Astolfo.AstolfoCaffeine.main.cmd.info.Stats;
+import tech.Astolfo.AstolfoCaffeine.main.cmd.info.*;
 import tech.Astolfo.AstolfoCaffeine.main.db.Database;
 import tech.Astolfo.AstolfoCaffeine.main.event.Listener;
 
+import javax.security.auth.login.LoginException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import javax.security.auth.login.LoginException;
 
 public class App {
     public static ConnectionString conStr = new ConnectionString(System.getenv("CON_URL"));
@@ -120,6 +105,7 @@ public class App {
                 .addCommand(new Kick())
                 .addCommand(new Join())
                 .addCommand(new Info(infoWaiter))
+                .addCommand(new Profile())
                 .addCommand(new SetImage(setImageWaiter))
                 .addCommand(new Leave())
                 .addCommand(new Casino())
