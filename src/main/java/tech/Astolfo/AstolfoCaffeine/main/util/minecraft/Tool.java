@@ -7,15 +7,17 @@ import static tech.Astolfo.AstolfoCaffeine.App.jda;
 
 public class Tool {
 
-    private final HashMap<Block.Material, Integer> specs;
+    public final HashMap<Block.Material, Integer> specs;
     public Emote emote;
+    public int cost;
 
-    public Tool(int stone_dmg, int wood_dmg, int dirt_dmg, String emote_str) {
+    public Tool(int stone_dmg, int wood_dmg, int dirt_dmg, String emote_str, int cost) {
         emote = jda.getEmoteById(emote_str);
         specs = new HashMap<>();
         specs.put(Block.Material.STONE, stone_dmg);
         specs.put(Block.Material.WOOD, wood_dmg);
         specs.put(Block.Material.DIRT, dirt_dmg);
+        this.cost = cost;
     }
 
     public int damageTo(Block.Material type) {

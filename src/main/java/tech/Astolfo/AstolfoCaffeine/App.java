@@ -31,6 +31,7 @@ import tech.Astolfo.AstolfoCaffeine.main.cmd.business.SetImage;
 import tech.Astolfo.AstolfoCaffeine.main.cmd.business.Join;
 import tech.Astolfo.AstolfoCaffeine.main.cmd.economy.Balance;
 import tech.Astolfo.AstolfoCaffeine.main.cmd.economy.Pay;
+import tech.Astolfo.AstolfoCaffeine.main.cmd.economy.Shop;
 import tech.Astolfo.AstolfoCaffeine.main.cmd.economy.Work;
 import tech.Astolfo.AstolfoCaffeine.main.cmd.gambling.Casino;
 import tech.Astolfo.AstolfoCaffeine.main.cmd.gambling.Coinflip;
@@ -40,6 +41,7 @@ import tech.Astolfo.AstolfoCaffeine.main.cmd.info.Leaderboard;
 import tech.Astolfo.AstolfoCaffeine.main.cmd.info.Stats;
 import tech.Astolfo.AstolfoCaffeine.main.db.Database;
 import tech.Astolfo.AstolfoCaffeine.main.event.Listener;
+import tech.Astolfo.AstolfoCaffeine.main.util.minecraft.Toolbox;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -62,7 +64,7 @@ public class App {
     public static MongoCollection<Document> stocks = db.getCollection("stocks");
     public static MongoCollection<Document> company = db.getCollection("company");
 
-    public static HashMap<Long,Long> cooldown = new HashMap<>();
+    public static HashMap<Long, Long> cooldown = new HashMap<>();
 
     public static double round(double value, int places) {
         BigDecimal bd = BigDecimal.valueOf(value);
@@ -77,7 +79,6 @@ public class App {
                 .setFooter(System.getenv("VERSION_ID"), App.avatarURL)
                 .setColor(0xde1073);
     }
-    
 
     public static JDA jda;
 
@@ -128,7 +129,8 @@ public class App {
                 .addCommand(new Invite())
                 .addCommand(new Leaderboard(leaderboardWaiter))
                 .addCommand(new Stats())
-                .addCommand(new Transfer());
+                .addCommand(new Transfer())
+                .addCommand(new Shop(workWaiter));
 
         CommandClient client = builder.build();
         
@@ -142,5 +144,7 @@ public class App {
 
         new Database().clear_unused();
         new Database().clear_stocks();
+
+        System.out.println("hiya");
     }
 }
