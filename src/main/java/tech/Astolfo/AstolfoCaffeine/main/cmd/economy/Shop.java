@@ -4,17 +4,16 @@ import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
+import tech.Astolfo.AstolfoCaffeine.main.db.Database;
 import tech.Astolfo.AstolfoCaffeine.main.msg.Logging;
 import tech.Astolfo.AstolfoCaffeine.main.util.minecraft.Block;
 import tech.Astolfo.AstolfoCaffeine.main.util.minecraft.Tool;
 import tech.Astolfo.AstolfoCaffeine.main.util.minecraft.Toolbox;
 
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class Shop extends Command {
 
@@ -33,7 +32,7 @@ public class Shop extends Command {
     private Message lp_HostMsg;
     private Message lp_cmdMsg;
     private Toolbox lp_ownedTools;
-    private AtomicInteger lp_userBal;
+    private Double lp_userBal;
 
     @Override
     protected void execute(CommandEvent e) {
@@ -43,10 +42,12 @@ public class Shop extends Command {
         Toolbox defaultTools = Toolbox.DefaultTools;
 
         // DB magic to get users bal -> e.g. 10
-        lp_userBal = new AtomicInteger(9999);
+        new Database().create_account(u.getIdLong());
+        lp_userBal = new Database().get_account(u.getIdLong()).getDouble("credits");
 
         // DB magic here to get users tools -> e.g. 0 (no tools)
-        lp_ownedTools = Toolbox.fromBits(0);
+        new Database().create_tools(u.getIdLong());
+        lp_ownedTools = Toolbox.fromBits(new Database().get_tools(u.getIdLong()).getInteger("tools"));
 
         String[][] fields = new String[defaultTools.tools.size()][4];
         fields[0] = new String[]{"Stats", "Stone:\nWood:\nDirt:\nCost:", "true"};
@@ -74,21 +75,20 @@ public class Shop extends Command {
                     if (lp_ownedTools.tools.contains(selectedTool)) {
                         lp_cmdMsg.getChannel().sendMessage("Noooo, you already have that tool").queue();
                         mainLoop();
-                    } else if (selectedTool.cost > lp_userBal.get()) {
+                    } else if (selectedTool.cost > lp_userBal) {
                         lp_cmdMsg.getChannel().sendMessage("Oof, is tooooo expensive for u").queue();
                         mainLoop();
                     } else {
                         lp_ownedTools.addTool(selectedTool);
                         lp_cmdMsg.getChannel().sendMessage("Yayyyy, here special for you onlyyyyyy").queue(THIS_VARIABLE_DOESNT_DO_ANYTHING_DO_WE_REALLY_NEED_TO_DEFINE_IT_QUESTION_MARK -> lp_cmdMsg.getChannel().sendMessage(selectedTool.emote.getAsMention()).queue());
-                        lp_userBal.addAndGet(-selectedTool.cost);
+                        lp_userBal -= selectedTool.cost;
                         mainLoop();
                     }
                 },
                 30, TimeUnit.SECONDS,
                 () -> {
                     // Put back bal and tool
-                    lp_ownedTools.asBits();
-                    lp_userBal.get();
+                    System.out.println("Owned: "+lp_ownedTools.asBits()+"\nBal: "+lp_userBal);
                 }
         );
     }
