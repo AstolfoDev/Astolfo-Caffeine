@@ -37,7 +37,6 @@ public class Toolbox {
 
     public static final Toolbox DefaultTools = new Toolbox() {{
         addTool(new Tool(2, 0, 0, "737855791171895308", 1));
-        addTool(new Tool(2, 0, 0, "737855791171895308", 5));  //Pickaxe
         addTool(new Tool(1, 1, 0, "703305007264694394", 10)); //Sword
         addTool(new Tool(1, 1, 0, "703305007264694394", 15)); //Sword
         addTool(new Tool(1, 1, 0, "703305007264694394", 20)); //Sword
