@@ -17,9 +17,6 @@ public class Profile extends Command {
     }
 
 
-    private String baseURL = "https://profile.astolfo.tech/";
-
-
     @Override
     protected void execute(CommandEvent e) {
 
@@ -45,6 +42,7 @@ public class Profile extends Command {
     }
 
     private void send(CommandEvent e, String id) {
-        e.reply(baseURL+"user/"+id);
+        String baseURL = "https://profile.astolfo.tech/";
+        e.reply(baseURL + "user/" + id);
     }
 }
