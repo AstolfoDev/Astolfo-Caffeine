@@ -23,8 +23,8 @@ public class Transfer extends Command  {
     public Transfer() {
         super.name = "transfer";
         super.aliases = new String[]{"t","trans"};
-        super.help = "HELP HELP";
-        super.arguments = "<@user> <item>";
+        super.help = "withdraw capital from company funds and send it to a user";
+        super.arguments = "<@user> <amount>";
         super.category = new Category("business");
     }
 
@@ -71,7 +71,7 @@ public class Transfer extends Command  {
         int bank = company.getInteger("bank");
 
         if (amount > bank) {
-            err_channel.error("OooooOwOh nuuuu! u dont hazzz enough cwedits 4 dat transfer!!!");
+            err_channel.error("OooooOwOh nuuuu! "+company.getString("name")+" dont hazzz enough cwedits 4 dat transfer!!!");
             return;
         }
 
@@ -98,14 +98,3 @@ public class Transfer extends Command  {
     }
 
 }
-
-        /*
-        FindIterable<Document> companies = App.company.find();
-        Document comp = null;
-        for (Document company: companies) {
-            if (company.getLong("owner") == msg.getAuthor().getIdLong()) {
-                comp = company;
-                break;
-            }
-        }
-        */
