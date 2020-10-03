@@ -1,17 +1,14 @@
 package tech.Astolfo.AstolfoCaffeine.main.db;
 
+import com.mongodb.BasicDBObject;
 import org.bson.Document;
 import org.bson.conversions.Bson;
-import org.bson.types.ObjectId;
-
-import static com.mongodb.client.model.Filters.eq;
+import tech.Astolfo.AstolfoCaffeine.App;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import com.mongodb.BasicDBObject;
-
-import tech.Astolfo.AstolfoCaffeine.App;
+import static com.mongodb.client.model.Filters.eq;
 
 public class Database {
     public Document get_account(long id) {
@@ -24,6 +21,13 @@ public class Database {
     public Document get_stocks(long id) {
         Bson filter = eq("userID", id);
         Document info = App.stocks.find(filter).first();
+        assert info != null;
+        return info;
+    }
+
+    public Document get_tools(long id) {
+        Bson filter = eq("userID", id);
+        Document info = App.db.getCollection("tools").find(filter).first();
         assert info != null;
         return info;
     }
@@ -60,6 +64,13 @@ public class Database {
                .append("industry", "none")
                .append("xp", 0);
         App.company.insertOne(doc);
+    }
+
+    public void create_tools(long id) {
+        if (get_tools(id) != null) return;
+        Document doc = new Document("userID", id)
+                .append("tools", 0);
+        App.db.getCollection("tools").insertOne(doc);
     }
 
     public void clear_unused() {
