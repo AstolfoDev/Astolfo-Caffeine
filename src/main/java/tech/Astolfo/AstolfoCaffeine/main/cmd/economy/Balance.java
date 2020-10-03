@@ -2,7 +2,9 @@ package tech.Astolfo.AstolfoCaffeine.main.cmd.economy;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
+import net.dv8tion.jda.api.entities.EmbedType;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
 import org.bson.Document;
 import tech.Astolfo.AstolfoCaffeine.main.db.Database;

@@ -27,16 +27,8 @@ import static tech.Astolfo.AstolfoCaffeine.main.util.minecraft.Block.blockState;
 
 public class Work extends Command {
 
-    ArrayList<Tool> tools = new ArrayList<Tool>() {{
-        add(new Tool(2, 0, 0, "737855791171895308")); //Pickaxe
-        add(new Tool(1, 1, 0, "703305007264694394")); //Sword
-        //TODO: ADD MORE
-    }};
-
-
 
     private EventWaiter waiter;
-
 
 
     public Work(EventWaiter waiter) {
@@ -53,10 +45,10 @@ public class Work extends Command {
         Message msg = e.getMessage();
         MessageChannel channel = msg.getChannel();
 
-        Block.Material mat = new ArrayList<Block.Material>(blockState.keySet()).get(new Random().nextInt(blockState.keySet().size()));
+        Block.Material mat = new ArrayList<Block.Material>().get(new Random().nextInt(blockState.keySet().size()));
 
-        ArrayList<Block> blocks = new ArrayList<>() {{
-            add(new Block(mat, 3, 3, 10, 10)); //????
+        ArrayList<Block> blocks = new ArrayList<Block>() {{
+            add(new Block(Block.Material.STONE, Block.BlockStyle.GOLD_ORE, 3, 3, 10, 10)); //????
             //TODO: ADD MORE
         }};
 
