@@ -40,18 +40,35 @@ public class Work extends Command {
     }
 
     @Override
-    protected void execute(CommandEvent e) throws NumberFormatException {
+    protected void execute(CommandEvent e) {
 
         Message msg = e.getMessage();
         MessageChannel channel = msg.getChannel();
 
-        Block.Material mat = new ArrayList<Block.Material>().get(new Random().nextInt(blockState.keySet().size()));
-
+        //TODO: Move this somewhere else, sould be cahced
         ArrayList<Block> blocks = new ArrayList<Block>() {{
-            add(new Block(Block.Material.STONE, Block.BlockStyle.GOLD_ORE, 3, 3, 10, 10)); //????
+            add(new Block(Block.Material.STONE, Block.BlockStyle.IRON_ORE , 2, 5, 15, 100));
+            add(new Block(Block.Material.STONE, Block.BlockStyle.GOLD_ORE, 2, 10, 15, 50));
+            add(new Block(Block.Material.STONE, Block.BlockStyle.EMERALD_ORE, 2, 20, 15, 20));
+            add(new Block(Block.Material.STONE, Block.BlockStyle.DIAMOND_ORE , 4, 100, 15, 5));
+            add(new Block(Block.Material.STONE, Block.BlockStyle.ASTOLFO, 1, 1000, 5, 1));
             //TODO: ADD MORE
         }};
 
+        Random rndGen = new Random();
+        int sum = 0;
+        for (Block block : blocks) sum += block.rarity;
+        int rndVal = rndGen.nextInt(sum);
+        int cmlPrb = 0;
+        Block selectedBlockTemp = null;
+        for (Block block : blocks) {
+            cmlPrb += block.rarity;
+            if (rndVal <= cmlPrb) {
+                selectedBlockTemp = block;
+                break;
+            }
+        }
+        final Block selectedBlock = selectedBlockTemp;
 
         int cooldown = 3; // TODO: Set to 300
         if (App.cooldown.containsKey(msg.getAuthor().getIdLong())) {
@@ -65,19 +82,17 @@ public class Work extends Command {
         }
         App.cooldown.put(msg.getAuthor().getIdLong(), System.currentTimeMillis());
 
-
-        Toolbox toolbox = new Toolbox();
-        //TODO: Read from mongodb the tools and add to user
-        Random rnd = new Random();
-        Block block = blocks.get(rnd.nextInt(blocks.size()));
-        channel.sendMessage("**MINEEEEEEEEEEE**").queue(
+        //TODO: Read from mongodb the tools and add to user e.g. 2
+        Toolbox toolbox = Toolbox.fromBits(3);
+        channel.sendMessage("**MINEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE**").queue(
                 (react_msg) -> channel.sendMessage("Loading...").queue(
-                        (block_msg) -> new MCgame(block, toolbox, block_msg, react_msg, waiter).runThen(
+                        (block_msg) -> new MCgame(selectedBlock, toolbox, block_msg, react_msg, waiter).runThen(
                                 () -> {
-                                    if (block.state == Block.State.BROKEN) {
-                                        react_msg.editMessage("Nice you broke it").queue();
-                                    } else if (block.state == Block.State.EXPIRED) {
-                                        react_msg.editMessage("You are too slow").queue();
+                                    react_msg.delete().queue();
+                                    if (selectedBlock.state == Block.State.BROKEN) {
+                                        react_msg.getChannel().sendMessage("Nice you broke it").queue();
+                                    } else if (selectedBlock.state == Block.State.EXPIRED) {
+                                        react_msg.getChannel().sendMessage("You are too slow").queue();
                                     }
                                 }
                         )

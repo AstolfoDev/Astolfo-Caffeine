@@ -33,6 +33,7 @@ public class Block {
     public final BlockStyle style;
     public State state;
     private int hits;
+    public int rarity;
     public int stage;
     private final int num_stages;
     private final int hits_per_stage;
@@ -58,7 +59,8 @@ public class Block {
                             "738015063960584222", // 7
                             "738015063025123360", // 8
                             "738015061922021437", // 9
-                            "738015062274342939"  // 10
+                            "738015062274342939",  // 10
+                            "761598965253799946"
                     )
             );
 
@@ -74,7 +76,8 @@ public class Block {
                             "761581883111899166", // 7
                             "761581883196440596", // 8
                             "761581882756038707", // 9
-                            "761581883301167134"  // 10
+                            "761581883301167134",  // 10
+                            "761598965253799946"
                     )
             );
 
@@ -90,7 +93,8 @@ public class Block {
                             "761585002290217041", // 7
                             "761585002361651250", // 8
                             "761585002362175488", // 9
-                            "761585002374496266"  // 10
+                            "761585002374496266",  // 10
+                            "761598965253799946"
                     )
             );
 
@@ -106,7 +110,8 @@ public class Block {
                             "761586946244870154", // 7
                             "761586946186543165", // 8
                             "761586945956118600", // 9
-                            "761586946308308992" // 10
+                            "761586946308308992", // 10
+                            "761598965253799946"
                     )
             );
 
@@ -131,10 +136,11 @@ public class Block {
         }
     };
 
-    public Block(Material _material, BlockStyle _style, int _num_stages, int _hits_per_stage, int _value, int _max_time) {
+    public Block(Material _material, BlockStyle _style, int _hits_per_stage, int _value, int _max_time, int _rarity) {
+        rarity = _rarity;
         style = _style;
         mat = _material;
-        num_stages = _num_stages;
+        num_stages = blockState.get(style).size() - 1;
         hits_per_stage = _hits_per_stage;
         value = _value;
         max_time = _max_time;
