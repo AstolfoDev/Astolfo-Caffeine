@@ -41,9 +41,8 @@ public class Block {
     private long start_time;
     public static String emote_server = "512594569263579147";
   
-    public static HashMap<Material, List<String>> blockState = new HashMap<>() {
+    public static HashMap<BlockStyle, List<String>> blockState = new HashMap<BlockStyle, List<String>>() {
         {
-
 
             // Ores
 
