@@ -83,7 +83,9 @@ public class Work extends Command {
         App.cooldown.put(msg.getAuthor().getIdLong(), System.currentTimeMillis());
 
         //TODO: Read from mongodb the tools and add to user e.g. 2
-        Toolbox toolbox = Toolbox.fromBits(3);
+        Bson filter = new BasicDBObject("userID", msg.getAuthor().getIdLong());
+        int toolBits = App.db.getCollection("tools").find(filter).first().getInteger("tools");
+        Toolbox toolbox = Toolbox.fromBits(toolBits);
         channel.sendMessage("**MINEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE**").queue(
                 (react_msg) -> channel.sendMessage("Loading...").queue(
                         (block_msg) -> new MCgame(selectedBlock, toolbox, block_msg, react_msg, waiter).runThen(

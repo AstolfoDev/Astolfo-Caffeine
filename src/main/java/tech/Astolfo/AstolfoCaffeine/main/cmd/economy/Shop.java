@@ -7,6 +7,8 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
+import org.bson.conversions.Bson;
+import tech.Astolfo.AstolfoCaffeine.App;
 import tech.Astolfo.AstolfoCaffeine.main.db.Database;
 import tech.Astolfo.AstolfoCaffeine.main.msg.Logging;
 import tech.Astolfo.AstolfoCaffeine.main.util.minecraft.Block;
@@ -14,6 +16,9 @@ import tech.Astolfo.AstolfoCaffeine.main.util.minecraft.Tool;
 import tech.Astolfo.AstolfoCaffeine.main.util.minecraft.Toolbox;
 
 import java.util.concurrent.TimeUnit;
+
+import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Updates.set;
 
 public class Shop extends Command {
 
@@ -49,12 +54,12 @@ public class Shop extends Command {
         new Database().create_tools(u.getIdLong());
         lp_ownedTools = Toolbox.fromBits(new Database().get_tools(u.getIdLong()).getInteger("tools"));
 
-        String[][] fields = new String[defaultTools.tools.size()][4];
+        String[][] fields = new String[defaultTools.tools.size() + 1][4];
         fields[0] = new String[]{"Stats", "Stone:\nWood:\nDirt:\nCost:", "true"};
-        for (int i = 1; i < fields.length; i++)
+        for (int i = 0; i < fields.length - 1; i++)
         {
             Tool tool = defaultTools.tools.get(i);
-            fields[i] = new String[]{tool.emote.getAsMention(), String.format("**%s**\n**%s**\n**%s**\n**%s**", tool.specs.get(Block.Material.STONE), tool.specs.get(Block.Material.WOOD), tool.specs.get(Block.Material.DIRT), tool.cost), "true"};
+            fields[i + 1] = new String[]{tool.emote.getAsMention(), String.format("**%s**\n**%s**\n**%s**\n**%s**", tool.specs.get(Block.Material.STONE), tool.specs.get(Block.Material.WOOD), tool.specs.get(Block.Material.DIRT), tool.cost), "true"};
         }
         MessageEmbed embed = new Logging().send(null, "SHOP HERE", u.getAsTag(), "https://i.imgur.com/emm8mqS.gif", fields);
         lp_cmdMsg.getChannel().sendMessage(embed).queue(message -> {
@@ -85,10 +90,20 @@ public class Shop extends Command {
                         mainLoop();
                     }
                 },
-                30, TimeUnit.SECONDS,
+                10, TimeUnit.SECONDS,
                 () -> {
+                    lp_HostMsg.editMessage("Time's up").queue();
+
                     // Put back bal and tool
                     System.out.println("Owned: "+lp_ownedTools.asBits()+"\nBal: "+lp_userBal);
+
+                    Bson user_filter = eq("userID", lp_cmdMsg.getAuthor().getIdLong());
+
+                    Bson balUpdate = set("credits", lp_userBal);
+                    App.col.updateOne(user_filter, balUpdate);
+
+                    Bson toolsUpdate = set("tools", lp_ownedTools.asBits());
+                    App.db.getCollection("tools").updateOne(user_filter, toolsUpdate);
                 }
         );
     }

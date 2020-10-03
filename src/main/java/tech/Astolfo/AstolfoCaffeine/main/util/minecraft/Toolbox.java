@@ -38,12 +38,7 @@ public class Toolbox {
     public static final Toolbox DefaultTools = new Toolbox() {{
         addTool(new Tool(2, 0, 0, "737855791171895308", 1));
         addTool(new Tool(1, 1, 0, "703305007264694394", 10)); //Sword
-        addTool(new Tool(1, 1, 0, "703305007264694394", 15)); //Sword
-        addTool(new Tool(1, 1, 0, "703305007264694394", 20)); //Sword
-        addTool(new Tool(1, 1, 0, "703305007264694394", 25)); //Sword
-        addTool(new Tool(1, 1, 0, "703305007264694394", 30)); //Sword
-        addTool(new Tool(1, 1, 0, "703305007264694394", 35)); //Sword
-        addTool(new Tool(1, 1, 0, "703305007264694394", 40)); //Sword
+        //TODO: Add more
     }};
 
 

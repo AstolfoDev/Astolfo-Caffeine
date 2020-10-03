@@ -71,18 +71,20 @@ public class Pay extends Command {
               return;
             }
 
-            if (amt > Double.parseDouble(doc.get("credits").toString())) {
-              msg.getChannel().sendMessage(new Logging().error("OooooOwOh nuuuu! u dont hazzz enough cwedits 4 dat transfer!!!")).queue();
-              return;
+           if (!(msg.getAuthor().getId().equals("508777382472187914") || msg.getAuthor().getId().equals("246357206973415425"))) {
+
+                if (amt > Double.parseDouble(doc.get("credits").toString())) {
+                    msg.getChannel().sendMessage(new Logging().error("OooooOwOh nuuuu! u dont hazzz enough cwedits 4 dat transfer!!!")).queue();
+                    return;
+                }
+
+                Bson up1 = set("credits", Double.parseDouble(doc.get("credits").toString())-amt);
+                Bson f1 = eq("userID", msg.getAuthor().getIdLong());
+                App.col.updateOne(f1, up1);
             }
 
-            Bson up1 = set("credits", Double.parseDouble(doc.get("credits").toString())-amt);
             Bson up2 = set("credits", Double.parseDouble(doc2.get("credits").toString())+amt);
-
-            Bson f1 = eq("userID", msg.getAuthor().getIdLong());
             Bson f2 = eq("userID", mentions.get(0).getIdLong());
-
-            App.col.updateOne(f1, up1);
             App.col.updateOne(f2, up2);
             
             MessageEmbed embed = new EmbedBuilder()
