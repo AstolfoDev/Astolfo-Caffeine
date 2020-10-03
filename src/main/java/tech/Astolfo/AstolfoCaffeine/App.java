@@ -129,7 +129,8 @@ public class App {
                 .addCommand(new Invite())
                 .addCommand(new Leaderboard(leaderboardWaiter))
                 .addCommand(new Stats())
-                .addCommand(new Transfer());
+                .addCommand(new Transfer())
+                .addCommand(new Shop(workWaiter));;
 
         CommandClient client = builder.build();
         
