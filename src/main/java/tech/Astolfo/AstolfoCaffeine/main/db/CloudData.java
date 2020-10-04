@@ -9,7 +9,7 @@ import static com.mongodb.client.model.Filters.eq;
 public class CloudData {
 
     // Method for retrieving standard data from the MongoDB database
-    private Document get_data(long id, String collection) {
+    public Document get_data(long id, String collection) {
 
         // Create query to find data in table
         Bson filter = eq("userID", id);
