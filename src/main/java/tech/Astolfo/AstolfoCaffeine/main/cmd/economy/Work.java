@@ -10,25 +10,24 @@ import net.dv8tion.jda.api.entities.MessageChannel;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import tech.Astolfo.AstolfoCaffeine.App;
+import tech.Astolfo.AstolfoCaffeine.main.db.CloudData;
 import tech.Astolfo.AstolfoCaffeine.main.db.Database;
 import tech.Astolfo.AstolfoCaffeine.main.util.minecraft.Block;
 import tech.Astolfo.AstolfoCaffeine.main.util.minecraft.MCgame;
-import tech.Astolfo.AstolfoCaffeine.main.util.minecraft.Tool;
 import tech.Astolfo.AstolfoCaffeine.main.util.minecraft.Toolbox;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Objects;
 import java.util.Random;
 
 import static com.mongodb.client.model.Filters.eq;
 import static com.mongodb.client.model.Updates.set;
 
-import static tech.Astolfo.AstolfoCaffeine.main.util.minecraft.Block.blockState;
-
 public class Work extends Command {
 
 
-    private EventWaiter waiter;
+    private final EventWaiter waiter;
 
 
     public Work(EventWaiter waiter) {
@@ -46,11 +45,11 @@ public class Work extends Command {
         MessageChannel channel = msg.getChannel();
 
         //TODO: Move this somewhere else, sould be cahced
-        ArrayList<Block> blocks = new ArrayList<Block>() {{
-            add(new Block(Block.Material.STONE, Block.BlockStyle.IRON_ORE , 2, 5, 15, 100));
+        ArrayList<Block> blocks = new ArrayList<>() {{
+            add(new Block(Block.Material.STONE, Block.BlockStyle.IRON_ORE, 2, 5, 15, 100));
             add(new Block(Block.Material.STONE, Block.BlockStyle.GOLD_ORE, 2, 10, 15, 50));
             add(new Block(Block.Material.STONE, Block.BlockStyle.EMERALD_ORE, 2, 20, 15, 20));
-            add(new Block(Block.Material.STONE, Block.BlockStyle.DIAMOND_ORE , 4, 100, 15, 5));
+            add(new Block(Block.Material.STONE, Block.BlockStyle.DIAMOND_ORE, 4, 100, 15, 5));
             add(new Block(Block.Material.STONE, Block.BlockStyle.ASTOLFO, 1, 1000, 5, 1));
             //TODO: ADD MORE
         }};
@@ -84,7 +83,7 @@ public class Work extends Command {
 
         //TODO: Read from mongodb the tools and add to user e.g. 2
         Bson filter = new BasicDBObject("userID", msg.getAuthor().getIdLong());
-        int toolBits = App.db.getCollection("tools").find(filter).first().getInteger("tools");
+        int toolBits = Objects.requireNonNull(new CloudData().get_data(msg.getAuthor().getIdLong(), "tools").getInteger("tools"));
         Toolbox toolbox = Toolbox.fromBits(toolBits);
         channel.sendMessage("**MINEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE**").queue(
                 (react_msg) -> channel.sendMessage("Loading...").queue(
@@ -93,6 +92,7 @@ public class Work extends Command {
                                     react_msg.delete().queue();
                                     if (selectedBlock.state == Block.State.BROKEN) {
                                         react_msg.getChannel().sendMessage("Nice you broke it").queue();
+                                        success(msg);
                                     } else if (selectedBlock.state == Block.State.EXPIRED) {
                                         react_msg.getChannel().sendMessage("You are too slow").queue();
                                     }
