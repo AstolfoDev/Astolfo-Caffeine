@@ -45,7 +45,7 @@ public class Work extends Command {
         MessageChannel channel = msg.getChannel();
 
         //TODO: Move this somewhere else, sould be cahced
-        ArrayList<Block> blocks = new ArrayList<>() {{
+        ArrayList<Block> blocks = new ArrayList<Block>() {{
             add(new Block(Block.Material.STONE, Block.BlockStyle.IRON_ORE, 2, 5, 15, 100));
             add(new Block(Block.Material.STONE, Block.BlockStyle.GOLD_ORE, 2, 10, 15, 50));
             add(new Block(Block.Material.STONE, Block.BlockStyle.EMERALD_ORE, 2, 20, 15, 20));
@@ -82,7 +82,6 @@ public class Work extends Command {
         App.cooldown.put(msg.getAuthor().getIdLong(), System.currentTimeMillis());
 
         //TODO: Read from mongodb the tools and add to user e.g. 2
-        Bson filter = new BasicDBObject("userID", msg.getAuthor().getIdLong());
         int toolBits = Objects.requireNonNull(new CloudData().get_data(msg.getAuthor().getIdLong(), "tools").getInteger("tools"));
         Toolbox toolbox = Toolbox.fromBits(toolBits);
         channel.sendMessage("**MINEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE**").queue(
