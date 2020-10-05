@@ -1,6 +1,5 @@
 package tech.Astolfo.AstolfoCaffeine.main.db;
 
-import com.mongodb.client.MongoCollection;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import tech.Astolfo.AstolfoCaffeine.App;
@@ -26,44 +25,61 @@ public class CloudData {
         return query_data;
     }
 
+    // Method for overwriting data in a selected collection in the MongoDB database
+    public Long update_data(Bson query, Bson update, Collection collection) {
+
+        // Update the document and return the number of documents that were successfully updated
+        return App.db.getCollection(String.valueOf(collection)).updateOne(query, update).getModifiedCount();
+
+    }
+
+    // Method for setting new data in a selected collection in the MongoDB database
+    public void set_data(Document data, Collection collection) {
+
+        // Checks if the document for that user already exists and updates it instead of inserting a new document
+        if (update_data(eq("userID", data.getLong("userID")), data, collection) >= 1) return;
+
+        // Inserts a new document if there is not already one present for the user
+        App.db.getCollection(String.valueOf(collection)).insertOne(data);
+
+    }
+
     // Method for creating and inserting standard documents into the MongoDB database
     private Document create_template(long id, Collection selected_collection) {
 
-        Document to_insert = null;
+        // Check and get the value of the collection variable
+        Document to_insert = switch (selected_collection) {
 
-        // Check the value of the collection variable
-        switch (selected_collection) {
+            // Create a default wallet document
+            case wallets -> new Document("userID", id)
+                    .append("credits", 0D)
+                    .append("trapcoins", 0D)
+                    .append("tokens", 0D);
 
-            case wallets:
-                // Create a default wallet document
-                to_insert = new Document("userID", id)
-                        .append("credits", 0D)
-                        .append("trapcoins", 0D)
-                        .append("tokens", 0D);
-                break;
+            // Create a default stocks document
+            case stocks -> new Document("userID", id)
+                    .append("astf", 0)
+                    .append("gudk", 0)
+                    .append("weeb", 0)
+                    .append("wolf", 0)
+                    .append("emo", 0)
+                    .append("vimx", 0);
 
-            case stocks:
-                // Create a default stocks document
-                to_insert = new Document("userID", id)
-                        .append("astf", 0)
-                        .append("gudk", 0)
-                        .append("weeb", 0)
-                        .append("wolf", 0)
-                        .append("emo", 0)
-                        .append("vimx", 0);
-                break;
+            // Create a default tools document
+            case tools -> new Document("userID", id)
+                    .append("tools", 0);
 
-            case tools:
-                // Create a default tools document
-                to_insert = new Document("userID", id)
-                        .append("tools", 0);
-                break;
+            default -> null;
 
-        }
+        };
 
+        // Checks if the "to_insert" variable is null and throws an error if it is
         if (to_insert == null) throw new RuntimeException();
-        MongoCollection<Document> collection = App.db.getCollection(String.valueOf(selected_collection));
-        collection.insertOne(to_insert);
+
+        // Inserts the new document into the collection specified
+        set_data(to_insert, selected_collection);
+
+        // The method returns the inserted document
         return to_insert;
     }
 
