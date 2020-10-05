@@ -40,7 +40,6 @@ public class Block {
     public int value;
     private final int max_time;
     private long start_time;
-    public static String emote_server = "512594569263579147";
   
     public static HashMap<BlockStyle, List<String>> blockState = new HashMap<BlockStyle, List<String>>() {
         {
@@ -178,8 +177,7 @@ public class Block {
     }
 
     public String render() {
-        Emote emote = Objects.requireNonNull(jda.getGuildById(emote_server)).getEmoteById(blockState.get(style).get(stage));
-        assert emote != null;
+        Emote emote = Objects.requireNonNull(jda.getEmoteById(blockState.get(style).get(stage)));
         return emote.getAsMention();
     }
 
