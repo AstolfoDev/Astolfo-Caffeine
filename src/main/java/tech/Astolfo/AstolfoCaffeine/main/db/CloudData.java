@@ -14,8 +14,11 @@ public class CloudData {
         // Create query to find data in table
         Bson filter = eq("userID", id);
 
+        // Convert the enum value into a string
+        String col_query = String.valueOf(collection);
+
         // Use query to retrieve first document matching the query conditions
-        Document query_data = App.db.getCollection(String.valueOf(collection)).find(filter).first();
+        Document query_data = App.db.getCollection(col_query).find(filter).first();
 
         // Check if the query returns no results
         // Creates and insert a new default document into the collection then returns the value of the document
@@ -28,8 +31,11 @@ public class CloudData {
     // Method for overwriting data in a selected collection in the MongoDB database
     public Long update_data(Bson query, Bson update, Collection collection) {
 
+        // Convert the enum value into a string
+        String col_query = String.valueOf(collection);
+
         // Update the document and return the number of documents that were successfully updated
-        return App.db.getCollection(String.valueOf(collection)).updateOne(query, update).getModifiedCount();
+        return App.db.getCollection(col_query).updateOne(query, update).getModifiedCount();
 
     }
 
@@ -39,8 +45,11 @@ public class CloudData {
         // Checks if the document for that user already exists and updates it instead of inserting a new document
         if (update_data(eq("userID", data.getLong("userID")), data, collection) >= 1) return;
 
+        // Convert the enum value into a string
+        String col_query = String.valueOf(collection);
+
         // Inserts a new document if there is not already one present for the user
-        App.db.getCollection(String.valueOf(collection)).insertOne(data);
+        App.db.getCollection(col_query).insertOne(data);
 
     }
 
@@ -68,8 +77,6 @@ public class CloudData {
             // Create a default tools document
             case tools -> new Document("userID", id)
                     .append("tools", 0);
-
-            default -> null;
 
         };
 
