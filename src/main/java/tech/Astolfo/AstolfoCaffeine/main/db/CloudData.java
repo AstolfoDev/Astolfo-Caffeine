@@ -78,10 +78,8 @@ public class CloudData {
             case tools -> new Document("userID", id)
                     .append("tools", 0);
 
+            default -> throw new RuntimeException();
         };
-
-        // Checks if the "to_insert" variable is null and throws an error if it is
-        if (to_insert == null) throw new RuntimeException();
 
         // Inserts the new document into the collection specified
         set_data(to_insert, selected_collection);
