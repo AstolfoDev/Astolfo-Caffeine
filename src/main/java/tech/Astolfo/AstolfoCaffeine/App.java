@@ -28,7 +28,6 @@ import tech.Astolfo.AstolfoCaffeine.main.cmd.gambling.Coinflip;
 import tech.Astolfo.AstolfoCaffeine.main.cmd.info.*;
 import tech.Astolfo.AstolfoCaffeine.main.db.Database;
 import tech.Astolfo.AstolfoCaffeine.main.event.Listener;
-import tech.Astolfo.AstolfoCaffeine.main.util.minecraft.Toolbox;
 
 import javax.security.auth.login.LoginException;
 import java.math.BigDecimal;
@@ -59,6 +58,7 @@ public class App {
     
     public static String avatarURL;
 
+    @Deprecated
     public static EmbedBuilder embed() {
         return new EmbedBuilder()
                 .setFooter(System.getenv("VERSION_ID"), App.avatarURL)
