@@ -15,26 +15,28 @@ public class CloudData {
         // Create query to find data in table
         Bson filter = eq("userID", id);
 
+        String col_query = String.valueOf(collection);
+
         // Use query to retrieve first document matching the query conditions
-        Document query_data = App.db.getCollection(String.valueOf(collection)).find(filter).first();
+        Document query_data = App.db.getCollection(col_query).find(filter).first();
 
         // Check if the query returns no results
         // Creates and insert a new default document into the collection then returns the value of the document
-        if (query_data == null) query_data = create_template(id, collection);
+        if (query_data == null) query_data = create_template(id, col_query);
 
         // The method returns the value of the document
         return query_data;
     }
 
     // Method for creating and inserting standard documents into the MongoDB database
-    private Document create_template(long id, Collection selected_collection) {
+    private Document create_template(long id, String selected_collection) {
 
         Document to_insert = null;
 
         // Check the value of the collection variable
         switch (selected_collection) {
 
-            case wallets:
+            case "wallets":
                 // Create a default wallet document
                 to_insert = new Document("userID", id)
                         .append("credits", 0D)
@@ -42,7 +44,7 @@ public class CloudData {
                         .append("tokens", 0D);
                 break;
 
-            case stocks:
+            case "stocks":
                 // Create a default stocks document
                 to_insert = new Document("userID", id)
                         .append("astf", 0)
@@ -53,7 +55,7 @@ public class CloudData {
                         .append("vimx", 0);
                 break;
 
-            case tools:
+            case "tools":
                 // Create a default tools document
                 to_insert = new Document("userID", id)
                         .append("tools", 0);
@@ -62,7 +64,7 @@ public class CloudData {
         }
 
         if (to_insert == null) throw new RuntimeException();
-        MongoCollection<Document> collection = App.db.getCollection(String.valueOf(selected_collection));
+        MongoCollection<Document> collection = App.db.getCollection(selected_collection);
         collection.insertOne(to_insert);
         return to_insert;
     }

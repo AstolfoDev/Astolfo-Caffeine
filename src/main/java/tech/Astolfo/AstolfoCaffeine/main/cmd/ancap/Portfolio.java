@@ -23,6 +23,26 @@ public class Portfolio extends Command {
         super.arguments = "<@user>";
     }
 
+    // Map containing all the information for each tradable stock
+    private final Map<Ticker, String[]> securities = new HashMap<Ticker, String[]>() {{
+        put(Ticker.astf, new String[]{"astf", "Team Astolfo **(ASTF)**"});
+        put(Ticker.gudk, new String[]{"gudk", "Gudako, Corp. **(GUDK)**"});
+        put(Ticker.vimx, new String[]{"vimx", "KAY&VIM Index **(^VIM)**"});
+        put(Ticker.weeb, new String[]{"weeb", "Ishtar Motors **(WEEB)**"});
+        put(Ticker.wolf, new String[]{"wolf", "Meliodaf, Inc. **(WOLF)**"});
+        put(Ticker.emo, new String[]{"emo", "Emortal, Inc. **(EMO)**"});
+    }};
+
+    // Enum containing values for each tradable stock's ticker (identifier)
+    enum Ticker {
+        astf,
+        gudk,
+        vimx,
+        weeb,
+        wolf,
+        emo
+    }
+
     @Override
     protected void execute (CommandEvent e) {
         // Get Message object from CommandEvent and intiialise arguments as a string array
@@ -78,27 +98,5 @@ public class Portfolio extends Command {
             msg.getChannel().sendMessage(new Logging().error("OooooOoh no! u gave me and invalid numbwer ;(\n*(Hint: make sure it's a whole number!)*")).queue();
         }
 
-    }
-
-
-    // Map containing all the information for each tradable stock
-    private final Map<Ticker, String[]> securities = new HashMap() {{
-        put(Ticker.astf, new String[]{"astf", "Team Astolfo **(ASTF)**"});
-        put(Ticker.gudk, new String[]{"gudk", "Gudako, Corp. **(GUDK)**"});
-        put(Ticker.vimx, new String[]{"vimx", "KAY&VIM Index **(^VIM)**"});
-        put(Ticker.weeb, new String[]{"weeb", "Ishtar Motors **(WEEB)**"});
-        put(Ticker.wolf, new String[]{"wolf", "Meliodaf, Inc. **(WOLF)**"});
-        put(Ticker.emo, new String[]{"emo", "Emortal, Inc. **(EMO)**"});
-    }};
-
-
-    // Enum containing values for each tradable stock's ticker (identifier)
-    enum Ticker {
-        astf,
-        gudk,
-        vimx,
-        weeb,
-        wolf,
-        emo
     }
 }
