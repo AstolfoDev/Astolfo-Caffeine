@@ -82,7 +82,7 @@ public class Work extends Command {
         App.cooldown.put(msg.getAuthor().getIdLong(), System.currentTimeMillis());
 
         //TODO: Read from mongodb the tools and add to user e.g. 2
-        int toolBits = Objects.requireNonNull(new CloudData().get_data(msg.getAuthor().getIdLong(), "tools").getInteger("tools"));
+        int toolBits = Objects.requireNonNull(new CloudData().get_data(msg.getAuthor().getIdLong(), CloudData.Collection.tools).getInteger("tools"));
         Toolbox toolbox = Toolbox.fromBits(toolBits);
         channel.sendMessage("**MINEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE**").queue(
                 (react_msg) -> channel.sendMessage("Loading...").queue(
@@ -131,7 +131,7 @@ public class Work extends Command {
         int pay = rand-tax;
 
         if (extra != 0) {
-          pay = Math.round(rand + extra);
+            pay = Math.round(rand + extra);
         }
 
         int user_cut = (int) (pay * cut);
@@ -149,8 +149,8 @@ public class Work extends Command {
 
 
         EmbedBuilder eb = App.embed()
-            .setAuthor("Work Complete!", "https://astolfo.tech", msg.getAuthor().getAvatarUrl())
-            .setDescription("You earned "+user_cut+" <:credit:738537190652510299> from working!\nYou now have **"+(doc.getDouble("credits")+user_cut)+"** <:credit:738537190652510299>");
+                .setAuthor("Work Complete!", "https://astolfo.tech", msg.getAuthor().getAvatarUrl())
+                .setDescription("You earned " + user_cut + " <:credit:738537190652510299> from working!\nYou now have **" + (doc.getDouble("credits") + user_cut) + "** <:credit:738537190652510299>");
 
 
         if (tax > 0) {
@@ -158,7 +158,7 @@ public class Work extends Command {
         }
 
         if (comp != null) {
-          eb.appendDescription("\nCompany Bonus: `"+extra+"`\nCompany Cut: `"+cut+"`");
+            eb.appendDescription("\nCompany Bonus: `" + extra + "`\nCompany Cut: `" + cut + "`");
         }
 
 
