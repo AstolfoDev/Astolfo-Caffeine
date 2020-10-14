@@ -8,7 +8,13 @@ import static com.mongodb.client.model.Filters.eq;
 
 public class CloudData {
 
-    // Method for retrieving standard data from the MongoDB database
+    /**
+     * Method for retrieving standard data from the MongoDB database
+     *
+     * @param id         The ID of the user who's data is being retrieved from the collection.
+     * @param collection The name of the collection where the data required is being stored.
+     * @return The method returns the value of the document
+     */
     public Document get_data(long id, Collection collection) {
 
         // Create query to find data in table
@@ -28,18 +34,30 @@ public class CloudData {
         return query_data;
     }
 
-    // Method for overwriting data in a selected collection in the MongoDB database
+    /**
+     * Method for overwriting data in a selected collection in the MongoDB database
+     *
+     * @param query      The query being used to filter through data in the collection
+     * @param update     The update query to specify how the data should be modified
+     * @param collection The name of the collection being modified
+     * @return The number of documents modified in the collection
+     */
     public Long update_data(Bson query, Bson update, Collection collection) {
 
         // Convert the enum value into a string
         String col_query = String.valueOf(collection);
 
         // Update the document and return the number of documents that were successfully updated
-        return App.db.getCollection(col_query).updateOne(query, update).getModifiedCount();
+        return App.db.getCollection(col_query).updateMany(query, update).getModifiedCount();
 
     }
 
-    // Method for setting new data in a selected collection in the MongoDB database
+    /**
+     * Method for setting new data in a selected collection in the MongoDB database
+     *
+     * @param data       The document that is being inserted into the collection
+     * @param collection The name of the collection where the document is being inserted into
+     */
     public void set_data(Document data, Collection collection) {
 
         // Checks if the document for that user already exists and updates it instead of inserting a new document
@@ -53,7 +71,13 @@ public class CloudData {
 
     }
 
-    // Method for creating and inserting standard documents into the MongoDB database
+    /**
+     * Method for creating and inserting standard documents into the MongoDB database
+     *
+     * @param id                  The ID of the user who's having their default data set for them
+     * @param selected_collection The collection where the default data is being set
+     * @return The document that was inserted into the selected collection
+     */
     private Document create_template(long id, Collection selected_collection) {
 
         // Check and get the value of the collection variable
