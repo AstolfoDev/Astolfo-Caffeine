@@ -26,7 +26,7 @@ public class Shop extends Command {
 
     public Shop(EventWaiter waiter) {
         super.name = "shop";
-        super.aliases = new String[]{"shp"};
+        super.aliases = new String[]{"shp", "upgrade"};
         super.help = "buy stuff";
         super.arguments = "";
         super.category = new Category("economy");
@@ -90,12 +90,12 @@ public class Shop extends Command {
                         mainLoop();
                     }
                 },
-                10, TimeUnit.SECONDS,
+                60, TimeUnit.SECONDS,
                 () -> {
-                    lp_HostMsg.editMessage("Time's up").queue();
+                    lp_HostMsg.editMessage("Shop expired!").queue();
 
                     // Put back bal and tool
-                    System.out.println("Owned: "+lp_ownedTools.asBits()+"\nBal: "+lp_userBal);
+                    System.out.println("Owned: " + lp_ownedTools.asBits() + "\nBal: " + lp_userBal);
 
                     Bson user_filter = eq("userID", lp_cmdMsg.getAuthor().getIdLong());
 
@@ -109,4 +109,3 @@ public class Shop extends Command {
     }
 
 }
-

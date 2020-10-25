@@ -11,10 +11,10 @@ public class Toolbox {
         PICK
     }
 
-    public Map tool_id = new HashMap() {{
+    public Map<type, Map<Integer, String>> tool_id = new HashMap<type, Map<Integer, String>>() {{
         put(
                 type.SWORD,
-                new HashMap() {{
+                new HashMap<Integer, String>() {{
                     put(0, "762750435902881875"); // Wood
                     put(1, "762750401807122433"); // Stone
                     put(2, "762748274435162112"); // Iron
@@ -29,7 +29,7 @@ public class Toolbox {
         );
         put(
                 type.PICK,
-                new HashMap() {{
+                new HashMap<Integer, String>() {{
                     put(0, "762750435873390622"); // Wood
                     put(1, "762750401840939018"); // Stone
                     put(2, "762748274246942740"); // Iron
@@ -71,8 +71,13 @@ public class Toolbox {
     }
 
     public static final Toolbox DefaultTools = new Toolbox() {{
+        addTool(new Tool(1, 0, 0, tool_id.get(type.PICK).get(0), 1)); // Wooden Pickaxe
+
+        /*
         addTool(new Tool(2, 0, 0, "737855791171895308", 1));
         addTool(new Tool(1, 1, 0, "703305007264694394", 10)); //Sword
+        */
+
         //TODO: Add more
     }};
 

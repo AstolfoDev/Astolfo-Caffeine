@@ -130,7 +130,5 @@ public class App {
 
         new Database().clear_unused();
         new Database().clear_stocks();
-
-        System.out.println("hiya");
     }
 }
