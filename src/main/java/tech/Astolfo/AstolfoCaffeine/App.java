@@ -82,51 +82,52 @@ public class App {
     public static void main(String[] args) {
         Logger.getLogger("org.mongodb.driver").setLevel(Level.WARNING);
 
-        EventWaiter workWaiter = new EventWaiter();
-        EventWaiter createWaiter = new EventWaiter();
-        EventWaiter infoWaiter = new EventWaiter();
-        EventWaiter helpWaiter = new EventWaiter();
-        EventWaiter setImageWaiter = new EventWaiter();
-        EventWaiter leaderboardWaiter = new EventWaiter();
+        EventWaiter waiter = new EventWaiter();
 
         CommandClientBuilder builder = new CommandClientBuilder()
                 .setPrefix(System.getenv("PREFIX"))
                 .setOwnerId(System.getenv("OWNER"))
                 .setActivity(Activity.streaming("with pokimane", "https://www.twitch.tv/team_astolfo"))
                 .setHelpWord("globglogabgalab")
-                .addCommand(new Balance())
-                .addCommand(new Pay())
-                .addCommand(new Work(workWaiter))
-                .addCommand(new Market())
-                .addCommand(new Buyorder())
-                .addCommand(new Sellorder())
-                .addCommand(new Portfolio())
-                .addCommand(new Create(createWaiter))
-                .addCommand(new Hire())
-                .addCommand(new Kick())
-                .addCommand(new Join())
-                .addCommand(new Info(infoWaiter))
-                .addCommand(new Profile())
-                .addCommand(new SetImage(setImageWaiter))
-                .addCommand(new Leave())
-                .addCommand(new Casino())
-                .addCommand(new Coinflip())
-                .addCommand(new Help(helpWaiter))
-                .addCommand(new Invite())
-                .addCommand(new Leaderboard(leaderboardWaiter))
-                .addCommand(new Stats())
-                .addCommand(new Transfer())
-                .addCommand(new Shop(workWaiter));;
+                .addCommands(
+                        // Ancap
+                        new Market(),
+                        new Buyorder(),
+                        new Sellorder(),
+                        new Portfolio(),
+
+                        // Business
+                        new Create(waiter),
+                        new Hire(),
+                        new Info(waiter),
+                        new Join(),
+                        new Kick(),
+                        new Leave(),
+                        new SetImage(waiter),
+                        new Transfer(),
+
+                        // Economy
+                        new Balance(),
+                        new Pay(),
+                        new Shop(waiter),
+                        new Work(waiter),
+
+                        // Gambling
+                        new Casino(),
+                        new Coinflip(),
+
+                        // Info
+                        new Help(waiter),
+                        new Invite(),
+                        new Leaderboard(waiter),
+                        new Profile(),
+                        new Stats()
+                );
 
         CommandClient client = builder.build();
-        
+
         jda.addEventListener(client);
-        jda.addEventListener(workWaiter);
-        jda.addEventListener(createWaiter);
-        jda.addEventListener(infoWaiter);
-        jda.addEventListener(helpWaiter);
-        jda.addEventListener(setImageWaiter);
-        jda.addEventListener(leaderboardWaiter);
+        jda.addEventListener(waiter);
 
         new Database().clear_unused();
         new Database().clear_stocks();
