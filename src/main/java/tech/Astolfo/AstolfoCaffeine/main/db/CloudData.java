@@ -42,13 +42,13 @@ public class CloudData {
      * @param collection The name of the collection being modified
      * @return The number of documents modified in the collection
      */
-    public Long update_data(Bson query, Bson update, Collection collection) {
+    public Long update_data(Bson query, Document update, Collection collection) {
 
         // Convert the enum value into a string
         String col_query = String.valueOf(collection);
 
         // Update the document and return the number of documents that were successfully updated
-        return App.db.getCollection(col_query).updateMany(query, update).getModifiedCount();
+        return App.db.getCollection(col_query).replaceOne(query, update).getModifiedCount();
 
     }
 
