@@ -42,13 +42,24 @@ public class CloudData {
      * @param collection The name of the collection being modified
      * @return The number of documents modified in the collection
      */
-    public Long update_data(Bson query, Document update, Collection collection) {
+    public Long update_data(Bson query, Object update, Collection collection) {
 
         // Convert the enum value into a string
         String col_query = String.valueOf(collection);
 
-        // Update the document and return the number of documents that were successfully updated
-        return App.db.getCollection(col_query).replaceOne(query, update).getModifiedCount();
+        // Checks what class the object is and runs the appropriate operation based on the class type
+        if (update instanceof Document) {
+            // Replace the document and return the number of documents that were successfully replaced
+            return App.db.getCollection(col_query).replaceOne(query, (Document) update).getModifiedCount();
+
+        } else if (update instanceof Bson) {
+            // Update the document and return the number of documents that were successfully updated
+            return App.db.getCollection(col_query).updateOne(query, (Bson) update).getModifiedCount();
+
+        } else {
+            // Fallback if no required object was given as a parameter for the update statement
+            return 0L;
+        }
 
     }
 
