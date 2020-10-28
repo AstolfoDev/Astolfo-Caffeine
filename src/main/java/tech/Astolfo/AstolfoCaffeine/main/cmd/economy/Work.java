@@ -82,7 +82,7 @@ public class Work extends Command {
         App.cooldown.put(msg.getAuthor().getIdLong(), System.currentTimeMillis());
 
         //TODO: Read from mongodb the tools and add to user e.g. 2
-        int toolBits = Objects.requireNonNull(new CloudData().get_data(msg.getAuthor().getIdLong(), CloudData.Collection.tools).getInteger("tools"));
+        int toolBits = Objects.requireNonNull(new CloudData().get_data(msg.getAuthor().getIdLong(), CloudData.Database.Economy, CloudData.Collection.tools).getInteger("tools"));
         Toolbox toolbox = Toolbox.fromBits(toolBits);
         channel.sendMessage("**MINEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE**").queue(
                 (react_msg) -> channel.sendMessage("Loading...").queue(

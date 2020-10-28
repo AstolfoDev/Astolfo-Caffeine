@@ -66,7 +66,7 @@ public class Portfolio extends Command {
             }
 
             // Retrieves the user's portfolio from the MongoDB "stocks" collection
-            Document portfolio = new CloudData().get_data(id, CloudData.Collection.stocks);
+            Document portfolio = new CloudData().get_data(id, CloudData.Database.Economy, CloudData.Collection.stocks);
 
             // The EmbedBuilder "eb" is initialised with basic information for the title/author
             EmbedBuilder eb = new Logging().embed()
