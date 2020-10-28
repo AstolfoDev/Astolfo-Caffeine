@@ -2,21 +2,20 @@ package tech.Astolfo.AstolfoCaffeine.main.cmd.business;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
-
 import com.mongodb.BasicDBObject;
+import com.mongodb.client.MongoCollection;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import org.bson.Document;
 import org.bson.conversions.Bson;
-
-import tech.Astolfo.AstolfoCaffeine.App;
+import tech.Astolfo.AstolfoCaffeine.main.db.CloudData;
 import tech.Astolfo.AstolfoCaffeine.main.msg.Logging;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static com.mongodb.client.model.Updates.*;
+import static com.mongodb.client.model.Updates.set;
 
 public class Kick extends Command {
 
@@ -30,11 +29,13 @@ public class Kick extends Command {
 
   @Override
   protected void execute(CommandEvent e) {
+    MongoCollection<Document> company = new CloudData().get_collection(CloudData.Database.Economy, CloudData.Collection.company);
+
     Message msg = e.getMessage();
     User author = msg.getAuthor();
 
     BasicDBObject filter1 = new BasicDBObject("members", new BasicDBObject("$in", Collections.singletonList(author.getIdLong())));
-    Document comp = App.company.find(filter1).first();
+    Document comp = company.find(filter1).first();
 
     if (comp == null) {
       e.reply(new Logging().error("**heY!!** ur not even in a company... u canz kick anyone from it..."));
@@ -85,7 +86,7 @@ public class Kick extends Command {
 
     BasicDBObject filter2 = new BasicDBObject("members", new BasicDBObject("$in", Collections.singletonList(target.getIdLong())))
             .append("name", comp.getString("name"));
-    Document comp2 = App.company.find(filter2).first();
+    Document comp2 = company.find(filter2).first();
 
     if (comp2 == null) {
       noAuth(e, "whaaaa-!>/??? " + target.getAsMention() + " aint in ur companaaaaaaaay!!!!!");
@@ -99,18 +100,18 @@ public class Kick extends Command {
     obj.remove(target.getIdLong());
     Bson up = set("members", obj);
 
-    App.company.updateOne(filter1, up);
+    company.updateOne(filter1, up);
     e.reply(
-            App.embed()
+            new Logging().embed()
                     .setAuthor("Employee fired!", "https://astolfo.tech", author.getAvatarUrl())
-                    .setThumbnail(target.getAvatarUrl()).setDescription("i hazzz fired da employee "+target.getAsMention()+" from das Company 4 u!! ;3")
+                    .setThumbnail(target.getAvatarUrl()).setDescription("i hazzz fired da employee " + target.getAsMention() + " from das Company 4 u!! ;3")
                     .build()
     );
 
     target
             .openPrivateChannel()
             .flatMap(ch -> ch.sendMessage(
-                    App.embed()
+                    new Logging().embed()
                             .setThumbnail(comp.getString("logo"))
                             .setAuthor("Lé Pink Slip", "https://astolfo.tech", comp.getString("logo"))
                             .setDescription("hewWWo, u haz been fired from... `"+comp.getString("name")+"`\nby: "+author.getAsMention()+" ("+author.getAsTag()+")"+"\nvewwwy sad ;(")
