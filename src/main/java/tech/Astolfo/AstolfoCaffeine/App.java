@@ -13,6 +13,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import org.bson.Document;
 import tech.Astolfo.AstolfoCaffeine.main.cmd.ancap.Buyorder;
 import tech.Astolfo.AstolfoCaffeine.main.cmd.ancap.Market;
@@ -83,6 +84,7 @@ public class App {
         try {
             jda = JDABuilder
                     .createLight(System.getenv("TOKEN"))
+                    .enableCache(CacheFlag.EMOTE)
                     .setActivity(Activity.watching("pokimane"))
                     .addEventListeners(new Listener())
                     .build();
