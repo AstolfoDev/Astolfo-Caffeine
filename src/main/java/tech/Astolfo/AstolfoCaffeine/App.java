@@ -28,6 +28,7 @@ import tech.Astolfo.AstolfoCaffeine.main.cmd.gambling.Coinflip;
 import tech.Astolfo.AstolfoCaffeine.main.cmd.info.*;
 import tech.Astolfo.AstolfoCaffeine.main.db.Database;
 import tech.Astolfo.AstolfoCaffeine.main.event.Listener;
+import tech.Astolfo.AstolfoCaffeine.main.util.caching.Cache;
 
 import javax.security.auth.login.LoginException;
 import java.math.BigDecimal;
@@ -37,25 +38,36 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class App {
+
+    @Deprecated
     public static ConnectionString conStr = new ConnectionString(System.getenv("CON_URL"));
+    @Deprecated
     public static MongoClientSettings settings = MongoClientSettings.builder()
             .applyConnectionString(conStr)
             .retryWrites(true)
             .build();
+    @Deprecated
     public static MongoClient mongoClient = MongoClients.create(settings);
     public static MongoDatabase db = mongoClient.getDatabase("Economy");
+    @Deprecated
     public static MongoCollection<Document> col = db.getCollection("wallets");
+    @Deprecated
     public static MongoCollection<Document> stocks = db.getCollection("stocks");
+    @Deprecated
     public static MongoCollection<Document> company = db.getCollection("company");
 
+
+    @Deprecated
     public static HashMap<Long, Long> cooldown = new HashMap<>();
 
+    @Deprecated
     public static double round(double value, int places) {
         BigDecimal bd = BigDecimal.valueOf(value);
         bd = bd.setScale(places, RoundingMode.HALF_UP);
         return bd.doubleValue();
     }
-    
+
+    @Deprecated
     public static String avatarURL;
 
     @Deprecated
@@ -69,11 +81,14 @@ public class App {
 
     static {
         try {
-            jda = new JDABuilder()
-                        .setToken(System.getenv("TOKEN"))
-                        .setActivity(Activity.watching("pokimane"))
-                        .addEventListeners(new Listener())
-                        .build();
+            jda = JDABuilder
+                    .createLight(System.getenv("TOKEN"))
+                    .setActivity(Activity.watching("pokimane"))
+                    .addEventListeners(new Listener())
+                    .build();
+
+            Cache.jda = jda;
+
         } catch (LoginException e) {
             e.printStackTrace();
         }
