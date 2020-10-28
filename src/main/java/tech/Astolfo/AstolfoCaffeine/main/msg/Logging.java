@@ -3,7 +3,7 @@ package tech.Astolfo.AstolfoCaffeine.main.msg;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
-import tech.Astolfo.AstolfoCaffeine.App;
+import tech.Astolfo.AstolfoCaffeine.main.util.caching.Cache;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
@@ -11,8 +11,8 @@ import java.util.Arrays;
 public class Logging {
     public MessageEmbed error(String str) {
         return new EmbedBuilder()
-          .setTitle(App.jda.getSelfUser().getName()+" had an uh-oh moment!")
-          .setFooter(System.getenv("VERSION_ID"), App.avatarURL)
+                .setTitle(Cache.jda.getSelfUser().getName() + " had an uh-oh moment!")
+                .setFooter(System.getenv("VERSION_ID"), Cache.avatarURL)
           .setDescription(str)
           .setColor(0xde1073)
           .build();
@@ -20,7 +20,7 @@ public class Logging {
 
     public EmbedBuilder embed() {
         return new EmbedBuilder()
-                .setFooter(System.getenv("VERSION_ID"), App.avatarURL)
+                .setFooter(System.getenv("VERSION_ID"), Cache.avatarURL)
                 .setColor(0xde1073);
     }
 
