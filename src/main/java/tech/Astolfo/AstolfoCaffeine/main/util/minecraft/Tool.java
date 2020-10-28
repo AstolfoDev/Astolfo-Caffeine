@@ -1,9 +1,8 @@
 package tech.Astolfo.AstolfoCaffeine.main.util.minecraft;
 import net.dv8tion.jda.api.entities.Emote;
+import tech.Astolfo.AstolfoCaffeine.main.util.caching.Cache;
 
 import java.util.HashMap;
-
-import static tech.Astolfo.AstolfoCaffeine.App.jda;
 
 public class Tool {
 
@@ -12,7 +11,7 @@ public class Tool {
     public int cost;
 
     public Tool(int stone_dmg, int wood_dmg, int dirt_dmg, String emote_str, int cost) {
-        emote = jda.getEmoteById(emote_str);
+        emote = Cache.jda.getEmoteById(emote_str);
         specs = new HashMap<>();
         specs.put(Block.Material.STONE, stone_dmg);
         specs.put(Block.Material.WOOD, wood_dmg);
