@@ -1,6 +1,8 @@
 package tech.Astolfo.AstolfoCaffeine.main.util.minecraft;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageReaction;
+import org.bson.Document;
+import tech.Astolfo.AstolfoCaffeine.main.db.CloudData;
 
 import java.util.*;
 
@@ -11,35 +13,20 @@ public class Toolbox {
         PICK
     }
 
-    public Map<type, Map<Integer, String>> tool_id = new HashMap<type, Map<Integer, String>>() {{
+    public static Map<type, Map<Integer, Tool>> tool_id = new HashMap<type, Map<Integer, Tool>>() {{
         put(
                 type.SWORD,
-                new HashMap<Integer, String>() {{
-                    put(0, "762750435902881875"); // Wood
-                    put(1, "762750401807122433"); // Stone
-                    put(2, "762748274435162112"); // Iron
-                    put(3, "762751771813609513"); // Iron (Enchanted)
-                    put(4, "762748240599842816"); // Gold
-                    put(5, "762751733419474974"); // Gold (Enchanted)
-                    put(6, "762746914823209010"); // Diamond
-                    put(7, "762750036160413697"); // Diamond (Enchanted)
-                    put(8, "762745406353833995"); // Netherite
-                    put(9, "762745409885175828"); // Netherite (Enchanted)
-                }}
-        );
-        put(
-                type.PICK,
-                new HashMap<Integer, String>() {{
-                    put(0, "762750435873390622"); // Wood
-                    put(1, "762750401840939018"); // Stone
-                    put(2, "762748274246942740"); // Iron
-                    put(3, "762751771244232774"); // Iron (Enchanted)
-                    put(4, "762748240315547689"); // Gold
-                    put(5, "762751733066891314"); // Gold (Enchanted)
-                    put(6, "737855791171895308"); // Diamond
-                    put(7, "762750341376245811"); // Diamond (Enchanted)
-                    put(8, "762745405746053181"); // Netherite
-                    put(9, "762745408966361171"); // Netherite (Enchanted)
+                new HashMap<Integer, Tool>() {{
+                    put(0, new Tool(1, 0, 0, "762750435902881875", Integer.MIN_VALUE)); // Wood
+                    put(1, new Tool(2, 0, 0, "762750401807122433", Integer.MIN_VALUE)); // Stone
+                    put(2, new Tool(3, 0, 1, "762748274435162112", Integer.MIN_VALUE)); // Iron
+                    put(3, new Tool(4, 1, 1, "762751771813609513", Integer.MIN_VALUE)); // Iron (Enchanted)
+                    put(4, new Tool(5, 1, 2, "762748240599842816", Integer.MIN_VALUE)); // Gold
+                    put(5, new Tool(6, 1, 2, "762751733419474974", Integer.MIN_VALUE)); // Gold (Enchanted)
+                    put(6, new Tool(7, 2, 3, "762746914823209010", Integer.MIN_VALUE)); // Diamond
+                    put(7, new Tool(8, 2, 3, "762750036160413697", Integer.MIN_VALUE)); // Diamond (Enchanted)
+                    put(8, new Tool(9, 3, 4, "762745406353833995", Integer.MIN_VALUE)); // Netherite
+                    put(9, new Tool(10, 4, 5, "762745409885175828", Integer.MIN_VALUE)); // Netherite (Enchanted)
                 }}
         );
     }};
@@ -71,39 +58,33 @@ public class Toolbox {
     }
 
     public static final Toolbox DefaultTools = new Toolbox() {{
-        addTool(new Tool(1, 0, 0, tool_id.get(type.PICK).get(0), 1)); // Wooden Pickaxe
-
-        /*
-        addTool(new Tool(2, 0, 0, "737855791171895308", 1));
-        addTool(new Tool(1, 1, 0, "703305007264694394", 10)); //Sword
-        */
-
-        //TODO: Add more
+        addTool(tool_id.get(type.PICK).get(0)); // Wooden Pickaxe
     }};
 
-
-    public static Toolbox fromBits(int bits) {
+    public static Toolbox fromUserID(long id) {
+        Document toolsDoc = new CloudData().get_data(id, CloudData.Database.Economy, CloudData.Collection.tools);
         Toolbox myTools = new Toolbox();
-        for (Tool tool: DefaultTools.tools) {
-            if ((bits & 1) == 1) {
-                myTools.addTool(tool);
-            }
-            bits >>= 1;
-        }
+
+        int pick = toolsDoc.getInteger("pick");
+        myTools.addTool(tool_id.get(type.PICK).get(pick));
+
         return myTools;
     }
 
-    public int asBits() {
-        int bits = 0;
-        List<Tool> revTools = new ArrayList<>(DefaultTools.tools);
-        Collections.reverse(revTools);
-        for (Tool tool: revTools) {
-            bits <<= 1;
-            if (this.tools.contains(tool)) {
-                bits += 1;
-            }
-        }
-        return bits;
-    }
-    
 }
+
+/*put(
+                type.PICK,
+                new HashMap<Integer, Tool>() {{
+                    put(0, "762750435873390622"); // Wood
+                    put(1, "762750401840939018"); // Stone
+                    put(2, "762748274246942740"); // Iron
+                    put(3, "762751771244232774"); // Iron (Enchanted)
+                    put(4, "762748240315547689"); // Gold
+                    put(5, "762751733066891314"); // Gold (Enchanted)
+                    put(6, "737855791171895308"); // Diamond
+                    put(7, "762750341376245811"); // Diamond (Enchanted)
+                    put(8, "762745405746053181"); // Netherite
+                    put(9, "762745408966361171"); // Netherite (Enchanted)
+                }}
+        );*/
