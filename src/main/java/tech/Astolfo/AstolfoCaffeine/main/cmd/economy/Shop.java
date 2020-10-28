@@ -7,8 +7,6 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
-import org.bson.conversions.Bson;
-import tech.Astolfo.AstolfoCaffeine.App;
 import tech.Astolfo.AstolfoCaffeine.main.db.Database;
 import tech.Astolfo.AstolfoCaffeine.main.msg.Logging;
 import tech.Astolfo.AstolfoCaffeine.main.util.minecraft.Block;
@@ -16,9 +14,6 @@ import tech.Astolfo.AstolfoCaffeine.main.util.minecraft.Tool;
 import tech.Astolfo.AstolfoCaffeine.main.util.minecraft.Toolbox;
 
 import java.util.concurrent.TimeUnit;
-
-import static com.mongodb.client.model.Filters.eq;
-import static com.mongodb.client.model.Updates.set;
 
 public class Shop extends Command {
 
@@ -52,7 +47,7 @@ public class Shop extends Command {
 
         // DB magic here to get users tools -> e.g. 0 (no tools)
         new Database().create_tools(u.getIdLong());
-        lp_ownedTools = Toolbox.fromBits(new Database().get_tools(u.getIdLong()).getInteger("tools"));
+        lp_ownedTools = Toolbox.fromUserID(u.getIdLong());
 
         String[][] fields = new String[defaultTools.tools.size() + 1][4];
         fields[0] = new String[]{"Stats", "Stone:\nWood:\nDirt:\nCost:", "true"};
@@ -95,7 +90,11 @@ public class Shop extends Command {
                     lp_HostMsg.editMessage("Shop expired!").queue();
 
                     // Put back bal and tool
-                    System.out.println("Owned: " + lp_ownedTools.asBits() + "\nBal: " + lp_userBal);
+
+
+                    /*TODO: Fix this
+
+                    /System.out.println("Owned: " + lp_ownedTools.asBits() + "\nBal: " + lp_userBal);
 
                     Bson user_filter = eq("userID", lp_cmdMsg.getAuthor().getIdLong());
 
@@ -104,6 +103,8 @@ public class Shop extends Command {
 
                     Bson toolsUpdate = set("tools", lp_ownedTools.asBits());
                     App.db.getCollection("tools").updateOne(user_filter, toolsUpdate);
+
+                     */
                 }
         );
     }

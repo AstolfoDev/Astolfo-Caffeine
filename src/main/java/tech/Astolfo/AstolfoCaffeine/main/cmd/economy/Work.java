@@ -83,7 +83,7 @@ public class Work extends Command {
 
         //TODO: Read from mongodb the tools and add to user e.g. 2
         int toolBits = Objects.requireNonNull(new CloudData().get_data(msg.getAuthor().getIdLong(), CloudData.Database.Economy, CloudData.Collection.tools).getInteger("tools"));
-        Toolbox toolbox = Toolbox.fromBits(toolBits);
+        Toolbox toolbox = Toolbox.DefaultTools;
         channel.sendMessage("**MINEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE**").queue(
                 (react_msg) -> channel.sendMessage("Loading...").queue(
                         (block_msg) -> new MCgame(selectedBlock, toolbox, block_msg, react_msg, waiter).runThen(
