@@ -124,7 +124,10 @@ public class CloudData {
 
             // Create a default tools document
             case tools -> new Document("userID", id)
-                    .append("tools", 0);
+                    .append("pick", 0)
+                    .append("sword", 0)
+                    .append("axe", 0)
+                    .append("shovel", 0);
 
             default -> throw new RuntimeException();
         };
