@@ -1,5 +1,7 @@
 package tech.Astolfo.AstolfoCaffeine.main.db;
 
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import tech.Astolfo.AstolfoCaffeine.App;
@@ -7,6 +9,25 @@ import tech.Astolfo.AstolfoCaffeine.App;
 import static com.mongodb.client.model.Filters.eq;
 
 public class CloudData {
+
+    /**
+     * @param database The name of the database that is being retrieved
+     * @return The method returns the database that has been retrieved
+     */
+    public MongoDatabase get_database(Database database) {
+        // Grab and return the MongoDatabase object using the static mongoClient object
+        return MongoDB.Database.mongoClient.getDatabase(String.valueOf(database));
+    }
+
+    /**
+     * @param database   The name of the database where the data required is being stored
+     * @param collection The name of the collection where the data required is being stored
+     * @return The method returns a MongoCollection of Documents from the collection
+     */
+    public MongoCollection<Document> get_collection(Database database, Collection collection) {
+        // Grab and return the MongoCollection object using the get_database method
+        return get_database(database).getCollection(String.valueOf(collection));
+    }
 
     /**
      * Method for retrieving standard data from the MongoDB database
@@ -121,6 +142,11 @@ public class CloudData {
 
         // The method returns the inserted document
         return to_insert;
+    }
+
+    // An enum storing the different valid database types for the CloudData#get_database() method
+    public enum Database {
+        Economy
     }
 
     // An enum storing the different valid collection types for the CloudData#get_data() method
