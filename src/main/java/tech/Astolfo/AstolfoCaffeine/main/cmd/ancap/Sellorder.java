@@ -2,20 +2,18 @@ package tech.Astolfo.AstolfoCaffeine.main.cmd.ancap;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
-
-import org.bson.Document;
-import org.bson.conversions.Bson;
-
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
-import tech.Astolfo.AstolfoCaffeine.App;
-import tech.Astolfo.AstolfoCaffeine.main.db.Database;
+import org.bson.Document;
+import org.bson.conversions.Bson;
+import tech.Astolfo.AstolfoCaffeine.main.db.CloudData;
 import tech.Astolfo.AstolfoCaffeine.main.msg.Logging;
+import tech.Astolfo.AstolfoCaffeine.main.util.maths.Rounding;
 import tech.Astolfo.AstolfoCaffeine.main.web.webAPI;
 
 import static com.mongodb.client.model.Filters.eq;
-import static com.mongodb.client.model.Updates.*;
+import static com.mongodb.client.model.Updates.set;
 
 public class Sellorder extends Command {
     public Sellorder() {
@@ -31,20 +29,17 @@ public class Sellorder extends Command {
         Message msg = e.getMessage();
         String[] args = e.getArgs().split("\\s+");
         try {
-            new Database().create_account(msg.getAuthor().getIdLong());
-            Document doc = new Database().get_account(msg.getAuthor().getIdLong());
-
-            new Database().create_stocks(msg.getAuthor().getIdLong());
-            Document doc2 = new Database().get_stocks(msg.getAuthor().getIdLong());
+            Document doc = new CloudData().get_data(e.getAuthor().getIdLong(), CloudData.Database.Economy, CloudData.Collection.wallets);
+            Document doc2 = new CloudData().get_data(e.getAuthor().getIdLong(), CloudData.Database.Economy, CloudData.Collection.stocks);
 
             Bson filter = eq("userID", msg.getAuthor().getIdLong());
             String cr = "<:credit:738537190652510299>";
 
             if (args.length < 1 || args[0].equals("")) {
-                msg.getChannel().sendMessage(new Logging().error("nuuuuu! u fOwOgot to write which stock u wanz to sell...\n*(Ex. "+System.getenv("PREFIX")+"selloroder ASTF 100)*")).queue();
+                msg.getChannel().sendMessage(new Logging().error("nuuuuu! u fOwOgot to write which stock u wanz to sell...\n*(Ex. " + System.getenv("PREFIX") + "selloroder ASTF 100)*")).queue();
                 return;
             } else if (args.length < 2) {
-                msg.getChannel().sendMessage(new Logging().error("ahhhhH!!! u forgot to specifyyyy how many shares u wanna sellLLlz...\n*(Ex. "+System.getenv("PREFIX")+"sellorder ASTF 100)*")).queue();
+                msg.getChannel().sendMessage(new Logging().error("ahhhhH!!! u forgot to specifyyyy how many shares u wanna sellLLlz...\n*(Ex. " + System.getenv("PREFIX") + "sellorder ASTF 100)*")).queue();
                 return;
             }
 
@@ -57,52 +52,34 @@ public class Sellorder extends Command {
                 .setColor(0xde1073);
 
             switch (stock) {
-                default:
-                    msg.getChannel().sendMessage(new Logging().error("invalid ticker! view tickers @ "+System.getenv("PREFIX")+"market")).queue();
+                default -> {
+                    msg.getChannel().sendMessage(new Logging().error("invalid ticker! view tickers @ " + System.getenv("PREFIX") + "market")).queue();
                     return;
-                case "astf":
-                case "astolfo":
-                case "teamastolfo":
-                case "team_astlfo":
+                }
+                case "astf", "astolfo", "teamastolfo", "team_astlfo" -> {
                     stock = "AMZN";
                     company = "Team Astolfo";
-                    break;
-                case "gudk":
-                case "gudako":
-                case "gudakocorp":
-                case "gudakocorporation":
+                }
+                case "gudk", "gudako", "gudakocorp", "gudakocorporation" -> {
                     stock = "AAPL";
                     company = "Gudako, Corp.";
-                    break;
-                case "vim":
-                case "kay&vim":
-                case "^vim":
-                case "kay":
-                case "vimvim":
+                }
+                case "vim", "kay&vim", "^vim", "kay", "vimvim" -> {
                     stock = "VIM";
                     company = "KAY&VIM Index";
-                    break;
-                case "clwn":
-                case "ishtar":
-                case "clown":
-                case "ishtarmotors":
-                case "weeb":
+                }
+                case "clwn", "ishtar", "clown", "ishtarmotors", "weeb" -> {
                     stock = "TSLA";
                     company = "Ishtar Motors.";
-                    break;
-                case "meliodaf":
-                case "meliodas":
-                case "wolf":
+                }
+                case "meliodaf", "meliodas", "wolf" -> {
                     stock = "GOOGL";
                     company = "Meliodaf, Inc.";
-                    break;
-                case "emo":
-                case "emortal":
-                case "xeno":
-                case "emortalinc":
+                }
+                case "emo", "emortal", "xeno", "emortalinc" -> {
                     stock = "CIH";
                     company = "Emortal, Inc.";
-                    break;
+                }
             }
 
             int amt = (int) Float.parseFloat(args[1]);
@@ -119,133 +96,103 @@ public class Sellorder extends Command {
 
 
             switch (stock) {
-                default:
-                    msg.getChannel().sendMessage(new Logging().error("huh!? there was an unexpected problem handling dissss reqwest.... uh... contact the devs @ https://discord.gg/RSEpxVJ for help...")).queue();
-                    return;
-
-                case "AMZN":
+                default -> msg.getChannel().sendMessage(new Logging().error("huh!? there was an unexpected problem handling dissss reqwest.... uh... contact the devs @ https://discord.gg/RSEpxVJ for help...")).queue();
+                case "AMZN" -> {
                     if (amt > doc2.getInteger("astf")) {
                         msg.getChannel().sendMessage(new Logging().error("ahHHHHHHhhhh u no haz that many shares dat u can sell....")).queue();
                         return;
                     }
-
-                    price = App.round((new webAPI().get_price("AMZN")*amt), 2);
-
-                    up1 = set("credits", App.round(doc.getDouble("credits")+price, 2));
-                    up2 = set("astf", doc2.getInteger("astf")-amt);
-
-                    App.col.updateOne(filter, up1);
-                    App.stocks.updateOne(filter, up2);
-
+                    price = Rounding.round((new webAPI().get_price("AMZN") * amt), 2);
+                    up1 = set("credits", Rounding.round(doc.getDouble("credits") + price, 2));
+                    up2 = set("astf", doc2.getInteger("astf") - amt);
+                    new CloudData().get_collection(CloudData.Database.Economy, CloudData.Collection.wallets).updateOne(filter, up1);
+                    new CloudData().get_collection(CloudData.Database.Economy, CloudData.Collection.stocks).updateOne(filter, up2);
                     embed = eb
-                        .setDescription("Sell order successfully placed!")
-                        .addField("Order Summary", "**x"+amt+"** shares ("+company+") @ "+price/amt+" "+cr+"/share", false)
-                        .build();
+                            .setDescription("Sell order successfully placed!")
+                            .addField("Order Summary", "**x" + amt + "** shares (" + company + ") @ " + price / amt + " " + cr + "/share", false)
+                            .build();
                     msg.getChannel().sendMessage(embed).queue();
-                    return;
-
-                case "AAPL":
+                }
+                case "AAPL" -> {
                     if (amt > doc2.getInteger("gudk")) {
                         msg.getChannel().sendMessage(new Logging().error("ahHHHHHHhhhh u no haz that many shares dat u can sell....")).queue();
                         return;
                     }
-
-                    price = App.round((new webAPI().get_price("AAPL")*amt), 2);
-
-                    up1 = set("credits", App.round(doc.getDouble("credits")+price, 2));
-                    up2 = set("gudk", doc2.getInteger("gudk")-amt);
-
-                    App.col.updateOne(filter, up1);
-                    App.stocks.updateOne(filter, up2);
-
+                    price = Rounding.round((new webAPI().get_price("AAPL") * amt), 2);
+                    up1 = set("credits", Rounding.round(doc.getDouble("credits") + price, 2));
+                    up2 = set("gudk", doc2.getInteger("gudk") - amt);
+                    new CloudData().get_collection(CloudData.Database.Economy, CloudData.Collection.wallets).updateOne(filter, up1);
+                    new CloudData().get_collection(CloudData.Database.Economy, CloudData.Collection.stocks).updateOne(filter, up2);
                     embed = eb
-                        .setDescription("Sell order successfully placed!")
-                        .addField("Order Summary", "**x"+amt+"** shares ("+company+") @ "+price/amt+" "+cr+"/share", false)
-                        .build();
+                            .setDescription("Sell order successfully placed!")
+                            .addField("Order Summary", "**x" + amt + "** shares (" + company + ") @ " + price / amt + " " + cr + "/share", false)
+                            .build();
                     msg.getChannel().sendMessage(embed).queue();
-                    return;
-
-                case "VIM":
+                }
+                case "VIM" -> {
                     if (amt > doc2.getInteger("vimx")) {
                         msg.getChannel().sendMessage(new Logging().error("ahHHHHHHhhhh u no haz that many shares dat u can sell....")).queue();
                         return;
                     }
-
-                    price = App.round((new webAPI().get_price("AMZN"))+(new webAPI().get_price("AAPL"))+(new webAPI().get_price("GOOGL"))+(new webAPI().get_price("TSLA"))*amt, 2);
-    
-                    up1 = set("credits", App.round(doc.getDouble("credits")+price, 2));
-                    up2 = set("vimx", doc2.getInteger("vimx")-amt);
-
-                    App.col.updateOne(filter, up1);
-                    App.stocks.updateOne(filter, up2);
-
+                    price = Rounding.round((new webAPI().get_price("AMZN")) + (new webAPI().get_price("AAPL")) + (new webAPI().get_price("GOOGL")) + (new webAPI().get_price("TSLA")) * amt, 2);
+                    up1 = set("credits", Rounding.round(doc.getDouble("credits") + price, 2));
+                    up2 = set("vimx", doc2.getInteger("vimx") - amt);
+                    new CloudData().get_collection(CloudData.Database.Economy, CloudData.Collection.wallets).updateOne(filter, up1);
+                    new CloudData().get_collection(CloudData.Database.Economy, CloudData.Collection.stocks).updateOne(filter, up2);
                     embed = eb
-                        .setDescription("Sell order successfully placed!")
-                        .addField("Order Summary", "**x"+amt+"** shares ("+company+") @ "+price/amt+" "+cr+"/share", false)
-                        .build();
+                            .setDescription("Sell order successfully placed!")
+                            .addField("Order Summary", "**x" + amt + "** shares (" + company + ") @ " + price / amt + " " + cr + "/share", false)
+                            .build();
                     msg.getChannel().sendMessage(embed).queue();
-                    return;
-
-                case "TSLA":
+                }
+                case "TSLA" -> {
                     if (amt > doc2.getInteger("weeb")) {
                         msg.getChannel().sendMessage(new Logging().error("ahHHHHHHhhhh u no haz that many shares dat u can sell....")).queue();
                         return;
                     }
-                    price = App.round((new webAPI().get_price("TSLA")*amt), 2);
-
-                    up1 = set("credits", App.round(doc.getDouble("credits")+price, 2));
-                    up2 = set("weeb", doc2.getInteger("weeb")-amt);
-
-                    App.col.updateOne(filter, up1);
-                    App.stocks.updateOne(filter, up2);
-
+                    price = Rounding.round((new webAPI().get_price("TSLA") * amt), 2);
+                    up1 = set("credits", Rounding.round(doc.getDouble("credits") + price, 2));
+                    up2 = set("weeb", doc2.getInteger("weeb") - amt);
+                    new CloudData().get_collection(CloudData.Database.Economy, CloudData.Collection.wallets).updateOne(filter, up1);
+                    new CloudData().get_collection(CloudData.Database.Economy, CloudData.Collection.stocks).updateOne(filter, up2);
                     embed = eb
-                        .setDescription("Sell order successfully placed!")
-                        .addField("Order Summary", "**x"+amt+"** shares ("+company+") @ "+price/amt+" "+cr+"/share", false)
-                        .build();
+                            .setDescription("Sell order successfully placed!")
+                            .addField("Order Summary", "**x" + amt + "** shares (" + company + ") @ " + price / amt + " " + cr + "/share", false)
+                            .build();
                     msg.getChannel().sendMessage(embed).queue();
-                    return;
-
-                case "GOOGL":
+                }
+                case "GOOGL" -> {
                     if (amt > doc2.getInteger("wolf")) {
                         msg.getChannel().sendMessage(new Logging().error("ahHHHHHHhhhh u no haz that many shares dat u can sell....")).queue();
                         return;
                     }
-
-                    price = App.round((new webAPI().get_price("GOOGL")*amt), 2);
-
-                    up1 = set("credits", App.round(doc.getDouble("credits")+price, 2));
-                    up2 = set("wolf", doc2.getInteger("wolf")-amt);
-
-                    App.col.updateOne(filter, up1);
-                    App.stocks.updateOne(filter, up2);
-
+                    price = Rounding.round((new webAPI().get_price("GOOGL") * amt), 2);
+                    up1 = set("credits", Rounding.round(doc.getDouble("credits") + price, 2));
+                    up2 = set("wolf", doc2.getInteger("wolf") - amt);
+                    new CloudData().get_collection(CloudData.Database.Economy, CloudData.Collection.wallets).updateOne(filter, up1);
+                    new CloudData().get_collection(CloudData.Database.Economy, CloudData.Collection.stocks).updateOne(filter, up2);
                     embed = eb
-                        .setDescription("Sell order successfully placed!")
-                        .addField("Order Summary", "**x"+amt+"** shares ("+company+") @ "+price/amt+" "+cr+"/share", false)
-                        .build();
+                            .setDescription("Sell order successfully placed!")
+                            .addField("Order Summary", "**x" + amt + "** shares (" + company + ") @ " + price / amt + " " + cr + "/share", false)
+                            .build();
                     msg.getChannel().sendMessage(embed).queue();
-                    return;
-
-                case "CIH":
+                }
+                case "CIH" -> {
                     if (amt > doc2.getInteger("emo")) {
                         msg.getChannel().sendMessage(new Logging().error("ahHHHHHHhhhh u no haz that many shares dat u can sell....")).queue();
                         return;
                     }
-
-                    price = App.round((new webAPI().get_price("CIH")*amt), 2);
-
-                    up1 = set("credits", App.round(doc.getDouble("credits")+price, 2));
-                    up2 = set("emo", doc2.getInteger("emo")-amt);
-
-                    App.col.updateOne(filter, up1);
-                    App.stocks.updateOne(filter, up2);
-
+                    price = Rounding.round((new webAPI().get_price("CIH") * amt), 2);
+                    up1 = set("credits", Rounding.round(doc.getDouble("credits") + price, 2));
+                    up2 = set("emo", doc2.getInteger("emo") - amt);
+                    new CloudData().get_collection(CloudData.Database.Economy, CloudData.Collection.wallets).updateOne(filter, up1);
+                    new CloudData().get_collection(CloudData.Database.Economy, CloudData.Collection.stocks).updateOne(filter, up2);
                     embed = eb
-                        .setDescription("Sell order successfully placed!")
-                        .addField("Order Summary", "**x"+amt+"** shares ("+company+") @ "+price/amt+" "+cr+"/share", false)
-                        .build();
+                            .setDescription("Sell order successfully placed!")
+                            .addField("Order Summary", "**x" + amt + "** shares (" + company + ") @ " + price / amt + " " + cr + "/share", false)
+                            .build();
                     msg.getChannel().sendMessage(embed).queue();
+                }
             }
 
 

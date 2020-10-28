@@ -1,26 +1,25 @@
 package tech.Astolfo.AstolfoCaffeine.main.cmd.business;
 
+import com.jagrosh.jdautilities.command.Command;
+import com.jagrosh.jdautilities.command.CommandEvent;
+import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
+import com.mongodb.BasicDBObject;
+import com.mongodb.client.MongoCollection;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import org.bson.Document;
+import org.bson.conversions.Bson;
+import tech.Astolfo.AstolfoCaffeine.main.db.CloudData;
+import tech.Astolfo.AstolfoCaffeine.main.db.Database;
+import tech.Astolfo.AstolfoCaffeine.main.msg.Logging;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
-
-import com.jagrosh.jdautilities.command.Command;
-import com.jagrosh.jdautilities.command.CommandEvent;
-import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
-import com.mongodb.BasicDBObject;
-
-import org.bson.Document;
-import org.bson.conversions.Bson;
-
-import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
-import tech.Astolfo.AstolfoCaffeine.App;
-import tech.Astolfo.AstolfoCaffeine.main.db.Database;
-import tech.Astolfo.AstolfoCaffeine.main.msg.Logging;
 
 import static com.mongodb.client.model.Filters.eq;
 
@@ -40,7 +39,8 @@ public class Create extends Command {
 
         BasicDBObject filter1 = new BasicDBObject("members", new BasicDBObject("$in", Collections.singletonList(e.getMessage().getAuthor().getIdLong())));
 
-        Document comp = App.company.find(filter1).first();
+        MongoCollection<Document> company = new CloudData().get_collection(CloudData.Database.Economy, CloudData.Collection.company);
+        Document comp = company.find(filter1).first();
 
         if (comp != null) {
             e.reply(new Logging().error("oi! ur already in a business... leave it before creating a new one!!"));
@@ -48,7 +48,7 @@ public class Create extends Command {
         }
 
         String pattern = "(http(s)?:\\/\\/.)?(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{2,256}\\.[a-z]{2,6}\\b([-a-zA-Z0-9@:%_\\+.~#?&//=]*)";
-        List<String> validExt = Arrays.asList("png","jpeg","jpg","gif");
+        List<String> validExt = Arrays.asList("png", "jpeg", "jpg", "gif");
 
         e.reply("wut would u leik to call ur business?");
         waiter.waitForEvent(
@@ -62,7 +62,7 @@ public class Create extends Command {
                     final String name = e2.getMessage().getContentRaw();
                     final Bson filter = eq("name", Pattern.compile(name, Pattern.CASE_INSENSITIVE));
 
-                    if (App.company.find(filter).first() != null) {
+                    if (company.find(filter).first() != null) {
                         e.reply(new Logging().error("**EEhhHHhh!!** u sorta like canz choose that name cuzzzz some1 else alreadyyyy haz it ;( ;( ;("));
                         return;
                     }
@@ -119,7 +119,7 @@ public class Create extends Command {
 
     private void finalCalc(Message msg, String name, String desc, String logo) {
         new Database().create_company(name, desc, logo, msg.getAuthor().getIdLong());
-        EmbedBuilder eb = App.embed();
+        EmbedBuilder eb = new Logging().embed();
         MessageEmbed embed = eb
                 .setAuthor("Company created!", "https://astolfo.tech", msg.getAuthor().getAvatarUrl())
                 .setThumbnail(logo)

@@ -4,15 +4,14 @@ import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import com.mongodb.BasicDBObject;
-
+import com.mongodb.client.MongoCollection;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
-
 import org.bson.Document;
 import org.bson.conversions.Bson;
-import tech.Astolfo.AstolfoCaffeine.App;
+import tech.Astolfo.AstolfoCaffeine.main.db.CloudData;
 import tech.Astolfo.AstolfoCaffeine.main.msg.Logging;
 
 import java.util.Arrays;
@@ -45,15 +44,17 @@ public class SetImage extends Command {
         start(e);
     }
 
+    private MongoCollection<Document> company = new CloudData().get_collection(CloudData.Database.Economy, CloudData.Collection.company);
+
     private void start(CommandEvent e) {
-        MessageEmbed embed = App.embed()
-            .setAuthor("Company Settings ⚙️", "https://astolfo.tech", e.getAuthor().getAvatarUrl())
-            .setDescription("u canz modify various stuffz about ur company riiiiiight here :3")
-            .addField("🖼 Logo", "The image associated with your brand!", true)
-            .addField("📝 Slogan", "The description to go with your brand!", true)
-            .build();
+        MessageEmbed embed = new Logging().embed()
+                .setAuthor("Company Settings ⚙️", "https://astolfo.tech", e.getAuthor().getAvatarUrl())
+                .setDescription("u canz modify various stuffz about ur company riiiiiight here :3")
+                .addField("🖼 Logo", "The image associated with your brand!", true)
+                .addField("📝 Slogan", "The description to go with your brand!", true)
+                .build();
         e.getChannel().sendMessage(embed).queue(
-            m -> {
+                m -> {
               m.addReaction("🖼").queue();
               m.addReaction("📝").queue();
               menuOption(m, e);
@@ -85,7 +86,7 @@ public class SetImage extends Command {
     private boolean pistachio(CommandEvent e) {
         BasicDBObject filter1 = new BasicDBObject("members", new BasicDBObject("$in", Collections.singletonList(e.getMessage().getAuthor().getIdLong())));
 
-        Document comp = App.company.find(filter1).first();
+        Document comp = company.find(filter1).first();
 
         if (comp == null) {
             e.reply(new Logging().error("oi! ur not in a business... create one before changing the logo!!"));
@@ -119,7 +120,7 @@ public class SetImage extends Command {
                             BasicDBObject filter = new BasicDBObject("members", new BasicDBObject("$in", Collections.singletonList(e.getMessage().getAuthor().getIdLong())));
                             Document comp = almonds(kitkat, filter);
                             e.reply(
-                                    App.embed()
+                                    new Logging().embed()
                                             .setAuthor("Company Updated!", "https://astolfo.tech", e.getAuthor().getAvatarUrl())
                                             .setThumbnail(comp.getString("logo"))
                                             .setDescription("Successfully updated the logo for `"+comp.getString("name")+"`")
@@ -141,8 +142,8 @@ public class SetImage extends Command {
 
     private Document almonds(AtomicReference<String> kitkat, BasicDBObject filter) {
         Bson update = set("logo", kitkat.get());
-        App.company.updateOne(filter, update);
-        return App.company.find(filter).first();
+        company.updateOne(filter, update);
+        return company.find(filter).first();
     }
 
 
@@ -157,25 +158,25 @@ public class SetImage extends Command {
                     action -> {
                         final String desc = action.getMessage().getContentRaw().replaceAll(pattern, "");
                         if (desc.equalsIgnoreCase("cancel")) {
-                          e.reply("understandable. have a nice day! uwu~ <3");
-                          return;
+                            e.reply("understandable. have a nice day! uwu~ <3");
+                            return;
                         }
                         if (desc.length() > 140) {
                             e.reply(new Logging().error("**sozZz!** ur desc can only be 140 characterz long!!! ;P"));
                             return;
-                        } 
+                        }
                         description.set(desc);
                         BasicDBObject filter = new BasicDBObject("members", new BasicDBObject("$in", Collections.singletonList(e.getMessage().getAuthor().getIdLong())));
                         Bson update = set("description", description.get());
-                        App.company.updateOne(filter, update);
-                        Document comp = App.company.find(filter).first();
+                        company.updateOne(filter, update);
+                        Document comp = company.find(filter).first();
                         assert comp != null;
                         e.reply(
-                                    App.embed()
-                                            .setAuthor("Company Updated!", "https://astolfo.tech", e.getAuthor().getAvatarUrl())
-                                            .setThumbnail(comp.getString("logo"))
-                                            .setDescription("Successfully updated the description for `"+comp.getString("name")+"`\n\n"+comp.getString("description"))
-                                            .build()
+                                new Logging().embed()
+                                        .setAuthor("Company Updated!", "https://astolfo.tech", e.getAuthor().getAvatarUrl())
+                                        .setThumbnail(comp.getString("logo"))
+                                        .setDescription("Successfully updated the description for `" + comp.getString("name") + "`\n\n" + comp.getString("description"))
+                                        .build()
                         );
                     },
                     60, TimeUnit.SECONDS,

@@ -8,7 +8,6 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import tech.Astolfo.AstolfoCaffeine.main.db.CloudData;
-import tech.Astolfo.AstolfoCaffeine.main.db.Database;
 import tech.Astolfo.AstolfoCaffeine.main.msg.Logging;
 import tech.Astolfo.AstolfoCaffeine.main.util.maths.Rounding;
 import tech.Astolfo.AstolfoCaffeine.main.web.webAPI;
@@ -31,20 +30,17 @@ public class Buyorder extends Command {
         Message msg = e.getMessage();
         String[] args = e.getArgs().split("\\s+");
         try {
-            new Database().create_account(msg.getAuthor().getIdLong());
-            Document doc = new Database().get_account(msg.getAuthor().getIdLong());
-
-            new Database().create_stocks(msg.getAuthor().getIdLong());
-            Document doc2 = new Database().get_stocks(msg.getAuthor().getIdLong());
+            Document doc = new CloudData().get_data(e.getAuthor().getIdLong(), CloudData.Database.Economy, CloudData.Collection.wallets);
+            Document doc2 = new CloudData().get_data(e.getAuthor().getIdLong(), CloudData.Database.Economy, CloudData.Collection.stocks);
 
             Bson filter = eq("userID", msg.getAuthor().getIdLong());
             String cr = "<:credit:738537190652510299>";
 
             if (args.length < 1 || args[0].equals("")) {
-                msg.getChannel().sendMessage(new Logging().error("nuuuuu! u fOwOgot to write which stock u wanz to buy...\n*(Ex. "+System.getenv("PREFIX")+"buyorder ASTF 100)*")).queue();
+                msg.getChannel().sendMessage(new Logging().error("nuuuuu! u fOwOgot to write which stock u wanz to buy...\n*(Ex. " + System.getenv("PREFIX") + "buyorder ASTF 100)*")).queue();
                 return;
             } else if (args.length < 2) {
-                msg.getChannel().sendMessage(new Logging().error("ahhhhH!!! u forgot to specifyyyy how many shares u wanna buyyYy...\n*(Ex. "+System.getenv("PREFIX")+"buyorder ASTF 100)*")).queue();
+                msg.getChannel().sendMessage(new Logging().error("ahhhhH!!! u forgot to specifyyyy how many shares u wanna buyyYy...\n*(Ex. " + System.getenv("PREFIX") + "buyorder ASTF 100)*")).queue();
                 return;
             }
 

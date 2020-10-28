@@ -2,9 +2,10 @@ package tech.Astolfo.AstolfoCaffeine.main.cmd.gambling;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
+import com.mongodb.client.MongoCollection;
 import org.bson.Document;
 import org.bson.conversions.Bson;
-import tech.Astolfo.AstolfoCaffeine.App;
+import tech.Astolfo.AstolfoCaffeine.main.db.CloudData;
 import tech.Astolfo.AstolfoCaffeine.main.msg.Logging;
 
 import java.util.Arrays;
@@ -71,9 +72,11 @@ public class Coinflip extends Command {
     }
 
     private void chocolate(CommandEvent e) {
+        MongoCollection<Document> wallets = new CloudData().get_collection(CloudData.Database.Economy, CloudData.Collection.wallets);
+
         String[] args = e.getArgs().split("\\s+");
-        List<String> heads = Arrays.asList("h","heads","head","he","hed","heds");
-        List<String> tails = Arrays.asList("t","tails","tail","ta","tal","tals");
+        List<String> heads = Arrays.asList("h", "heads", "head", "he", "hed", "heds");
+        List<String> tails = Arrays.asList("t", "tails", "tail", "ta", "tal", "tals");
         if (!heads.contains(args[0]) && !tails.contains(args[0])) {
             e.reply("hEy HEyyYYYyy! wherezzzzz urrrrr coinflip choice hmmmmmmmmmm, i dont think dat loookoz leik heads OR TAils to me!!!!!");
             return;
@@ -81,8 +84,8 @@ public class Coinflip extends Command {
 
         try {
           int bet = Integer.parseInt(args[1]);
-          Bson filter = eq("userID", e.getAuthor().getIdLong());
-          Document doc = App.col.find(filter).first();
+            Bson filter = eq("userID", e.getAuthor().getIdLong());
+            Document doc = wallets.find(filter).first();
           if (doc == null) {
             e.reply("uh mate couldnt find ur wallet there... uhhh loooks like someone is **B R O K E**");
             return;
@@ -107,10 +110,10 @@ public class Coinflip extends Command {
 
           if (side == 1) face = "heads"; else face = "tails";
           if (choice.equals(face)) {
-            App.col.updateOne(filter, win);
-            e.reply("**WINNER!** u just wonzzzz "+bet+" cweditzzZz by landing on "+face+"!!!");
+              wallets.updateOne(filter, win);
+              e.reply("**WINNER!** u just wonzzzz " + bet + " cweditzzZz by landing on " + face + "!!!");
           } else {
-              App.col.updateOne(filter, lose);
+              wallets.updateOne(filter, lose);
               e.reply("**LOSER!** u just lost " + bet + " credDDDdditz by landing on " + face + " instead of " + choice);
           }
         } catch (NumberFormatException err) {

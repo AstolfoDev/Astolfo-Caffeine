@@ -3,13 +3,14 @@ package tech.Astolfo.AstolfoCaffeine.main.cmd.business;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
+import com.mongodb.client.MongoCollection;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import org.bson.Document;
 import org.bson.conversions.Bson;
-import tech.Astolfo.AstolfoCaffeine.App;
+import tech.Astolfo.AstolfoCaffeine.main.db.CloudData;
 import tech.Astolfo.AstolfoCaffeine.main.msg.Logging;
 
 import javax.annotation.Nullable;
@@ -35,6 +36,9 @@ public class Info extends Command {
 
     @Override
     protected void execute(CommandEvent e) {
+        MongoCollection<Document> company = new CloudData().get_collection(CloudData.Database.Economy, CloudData.Collection.company);
+        MongoCollection<Document> stocks = new CloudData().get_collection(CloudData.Database.Economy, CloudData.Collection.stocks);
+
         try {
             Message msg = e.getMessage();
 
@@ -45,7 +49,7 @@ public class Info extends Command {
             }
 
             Bson filter = eq("name", Pattern.compile(name, Pattern.CASE_INSENSITIVE));
-            Document docs = App.company.find(filter).first();
+            Document docs = company.find(filter).first();
 
             if (name.length() > 16) {
                 e.reply(new Logging().error("invawwwwid company nayyyyme ;/"));
@@ -73,7 +77,7 @@ public class Info extends Command {
                 int shareholders = 0;
                 pages = 3;
                 Document highest = null;
-                for (Document doc : App.stocks.find()) {
+                for (Document doc : stocks.find()) {
                     if (highest == null) {
                         highest = doc;
                     } else if (highest.getInteger(ticker) < doc.getInteger(ticker)) {
@@ -86,7 +90,7 @@ public class Info extends Command {
                 }
                 assert highest != null;
 
-                p3 = App.embed()
+                p3 = new Logging().embed()
                         .setAuthor(docs.getString("name") + " (3/" + pages + ")", "https://astolfo.tech", docs.getString("logo"))
                         .setThumbnail(docs.getString("logo"))
                         .setDescription("AstolfoEx Stats")
@@ -99,7 +103,7 @@ public class Info extends Command {
                 pages = 2;
             }
 
-            MessageEmbed page1 = App.embed()
+            MessageEmbed page1 = new Logging().embed()
                     .setAuthor(docs.getString("name") + " (1/" + pages + ")", "https://astolfo.tech", docs.getString("logo"))
                     .setThumbnail(docs.getString("logo"))
                     .setDescription(docs.getString("description"))
@@ -108,7 +112,7 @@ public class Info extends Command {
                     .addField("Sales", docs.get("xp").toString(), true)
                     .build();
 
-            MessageEmbed page2 = App.embed()
+            MessageEmbed page2 = new Logging().embed()
                     .setAuthor(docs.getString("name") + " (2/" + pages + ")", "https://astolfo.tech", docs.getString("logo"))
                     .setThumbnail(docs.getString("logo"))
                     .setDescription("Board of Directors")

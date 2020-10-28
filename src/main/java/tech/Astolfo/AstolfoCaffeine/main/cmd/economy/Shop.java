@@ -7,7 +7,7 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
-import tech.Astolfo.AstolfoCaffeine.main.db.Database;
+import tech.Astolfo.AstolfoCaffeine.main.db.CloudData;
 import tech.Astolfo.AstolfoCaffeine.main.msg.Logging;
 import tech.Astolfo.AstolfoCaffeine.main.util.minecraft.Block;
 import tech.Astolfo.AstolfoCaffeine.main.util.minecraft.Tool;
@@ -41,12 +41,9 @@ public class Shop extends Command {
         User u = lp_cmdMsg.getAuthor();
         Toolbox defaultTools = Toolbox.DefaultTools;
 
-        // DB magic to get users bal -> e.g. 10
-        new Database().create_account(u.getIdLong());
-        lp_userBal = new Database().get_account(u.getIdLong()).getDouble("credits");
+        lp_userBal = new CloudData().get_data(u.getIdLong(), CloudData.Database.Economy, CloudData.Collection.wallets).getDouble("credits");
 
         // DB magic here to get users tools -> e.g. 0 (no tools)
-        new Database().create_tools(u.getIdLong());
         lp_ownedTools = Toolbox.fromUserID(u.getIdLong());
 
         String[][] fields = new String[defaultTools.tools.size() + 1][4];

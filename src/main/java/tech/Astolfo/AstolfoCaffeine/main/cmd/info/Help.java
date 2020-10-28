@@ -8,7 +8,6 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
-import tech.Astolfo.AstolfoCaffeine.App;
 import tech.Astolfo.AstolfoCaffeine.main.msg.Logging;
 
 import java.util.ArrayList;
@@ -56,9 +55,9 @@ public class Help extends Command {
         if (!found.get()) {
             e.reply(new Logging().error("**h-huh!?** i canz find dat command!!!"));
         } else {
-            EmbedBuilder eb = App.embed()
-                    .setAuthor(command.get().getName().substring(0, 1).toUpperCase()+command.get().getName().substring(1)+" Command", "https://astolfo.tech", e.getAuthor().getAvatarUrl())
-                    .setDescription(command.get().getHelp().substring(0, 1).toUpperCase()+command.get().getHelp().substring(1))
+            EmbedBuilder eb = new Logging().embed()
+                    .setAuthor(command.get().getName().substring(0, 1).toUpperCase() + command.get().getName().substring(1) + " Command", "https://astolfo.tech", e.getAuthor().getAvatarUrl())
+                    .setDescription(command.get().getHelp().substring(0, 1).toUpperCase() + command.get().getHelp().substring(1))
                     .addField("Aliases", String.join(", ", command.get().getAliases()), false);
 
             if (!(command.get().getCategory() == null)) {
@@ -113,8 +112,8 @@ public class Help extends Command {
         page.set(1);
         pages.set(5);
 
-        EmbedBuilder infoPage = App.embed()
-                .setAuthor("Help Command (1/"+pages.get()+")", "https://astolfo.tech", e.getAuthor().getAvatarUrl())
+        EmbedBuilder infoPage = new Logging().embed()
+                .setAuthor("Help Command (1/" + pages.get() + ")", "https://astolfo.tech", e.getAuthor().getAvatarUrl())
                 .setThumbnail("https://cdn.discordapp.com/attachments/738514936338055178/746872226527182848/Screenshot_2020-08-23_at_00.23.22.png")
                 .setDescription("Info Category");
         info.forEach(
@@ -122,8 +121,8 @@ public class Help extends Command {
         );
         MessageEmbed inf = infoPage.build();
 
-        EmbedBuilder gamblingPage = App.embed()
-                .setAuthor("Help Command (2/"+pages.get()+")", "https://astolfo.tech", e.getAuthor().getAvatarUrl())
+        EmbedBuilder gamblingPage = new Logging().embed()
+                .setAuthor("Help Command (2/" + pages.get() + ")", "https://astolfo.tech", e.getAuthor().getAvatarUrl())
                 .setThumbnail("https://cdn.discordapp.com/attachments/738514936338055178/746868751353511976/image0.png")
                 .setDescription("Gambling Category");
         gambling.forEach(
@@ -131,8 +130,8 @@ public class Help extends Command {
         );
         MessageEmbed gam = gamblingPage.build();
 
-        EmbedBuilder economyPage = App.embed()
-                .setAuthor("Help Command (3/"+pages.get()+")", "https://astolfo.tech", e.getAuthor().getAvatarUrl())
+        EmbedBuilder economyPage = new Logging().embed()
+                .setAuthor("Help Command (3/" + pages.get() + ")", "https://astolfo.tech", e.getAuthor().getAvatarUrl())
                 .setThumbnail("https://cdn.discordapp.com/attachments/738514936338055178/746869445342920824/Screenshot_2020-08-23_at_00.12.19.png")
                 .setDescription("Economy Category");
         economy.forEach(
@@ -140,8 +139,8 @@ public class Help extends Command {
         );
         MessageEmbed eco = economyPage.build();
 
-        EmbedBuilder businessPage = App.embed()
-                .setAuthor("Help Command (4/"+pages.get()+")", "https://astolfo.tech", e.getAuthor().getAvatarUrl())
+        EmbedBuilder businessPage = new Logging().embed()
+                .setAuthor("Help Command (4/" + pages.get() + ")", "https://astolfo.tech", e.getAuthor().getAvatarUrl())
                 .setThumbnail("https://cdn.discordapp.com/attachments/738514936338055178/746869868581879879/Screenshot_2020-08-23_at_00.14.00.png")
                 .setDescription("Business Category");
         business.forEach(
@@ -149,8 +148,8 @@ public class Help extends Command {
         );
         MessageEmbed bus = businessPage.build();
 
-        EmbedBuilder ancapPage = App.embed()
-                .setAuthor("Help Command (5/"+pages.get()+")", "https://astolfo.tech", e.getAuthor().getAvatarUrl())
+        EmbedBuilder ancapPage = new Logging().embed()
+                .setAuthor("Help Command (5/" + pages.get() + ")", "https://astolfo.tech", e.getAuthor().getAvatarUrl())
                 .setThumbnail("https://cdn.discordapp.com/attachments/738514936338055178/746872045085786143/Screenshot_2020-08-23_at_00.22.28.png")
                 .setDescription("Capitalism Category");
         ancap.forEach(
@@ -190,22 +189,12 @@ public class Help extends Command {
                         pageHandler(msg, m, page, pages, inf, gam, eco, bus, anc);
                         return;
                     }
-                    switch(page.get()) {
-                        case 1:
-                            m.editMessage(inf).queue();
-                            break;
-                        case 2:
-                            m.editMessage(gam).queue();
-                            break;
-                        case 3:
-                            m.editMessage(eco).queue();
-                            break;
-                        case 4:
-                            m.editMessage(bus).queue();
-                            break;
-                        case 5:
-                            m.editMessage(anc).queue();
-                            break;
+                    switch (page.get()) {
+                        case 1 -> m.editMessage(inf).queue();
+                        case 2 -> m.editMessage(gam).queue();
+                        case 3 -> m.editMessage(eco).queue();
+                        case 4 -> m.editMessage(bus).queue();
+                        case 5 -> m.editMessage(anc).queue();
                     }
                     pageHandler(msg, m, page, pages, inf, gam, eco, bus, anc);
                 },

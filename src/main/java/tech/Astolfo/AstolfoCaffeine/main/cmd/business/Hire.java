@@ -3,12 +3,13 @@ package tech.Astolfo.AstolfoCaffeine.main.cmd.business;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.mongodb.BasicDBObject;
+import com.mongodb.client.MongoCollection;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
 import org.bson.Document;
 import org.bson.conversions.Bson;
-import tech.Astolfo.AstolfoCaffeine.App;
+import tech.Astolfo.AstolfoCaffeine.main.db.CloudData;
 import tech.Astolfo.AstolfoCaffeine.main.msg.Logging;
 
 import java.util.ArrayList;
@@ -27,11 +28,13 @@ public class Hire extends Command {
   }
   @Override
   protected void execute(CommandEvent e) {
+    MongoCollection<Document> company = new CloudData().get_collection(CloudData.Database.Economy, CloudData.Collection.company);
+
     Message msg = e.getMessage();
     User author = msg.getAuthor();
 
     BasicDBObject filter1 = new BasicDBObject("members", new BasicDBObject("$in", Collections.singletonList(author.getIdLong())));
-    Document comp = App.company.find(filter1).first();
+    Document comp = company.find(filter1).first();
 
     if (comp == null) {
       e.reply(new Logging().error("**heY!!** ur not even in a company... u canz invite anyone to it..."));
@@ -67,7 +70,7 @@ public class Hire extends Command {
 
     BasicDBObject filter2 = new BasicDBObject("members", new BasicDBObject("$in", Collections.singletonList(mentions.get(0).getIdLong())));
 
-    Document comp2 = App.company.find(filter2).first();
+    Document comp2 = company.find(filter2).first();
 
     if (comp2 != null) {
       e.reply(new Logging().error("oh no...... that person is already in a companyyyyyy ahhhhhhhhhHHHhhhn u canz invite em rn"));
@@ -91,21 +94,21 @@ public class Hire extends Command {
     obj.add(mentions.get(0).getIdLong());
     Bson up = set("invites", obj);
 
-    App.company.updateOne(filter1, up);
+    company.updateOne(filter1, up);
 
-    MessageEmbed embed = App.embed()
-      .setAuthor("Invited "+mentions.get(0).getName(), "https://astolfo.tech", msg.getAuthor().getAvatarUrl())
-      .setThumbnail(mentions.get(0).getAvatarUrl())
-      .setDescription("SuccessfOwOlly sent an invite to "+mentions.get(0).getName()+" :3\nAwaiiiiiiting reply!!! :D")
-      .build();
+    MessageEmbed embed = new Logging().embed()
+            .setAuthor("Invited " + mentions.get(0).getName(), "https://astolfo.tech", msg.getAuthor().getAvatarUrl())
+            .setThumbnail(mentions.get(0).getAvatarUrl())
+            .setDescription("SuccessfOwOlly sent an invite to " + mentions.get(0).getName() + " :3\nAwaiiiiiiting reply!!! :D")
+            .build();
 
     e.reply(embed);
 
-    MessageEmbed emb = App.embed()
-        .setAuthor("wagwan mah g", "https://astolfo.tech", msg.getAuthor().getAvatarUrl())
-        .setDescription("you've just been invited to join `"+comp.get("name")+"` (O꒳O)\nto accept the invite just do `"+System.getenv("PREFIX")+"join "+comp.get("name")+"`")
-        .setThumbnail(comp.getString("logo"))
-        .build();
+    MessageEmbed emb = new Logging().embed()
+            .setAuthor("wagwan mah g", "https://astolfo.tech", msg.getAuthor().getAvatarUrl())
+            .setDescription("you've just been invited to join `" + comp.get("name") + "` (O꒳O)\nto accept the invite just do `" + System.getenv("PREFIX") + "join " + comp.get("name") + "`")
+            .setThumbnail(comp.getString("logo"))
+            .build();
 
     mentions.get(0)
       .openPrivateChannel()

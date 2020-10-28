@@ -3,14 +3,14 @@ package tech.Astolfo.AstolfoCaffeine.main.cmd.business;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.mongodb.BasicDBObject;
+import com.mongodb.client.MongoCollection;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
 import org.bson.Document;
 import org.bson.conversions.Bson;
-import tech.Astolfo.AstolfoCaffeine.App;
-import tech.Astolfo.AstolfoCaffeine.main.db.Database;
+import tech.Astolfo.AstolfoCaffeine.main.db.CloudData;
 import tech.Astolfo.AstolfoCaffeine.main.msg.Logging;
 import tech.Astolfo.AstolfoCaffeine.main.util.ParamCheckerKotlin;
 
@@ -31,14 +31,16 @@ public class Transfer extends Command  {
     @Override
     protected void execute(CommandEvent e) {
 
+        MongoCollection<Document> comp = new CloudData().get_collection(CloudData.Database.Economy, CloudData.Collection.company);
+
         Message msg = e.getMessage();
         String[] args = e.getArgs().split("\\s+");
 
-        if  (!new ParamCheckerKotlin()
-                .addCheck(0, "Sowwy! You fOwOgot to mention the user you want to transfer capital tuuuuuuu...\n*(Ex: "+System.getenv("PREFIX")+"transfer <@682220266901733381> 10)*")
-                .addCheck(1, "Sowwy! You fOwOgot to put the amount you want to send...\n*(Ex: "+System.getenv("PREFIX")+"transfer <@682220266901733381> 10)*")
+        if (!new ParamCheckerKotlin()
+                .addCheck(0, "Sowwy! You fOwOgot to mention the user you want to transfer capital tuuuuuuu...\n*(Ex: " + System.getenv("PREFIX") + "transfer <@682220266901733381> 10)*")
+                .addCheck(1, "Sowwy! You fOwOgot to put the amount you want to send...\n*(Ex: " + System.getenv("PREFIX") + "transfer <@682220266901733381> 10)*")
                 .addCheck(2, "VALID")
-                .addCheck(3, "sozzzzz! You entered too many arguwuments...\n*(Ex: "+System.getenv("PREFIX")+"transfer <@682220266901733381> 10)*")
+                .addCheck(3, "sozzzzz! You entered too many arguwuments...\n*(Ex: " + System.getenv("PREFIX") + "transfer <@682220266901733381> 10)*")
                 .parse(e)) return;
 
         List<User> mentions = msg.getMentionedUsers();
@@ -57,7 +59,7 @@ public class Transfer extends Command  {
         }
 
         Bson company_filter = new BasicDBObject("owner", msg.getAuthor().getIdLong());
-        Document company = App.company.find(company_filter).first();
+        Document company = comp.find(company_filter).first();
 
         if (company == null) {
             err_channel.error("Noooooooo, chu dunt own any company :(");
@@ -76,14 +78,14 @@ public class Transfer extends Command  {
         }
 
         Bson user_filter = new BasicDBObject("userID", mentions.get(0).getIdLong());
-        Document user = new Database().get_account(mentions.get(0).getIdLong());
+        Document user = new CloudData().get_data(mentions.get(0).getIdLong(), CloudData.Database.Economy, CloudData.Collection.wallets);
         int user_bal = (int) Math.round(user.getDouble("credits"));
 
         Bson bank_up = set("bank", bank - amount);
         Bson user_up = set("credits", user_bal + amount);
 
-        App.company.updateOne(company_filter, bank_up);
-        App.col.updateOne(user_filter, user_up);
+        new CloudData().update_data(company_filter, bank_up, CloudData.Database.Economy, CloudData.Collection.company);
+        new CloudData().update_data(user_filter, user_up, CloudData.Database.Economy, CloudData.Collection.company);
 
 
         MessageEmbed embed = new EmbedBuilder()
@@ -91,8 +93,8 @@ public class Transfer extends Command  {
                 .setFooter(System.getenv("VERSION_ID"), msg.getJDA().getSelfUser().getAvatarUrl())
                 .setColor(0xde1073)
                 .setThumbnail("https://i.imgur.com/xxpd9tq.png")
-                .addField("Bank", (bank - amount) +" <:credit:738537190652510299>", true)
-                .addField(mentions.get(0).getName(), (user_bal + amount) +" <:credit:738537190652510299>", true)
+                .addField("Bank", (bank - amount) + " <:credit:738537190652510299>", true)
+                .addField(mentions.get(0).getName(), (user_bal + amount) + " <:credit:738537190652510299>", true)
                 .build();
         msg.getChannel().sendMessage(embed).queue();
     }

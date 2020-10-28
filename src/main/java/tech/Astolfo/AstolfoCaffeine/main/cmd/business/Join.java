@@ -3,12 +3,13 @@ package tech.Astolfo.AstolfoCaffeine.main.cmd.business;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.mongodb.BasicDBObject;
+import com.mongodb.client.MongoCollection;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
 import org.bson.Document;
 import org.bson.conversions.Bson;
-import tech.Astolfo.AstolfoCaffeine.App;
+import tech.Astolfo.AstolfoCaffeine.main.db.CloudData;
 import tech.Astolfo.AstolfoCaffeine.main.msg.Logging;
 
 import java.util.ArrayList;
@@ -30,13 +31,13 @@ public class Join extends Command {
 
   @Override
   protected void execute(CommandEvent e) {
-
+    MongoCollection<Document> company = new CloudData().get_collection(CloudData.Database.Economy, CloudData.Collection.company);
     
     Message msg = e.getMessage();
     User author = msg.getAuthor();
 
     BasicDBObject filter = new BasicDBObject("members", new BasicDBObject("$in", Collections.singletonList(e.getMessage().getAuthor().getIdLong())));
-    Document comp1 = App.company.find(filter).first();
+    Document comp1 = company.find(filter).first();
 
     if (comp1 != null) {
       e.reply(new Logging().error("EEEERMMMMM ur sorta in a company already... leave it first before joining a new one!!! ;P"));
@@ -55,8 +56,8 @@ public class Join extends Command {
 
     BasicDBObject filter1 = new BasicDBObject("invites", new BasicDBObject("$in", Collections.singletonList(author.getIdLong())))
       .append("name", Pattern.compile(name, Pattern.CASE_INSENSITIVE));
-    
-    Document doc = App.company.find(filter1).first();
+
+    Document doc = company.find(filter1).first();
     if (doc == null) {
       e.reply(new Logging().error("omgomogmogmgomgomg literally no one from `"+name+"` invited u... :expressionless:"));
       return;
@@ -77,14 +78,14 @@ public class Join extends Command {
 
     Bson filt = eq("name", doc.getString("name"));
 
-    App.company.updateOne(filt, up2);
-    App.company.updateOne(filt, up);
+    company.updateOne(filt, up2);
+    company.updateOne(filt, up);
 
-    MessageEmbed embed = App.embed()
-        .setAuthor("SuccessfOwOlly joined!", "https://astolfo.tech", author.getAvatarUrl())
-        .setDescription("You've joined the `"+doc.getString("name")+"` company!!1 ;3\n```\n"+doc.getString("description")+"\n```")
-        .build();
-        
+    MessageEmbed embed = new Logging().embed()
+            .setAuthor("SuccessfOwOlly joined!", "https://astolfo.tech", author.getAvatarUrl())
+            .setDescription("You've joined the `" + doc.getString("name") + "` company!!1 ;3\n```\n" + doc.getString("description") + "\n```")
+            .build();
+
     e.reply(embed);
   }
 }

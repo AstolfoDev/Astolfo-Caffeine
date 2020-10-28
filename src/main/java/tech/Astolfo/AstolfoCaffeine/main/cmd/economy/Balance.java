@@ -2,12 +2,10 @@ package tech.Astolfo.AstolfoCaffeine.main.cmd.economy;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
-import net.dv8tion.jda.api.entities.EmbedType;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
 import org.bson.Document;
-import tech.Astolfo.AstolfoCaffeine.main.db.Database;
+import tech.Astolfo.AstolfoCaffeine.main.db.CloudData;
 import tech.Astolfo.AstolfoCaffeine.main.msg.Logging;
 
 public class Balance extends Command {
@@ -32,8 +30,7 @@ public class Balance extends Command {
             return;
         }
 
-        new Database().create_account(u.getIdLong());
-        Document doc = new Database().get_account(u.getIdLong());
+        Document doc = new CloudData().get_data(u.getIdLong(), CloudData.Database.Economy, CloudData.Collection.wallets);
 
         if (doc == null) {
             msg.getChannel().sendMessage(new Logging().error("Balance for the selected user was not found!")).queue();
