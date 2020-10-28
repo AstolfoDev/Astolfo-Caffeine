@@ -145,6 +145,7 @@ public class CloudData {
     public enum Collection {
         wallets,
         stocks,
+        company,
         tools
     }
 
