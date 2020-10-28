@@ -2,11 +2,10 @@ package tech.Astolfo.AstolfoCaffeine.main.cmd.ancap;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
-
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
-import tech.Astolfo.AstolfoCaffeine.App;
+import tech.Astolfo.AstolfoCaffeine.main.util.maths.Rounding;
 import tech.Astolfo.AstolfoCaffeine.main.web.webAPI;
 
 public class Market extends Command {
@@ -26,7 +25,7 @@ public class Market extends Command {
         double clwn = new webAPI().get_price("TSLA");
         double weeb = new webAPI().get_price("GOOGL");
         double emo = new webAPI().get_price("CIH");
-        double vimx = App.round(astf+gudk+clwn+weeb, 2);
+        double vimx = Rounding.round(astf + gudk + clwn + weeb, 2);
         String cr = "<:credit:738537190652510299>";
 
         MessageEmbed embed = new EmbedBuilder()
