@@ -1,9 +1,12 @@
 package tech.Astolfo.AstolfoCaffeine.main.db;
 
+import com.mongodb.BasicDBObject;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
 import org.bson.conversions.Bson;
+
+import java.util.Collections;
 
 import static com.mongodb.client.model.Filters.eq;
 
@@ -38,6 +41,11 @@ public class CloudData {
 
         // Create query to find data in table
         Bson filter = eq("userID", id);
+
+        // Check if the collection matches the "company" col and update query accordingly
+        if (collection.equals(Collection.company)) {
+            filter = new BasicDBObject("members", new BasicDBObject("$in", Collections.singletonList(id)));
+        }
 
         // Use query to retrieve first document matching the query conditions
         Document query_data = get_collection(database, collection).find(filter).first();
