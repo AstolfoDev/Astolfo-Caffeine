@@ -1,10 +1,9 @@
 package tech.Astolfo.AstolfoCaffeine.main.util.minecraft;
 
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
-import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
+
 import java.util.concurrent.TimeUnit;
 
 // ISSUES:
@@ -37,6 +36,13 @@ public class MCgame {
     }
 
     private void mainLoop() {
+
+        if (block.stage >= 9) {
+            block.state = Block.State.BROKEN;
+            callback.run();
+            return;
+        }
+
         waiter.waitForEvent(
                 GuildMessageReactionAddEvent.class,
                 ev -> react_host.getId().equals(ev.getMessageId()) && !ev.getUser().isBot() && inventory.getTool(ev.getReaction()) != null,
