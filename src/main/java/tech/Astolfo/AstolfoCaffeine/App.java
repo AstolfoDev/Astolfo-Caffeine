@@ -73,6 +73,7 @@ public class App {
                         new Leave(),
                         new SetImage(waiter),
                         new Transfer(),
+                        new GoPublic(waiter),
 
                         // Economy
                         new Balance(),
