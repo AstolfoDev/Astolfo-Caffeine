@@ -91,6 +91,7 @@ public class GoPublic extends Command {
         List<Long> members = companyData.getList("members", Long.class);
         int bank = companyData.getInteger("bank");
 
+        // Requirements to go public? What's next, requirements to make toast in your own damn toaster?
         if (!companyData.getLong("owner").equals(author.getIdLong())) {
             e.getChannel().sendMessage(new Logging().error(String.format("You are not the owner of `%s`!", companyData.getString("name")))).queue();
             return;
