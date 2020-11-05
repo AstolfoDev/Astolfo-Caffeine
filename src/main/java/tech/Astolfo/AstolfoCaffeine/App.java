@@ -62,7 +62,7 @@ public class App {
                         new Market(),
                         new Buyorder(),
                         new Sellorder(),
-                        new Portfolio(),
+                        new Portfolio(waiter),
 
                         // Business
                         new Create(waiter),
