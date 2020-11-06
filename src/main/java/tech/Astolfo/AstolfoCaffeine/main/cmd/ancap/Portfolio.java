@@ -16,8 +16,9 @@ import tech.Astolfo.AstolfoCaffeine.main.db.CloudData;
 import tech.Astolfo.AstolfoCaffeine.main.msg.Logging;
 import tech.Astolfo.AstolfoCaffeine.main.util.maths.Maths;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 import java.util.regex.Pattern;
 
 import static com.mongodb.client.model.Filters.eq;
@@ -36,31 +37,14 @@ public class Portfolio extends Command {
         this.waiter = waiter;
     }
 
-    // Map containing all the information for each tradable stock
-    private final Map<Ticker, String[]> securities = new HashMap<Ticker, String[]>() {{
-        put(Ticker.astf, new String[]{"astf", "Team Astolfo **(ASTF)**"});
-        put(Ticker.gudk, new String[]{"gudk", "Gudako, Corp. **(GUDK)**"});
-        put(Ticker.vimx, new String[]{"vimx", "KAY&VIM Index **(^VIM)**"});
-        put(Ticker.weeb, new String[]{"weeb", "Ishtar Motors **(WEEB)**"});
-        put(Ticker.wolf, new String[]{"wolf", "Meliodaf, Inc. **(WOLF)**"});
-        put(Ticker.emo, new String[]{"emo", "Emortal, Inc. **(EMO)**"});
-    }};
-
-    // Enum containing values for each tradable stock's ticker (identifier)
-    enum Ticker {
-        astf,
-        gudk,
-        vimx,
-        weeb,
-        wolf,
-        emo
-    }
-
     @Override
     protected void execute(CommandEvent e) {
         // Get Message object from CommandEvent and intiialise arguments as a string array
         Message msg = e.getMessage();
         String[] args = e.getArgs().split("\\s+");
+
+        // Initialise the "company" collection as a MongoDB Collection object
+        MongoCollection<Document> companyCol = new CloudData().get_collection(CloudData.Database.Economy, CloudData.Collection.company);
 
         try {
             // Intialise user's id and user object as variables
@@ -93,13 +77,33 @@ public class Portfolio extends Command {
             EmbedBuilder eb = new Logging().embed()
                     .setAuthor(user.getAsTag() + " AstolfoEx Portfolio", "https://astolfo.tech", user.getAvatarUrl());
 
+            // Create a Hashmap to hold stock data supplied by the user's stored data
+            HashMap<String, Object> tickers = new HashMap<>();
+            ArrayList<String[]> embedFields = new ArrayList<>();
 
-            // Goes through every entry in the Map and adds the appropriate information to the embed when needed
-            securities.forEach(
-                    (security_ticker, security_data) -> {
-                        int shares_owned = portfolio.getInteger(security_data[0]);
-                        if (shares_owned >= 1) {
-                            eb.addField(security_data[1], shares_owned + " shares", true);
+            // Method reference used to append the user's portfolio data to the "tickers" document
+            portfolio.forEach(tickers::put);
+
+            // Iterates through every entry in the Document and adds the appropriate information to the embed when needed
+            tickers.forEach(
+                    (ticker, value) -> {
+                        // Queries the "company" collection to grab the first company that matches the filter
+                        Bson filter = eq("ticker", Pattern.compile(ticker, Pattern.CASE_INSENSITIVE));
+                        Document companyData = companyCol.find(filter).first();
+
+                        // Gets the value associated with the "ticker" key
+                        Object sharesOwned = portfolio.get(ticker);
+
+                        // Checks if the "sharesOwned" variable is indeed an integer
+                        if (sharesOwned instanceof Integer) {
+                            // Checks if the company with the ticker value from the ticker key exists
+                            if (companyData != null) {
+                                // Checks if the user's sharesOwned is a natural number
+                                if ((int) sharesOwned >= 1) {
+                                    // Adds to the fields document with information on how many shares the user owns
+                                    embedFields.add(new String[]{String.format("%1$s (%2$s)", companyData.getString("name"), ticker.toUpperCase()), String.format("%d shares", sharesOwned)});
+                                }
+                            }
                         }
                     }
             );
@@ -112,21 +116,62 @@ public class Portfolio extends Command {
             }
 
             // Constructs the EmbedBuilder into a sendable MessageEmbed
-            MessageEmbed embed = eb.build();
+            MessageEmbed embed = portfolio_page(user, eb, embedFields, 1).build();
             // Sends the final embed to the user
-            msg.getChannel().sendMessage(embed).queue(
-                    message -> {
-                        if (eb.getFields().size() >= 1 && finalUser.equals(e.getAuthor())) {
-                            message.addReaction("\uD83E\uDD1D").queue();
-                            transfer_waiter(e, message);
-                        }
-                    }
-            );
+            Message message = msg.getChannel().sendMessage(embed).complete();
+
+            if (eb.getFields().size() >= 1 && finalUser.equals(e.getAuthor())) {
+                message.addReaction("\uD83E\uDD1D").queue();
+                transfer_waiter(e, message);
+            }
+
+            if (embedFields.size() > 6) {
+                message.addReaction("◀️").queue();
+                message.addReaction("▶️").queue();
+            }
+
 
         } catch (NumberFormatException err) {
             // Why is this needed? I have no clue. I should probably remove this try catch...
             msg.getChannel().sendMessage(new Logging().error("OooooOoh no! u gave me and invalid numbwer ;(\n*(Hint: make sure it's a whole number!)*")).queue();
         }
+    }
+
+    private EmbedBuilder portfolio_page(User user, EmbedBuilder eb, List<String[]> embedFields, int page) {
+
+        int pages = (int) Maths.Rounding.ceil(embedFields.size() / 6D, 0);
+
+        eb.setAuthor(String.format("AstolfoEx Portfolio (Page %1$d/%2$d)", page, pages), "https://astolfo.tech", user.getAvatarUrl());
+
+        int[] slots = {
+                Maths.Equation.astolfoTheory(page, 6, 6),
+                Maths.Equation.astolfoTheory(page, 6, 5),
+                Maths.Equation.astolfoTheory(page, 6, 4),
+                Maths.Equation.astolfoTheory(page, 6, 3),
+                Maths.Equation.astolfoTheory(page, 6, 2),
+                Maths.Equation.astolfoTheory(page, 6, 1)
+        };
+
+        if (embedFields.size() > slots[0]) {
+            eb.addField(embedFields.get(slots[0])[0], embedFields.get(slots[0])[1], true);
+        }
+        if (embedFields.size() > slots[1]) {
+            eb.addField(embedFields.get(slots[1])[0], embedFields.get(slots[1])[1], true);
+        }
+        if (embedFields.size() > slots[2]) {
+            eb.addField(embedFields.get(slots[2])[0], embedFields.get(slots[2])[1], true);
+        }
+        if (embedFields.size() > slots[3]) {
+            eb.addField(embedFields.get(slots[3])[0], embedFields.get(slots[3])[1], true);
+        }
+        if (embedFields.size() > slots[4]) {
+            eb.addField(embedFields.get(slots[4])[0], embedFields.get(slots[4])[1], true);
+        }
+        if (embedFields.size() > slots[5]) {
+            eb.addField(embedFields.get(slots[5])[0], embedFields.get(slots[5])[1], true);
+        }
+
+        return eb;
     }
 
     private void transfer_waiter(CommandEvent e, Message msg) {
