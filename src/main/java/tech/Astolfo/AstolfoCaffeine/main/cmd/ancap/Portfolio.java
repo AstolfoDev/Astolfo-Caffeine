@@ -189,17 +189,18 @@ public class Portfolio extends Command {
     }
 
     private void transfer_amount(CommandEvent e, Document userShares, Document companyDoc, String ticker) {
-        Message message = e.getChannel().sendMessage(String.format("**Huh!** datz cool, how many `%s` shares u wantz?", companyDoc.getString("name"))).complete();
+        Message message = e.getChannel().sendMessage(String.format("**Huh!** datz cool, how many `%s` shares u wantz 2 trade?", companyDoc.getString("name"))).complete();
 
         waiter.waitForEvent(
                 GuildMessageReceivedEvent.class,
                 check -> e.getAuthor().getId().equals(check.getAuthor().getId()) && e.getChannel().getId().equals(check.getChannel().getId()),
                 action -> {
-                    Message msg = e.getMessage();
+                    Message msg = action.getMessage();
                     String msg_content = msg.getContentRaw();
 
                     if (!Maths.Validation.isNumeric(msg_content)) {
-                        e.reply("**Right!** thas no numbawh!! numbers look like dis: *1, 2,3 ,4 5, 69 420*");
+                        e.reply("**Right!** thas no numbawh!! numbers look like dis: *1, 2,3 ,4 5, 69 420*\ntry agauinzzz");
+                        transfer_amount(e, userShares, companyDoc, ticker);
                         return;
                     }
 
@@ -209,6 +210,88 @@ public class Portfolio extends Command {
                     if (trade_amount <= 0 || trade_amount > max_amount) {
                         e.reply(String.format("**heyyY heYYY!** cmon maaaaaate watttt ya playin at, u know u donz haz `%s` sharesSszzz", msg_content));
                         return;
+                    }
+
+                    message.delete().queue();
+                    transfer_recipient(e, companyDoc, ticker, trade_amount);
+                }
+        );
+    }
+
+    private void transfer_recipient(CommandEvent e, Document companyDoc, String ticker, int trade_amount) {
+        Message message = e.getChannel().sendMessage(String.format("**Mmmk!** who do yaaa leik to send your `%d` share(s) to?\n*u gotta @mention em btw ;P*", trade_amount)).complete();
+
+        waiter.waitForEvent(
+                GuildMessageReceivedEvent.class,
+                check -> e.getAuthor().getId().equals(check.getAuthor().getId()) && e.getChannel().getId().equals(check.getChannel().getId()),
+                action -> {
+                    Message msg = action.getMessage();
+
+                    if (msg.getMentionedMembers().size() == 0) {
+                        e.reply("bruh.... u didnt even mention anyone omlllllll");
+                        return;
+                    }
+
+                    User target = msg.getMentionedUsers().get(0);
+
+                    message.delete().queue();
+                    transfer_confirm(e, companyDoc, ticker, trade_amount, target);
+                }
+        );
+    }
+
+    private void transfer_confirm(CommandEvent e, Document companyDoc, String ticker, int trade_amount, User target) {
+        MessageEmbed embed = new Logging()
+                .embed()
+                .setAuthor("Confirm Transfer", "https://astolfo.tech", e.getAuthor().getAvatarUrl())
+                .setThumbnail(target.getAvatarUrl())
+                .setDescription("React with ✅ to confirm the transfer of share(s)\nor you can react with \uD83D\uDEAB to cancel the trade!")
+                .addField(companyDoc.getString("name") + String.format(" (%s)", companyDoc.getString("ticker")), String.format("(x%d) shares", trade_amount), false)
+                .build();
+
+        Message message = e.getChannel().sendMessage(embed).complete();
+        message.addReaction("✅").queue();
+        message.addReaction("\uD83D\uDEAB").queue();
+
+        waiter.waitForEvent(
+                GuildMessageReactionAddEvent.class,
+                check -> e.getAuthor().getIdLong() == check.getUserIdLong() && message.getIdLong() == check.getMessageIdLong(),
+                action -> {
+                    action.getReaction().removeReaction(action.getUser()).queue();
+
+                    if (action.getReactionEmote().getName().equals("✅")) {
+                        Document userStocks = new CloudData().get_data(e.getAuthor().getIdLong(), CloudData.Database.Economy, CloudData.Collection.stocks);
+                        Document targetStocks = new CloudData().get_data(target.getIdLong(), CloudData.Database.Economy, CloudData.Collection.stocks);
+
+                        if (!userStocks.containsKey(ticker)) {
+                            e.reply(new Logging().error(String.format("Sozzzz u no longer own shares in `%s`\n*(dat means the offer aint valid ;3)*", companyDoc.getString("name"))));
+                            return;
+                        } else if (userStocks.getInteger(ticker) < trade_amount) {
+                            e.reply(new Logging().error(String.format("Sozzzz u no longer own enough shares in `%s`\n*(dat means the offer aint valid ;3)*", companyDoc.getString("name"))));
+                            return;
+                        }
+
+                        if (targetStocks.containsKey(ticker)) {
+                            int oldTargetShareCount = targetStocks.getInteger(ticker);
+                            targetStocks.replace(ticker, oldTargetShareCount + trade_amount);
+                        } else {
+                            targetStocks.append(ticker, trade_amount);
+                        }
+
+                        int oldUserShareCount = userStocks.getInteger(ticker);
+                        userStocks.replace(ticker, oldUserShareCount - trade_amount);
+
+                        new CloudData().set_data(targetStocks, CloudData.Database.Economy, CloudData.Collection.stocks);
+                        new CloudData().set_data(userStocks, CloudData.Database.Economy, CloudData.Collection.stocks);
+
+                        message.delete().queue();
+                        e.reply(String.format("**Woooooo!!!** u just sentz *(x%1$d)* sharezz of `%2$s` stock to %3$s", trade_amount, companyDoc.getString("name"), target.getAsMention()));
+
+                    } else if (action.getReactionEmote().getName().equals("\uD83D\uDEAB")) {
+                        assert true;
+
+                    } else {
+                        transfer_confirm(e, companyDoc, ticker, trade_amount, target);
                     }
                 }
         );
