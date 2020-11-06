@@ -27,5 +27,12 @@ public class Maths {
             return str.matches("-?\\d+(\\.\\d+)?");
         }
     }
+
+    public static class Equation {
+        // Astolfo's Theorem of Maximum Pagination
+        public static int astolfoTheory(int page, int itemsPerPage, int slot) {
+            return page * itemsPerPage - slot;
+        }
+    }
 }
 
