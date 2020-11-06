@@ -14,7 +14,7 @@ import org.bson.Document;
 import org.bson.conversions.Bson;
 import tech.Astolfo.AstolfoCaffeine.main.db.CloudData;
 import tech.Astolfo.AstolfoCaffeine.main.msg.Logging;
-import tech.Astolfo.AstolfoCaffeine.main.util.maths.Validation;
+import tech.Astolfo.AstolfoCaffeine.main.util.maths.Maths;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -198,12 +198,12 @@ public class Portfolio extends Command {
                     Message msg = e.getMessage();
                     String msg_content = msg.getContentRaw();
 
-                    if (!Validation.isNumeric(msg_content)) {
+                    if (!Maths.Validation.isNumeric(msg_content)) {
                         e.reply("**Right!** thas no numbawh!! numbers look like dis: *1, 2,3 ,4 5, 69 420*");
                         return;
                     }
 
-                    int trade_amount = Integer.valueOf(msg_content);
+                    int trade_amount = Integer.parseInt(msg_content);
                     int max_amount = userShares.getInteger(ticker);
 
                     if (trade_amount <= 0 || trade_amount > max_amount) {

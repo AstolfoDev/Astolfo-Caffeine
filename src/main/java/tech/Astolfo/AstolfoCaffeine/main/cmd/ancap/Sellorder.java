@@ -9,7 +9,7 @@ import org.bson.Document;
 import org.bson.conversions.Bson;
 import tech.Astolfo.AstolfoCaffeine.main.db.CloudData;
 import tech.Astolfo.AstolfoCaffeine.main.msg.Logging;
-import tech.Astolfo.AstolfoCaffeine.main.util.maths.Rounding;
+import tech.Astolfo.AstolfoCaffeine.main.util.maths.Maths;
 import tech.Astolfo.AstolfoCaffeine.main.web.webAPI;
 
 import static com.mongodb.client.model.Filters.eq;
@@ -102,8 +102,8 @@ public class Sellorder extends Command {
                         msg.getChannel().sendMessage(new Logging().error("ahHHHHHHhhhh u no haz that many shares dat u can sell....")).queue();
                         return;
                     }
-                    price = Rounding.round((new webAPI().get_price("AMZN") * amt), 2);
-                    up1 = set("credits", Rounding.round(doc.getDouble("credits") + price, 2));
+                    price = Maths.Rounding.round((new webAPI().get_price("AMZN") * amt), 2);
+                    up1 = set("credits", Maths.Rounding.round(doc.getDouble("credits") + price, 2));
                     up2 = set("astf", doc2.getInteger("astf") - amt);
                     new CloudData().get_collection(CloudData.Database.Economy, CloudData.Collection.wallets).updateOne(filter, up1);
                     new CloudData().get_collection(CloudData.Database.Economy, CloudData.Collection.stocks).updateOne(filter, up2);
@@ -118,8 +118,8 @@ public class Sellorder extends Command {
                         msg.getChannel().sendMessage(new Logging().error("ahHHHHHHhhhh u no haz that many shares dat u can sell....")).queue();
                         return;
                     }
-                    price = Rounding.round((new webAPI().get_price("AAPL") * amt), 2);
-                    up1 = set("credits", Rounding.round(doc.getDouble("credits") + price, 2));
+                    price = Maths.Rounding.round((new webAPI().get_price("AAPL") * amt), 2);
+                    up1 = set("credits", Maths.Rounding.round(doc.getDouble("credits") + price, 2));
                     up2 = set("gudk", doc2.getInteger("gudk") - amt);
                     new CloudData().get_collection(CloudData.Database.Economy, CloudData.Collection.wallets).updateOne(filter, up1);
                     new CloudData().get_collection(CloudData.Database.Economy, CloudData.Collection.stocks).updateOne(filter, up2);
@@ -134,8 +134,8 @@ public class Sellorder extends Command {
                         msg.getChannel().sendMessage(new Logging().error("ahHHHHHHhhhh u no haz that many shares dat u can sell....")).queue();
                         return;
                     }
-                    price = Rounding.round((new webAPI().get_price("AMZN")) + (new webAPI().get_price("AAPL")) + (new webAPI().get_price("GOOGL")) + (new webAPI().get_price("TSLA")) * amt, 2);
-                    up1 = set("credits", Rounding.round(doc.getDouble("credits") + price, 2));
+                    price = Maths.Rounding.round((new webAPI().get_price("AMZN")) + (new webAPI().get_price("AAPL")) + (new webAPI().get_price("GOOGL")) + (new webAPI().get_price("TSLA")) * amt, 2);
+                    up1 = set("credits", Maths.Rounding.round(doc.getDouble("credits") + price, 2));
                     up2 = set("vimx", doc2.getInteger("vimx") - amt);
                     new CloudData().get_collection(CloudData.Database.Economy, CloudData.Collection.wallets).updateOne(filter, up1);
                     new CloudData().get_collection(CloudData.Database.Economy, CloudData.Collection.stocks).updateOne(filter, up2);
@@ -150,8 +150,8 @@ public class Sellorder extends Command {
                         msg.getChannel().sendMessage(new Logging().error("ahHHHHHHhhhh u no haz that many shares dat u can sell....")).queue();
                         return;
                     }
-                    price = Rounding.round((new webAPI().get_price("TSLA") * amt), 2);
-                    up1 = set("credits", Rounding.round(doc.getDouble("credits") + price, 2));
+                    price = Maths.Rounding.round((new webAPI().get_price("TSLA") * amt), 2);
+                    up1 = set("credits", Maths.Rounding.round(doc.getDouble("credits") + price, 2));
                     up2 = set("weeb", doc2.getInteger("weeb") - amt);
                     new CloudData().get_collection(CloudData.Database.Economy, CloudData.Collection.wallets).updateOne(filter, up1);
                     new CloudData().get_collection(CloudData.Database.Economy, CloudData.Collection.stocks).updateOne(filter, up2);
@@ -166,8 +166,8 @@ public class Sellorder extends Command {
                         msg.getChannel().sendMessage(new Logging().error("ahHHHHHHhhhh u no haz that many shares dat u can sell....")).queue();
                         return;
                     }
-                    price = Rounding.round((new webAPI().get_price("GOOGL") * amt), 2);
-                    up1 = set("credits", Rounding.round(doc.getDouble("credits") + price, 2));
+                    price = Maths.Rounding.round((new webAPI().get_price("GOOGL") * amt), 2);
+                    up1 = set("credits", Maths.Rounding.round(doc.getDouble("credits") + price, 2));
                     up2 = set("wolf", doc2.getInteger("wolf") - amt);
                     new CloudData().get_collection(CloudData.Database.Economy, CloudData.Collection.wallets).updateOne(filter, up1);
                     new CloudData().get_collection(CloudData.Database.Economy, CloudData.Collection.stocks).updateOne(filter, up2);
@@ -182,8 +182,8 @@ public class Sellorder extends Command {
                         msg.getChannel().sendMessage(new Logging().error("ahHHHHHHhhhh u no haz that many shares dat u can sell....")).queue();
                         return;
                     }
-                    price = Rounding.round((new webAPI().get_price("CIH") * amt), 2);
-                    up1 = set("credits", Rounding.round(doc.getDouble("credits") + price, 2));
+                    price = Maths.Rounding.round((new webAPI().get_price("CIH") * amt), 2);
+                    up1 = set("credits", Maths.Rounding.round(doc.getDouble("credits") + price, 2));
                     up2 = set("emo", doc2.getInteger("emo") - amt);
                     new CloudData().get_collection(CloudData.Database.Economy, CloudData.Collection.wallets).updateOne(filter, up1);
                     new CloudData().get_collection(CloudData.Database.Economy, CloudData.Collection.stocks).updateOne(filter, up2);

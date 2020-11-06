@@ -9,7 +9,7 @@ import org.bson.Document;
 import org.bson.conversions.Bson;
 import tech.Astolfo.AstolfoCaffeine.main.db.CloudData;
 import tech.Astolfo.AstolfoCaffeine.main.msg.Logging;
-import tech.Astolfo.AstolfoCaffeine.main.util.maths.Rounding;
+import tech.Astolfo.AstolfoCaffeine.main.util.maths.Maths;
 import tech.Astolfo.AstolfoCaffeine.main.web.webAPI;
 
 import static com.mongodb.client.model.Filters.eq;
@@ -99,12 +99,12 @@ public class Buyorder extends Command {
             switch (stock) {
                 default -> msg.getChannel().sendMessage(new Logging().error("huh!? there was an unexpected problem handling dissss reqwest.... uh... contact the devs @ https://discord.gg/RSEpxVJ for help...")).queue();
                 case "AMZN" -> {
-                    price = Rounding.round((new webAPI().get_price("AMZN") * amt), 2);
+                    price = Maths.Rounding.round((new webAPI().get_price("AMZN") * amt), 2);
                     if (price > doc.getDouble("credits")) {
                         msg.getChannel().sendMessage(new Logging().error("ahHHHHHHhhhh u need **" + price + "** " + cr + " to afford **x" + amt + "** shares!!!11!!")).queue();
                         return;
                     }
-                    up1 = set("credits", Rounding.round(doc.getDouble("credits") - price, 2));
+                    up1 = set("credits", Maths.Rounding.round(doc.getDouble("credits") - price, 2));
                     up2 = set("astf", doc2.getInteger("astf") + amt);
                     new CloudData().get_collection(CloudData.Database.Economy, CloudData.Collection.wallets).updateOne(filter, up1);
                     new CloudData().get_collection(CloudData.Database.Economy, CloudData.Collection.stocks).updateOne(filter, up2);
@@ -115,12 +115,12 @@ public class Buyorder extends Command {
                     msg.getChannel().sendMessage(embed).queue();
                 }
                 case "AAPL" -> {
-                    price = Rounding.round((new webAPI().get_price("AAPL") * amt), 2);
+                    price = Maths.Rounding.round((new webAPI().get_price("AAPL") * amt), 2);
                     if (price > doc.getDouble("credits")) {
                         msg.getChannel().sendMessage(new Logging().error("ahHHHHHHhhhh u need **" + price + "** " + cr + " to afford **x" + amt + "** shares!!!11!!")).queue();
                         return;
                     }
-                    up1 = set("credits", Rounding.round(doc.getDouble("credits") - price, 2));
+                    up1 = set("credits", Maths.Rounding.round(doc.getDouble("credits") - price, 2));
                     up2 = set("gudk", doc2.getInteger("gudk") + amt);
                     new CloudData().get_collection(CloudData.Database.Economy, CloudData.Collection.wallets).updateOne(filter, up1);
                     new CloudData().get_collection(CloudData.Database.Economy, CloudData.Collection.stocks).updateOne(filter, up2);
@@ -131,12 +131,12 @@ public class Buyorder extends Command {
                     msg.getChannel().sendMessage(embed).queue();
                 }
                 case "VIM" -> {
-                    price = Rounding.round((new webAPI().get_price("AMZN")) + (new webAPI().get_price("AAPL")) + (new webAPI().get_price("GOOGL")) + (new webAPI().get_price("TSLA")) * amt, 2);
+                    price = Maths.Rounding.round((new webAPI().get_price("AMZN")) + (new webAPI().get_price("AAPL")) + (new webAPI().get_price("GOOGL")) + (new webAPI().get_price("TSLA")) * amt, 2);
                     if (price > doc.getDouble("credits")) {
                         msg.getChannel().sendMessage(new Logging().error("ahHHHHHHhhhh u need **" + price + "** " + cr + " to afford **x" + amt + "** shares!!!11!!")).queue();
                         return;
                     }
-                    up1 = set("credits", Rounding.round(doc.getDouble("credits") - price, 2));
+                    up1 = set("credits", Maths.Rounding.round(doc.getDouble("credits") - price, 2));
                     up2 = set("vimx", doc2.getInteger("vimx") + amt);
                     new CloudData().get_collection(CloudData.Database.Economy, CloudData.Collection.wallets).updateOne(filter, up1);
                     new CloudData().get_collection(CloudData.Database.Economy, CloudData.Collection.stocks).updateOne(filter, up2);
@@ -147,12 +147,12 @@ public class Buyorder extends Command {
                     msg.getChannel().sendMessage(embed).queue();
                 }
                 case "TSLA" -> {
-                    price = Rounding.round((new webAPI().get_price("TSLA") * amt), 2);
+                    price = Maths.Rounding.round((new webAPI().get_price("TSLA") * amt), 2);
                     if (price > doc.getDouble("credits")) {
                         msg.getChannel().sendMessage(new Logging().error("ahHHHHHHhhhh u need **" + price + "** " + cr + " to afford **x" + amt + "** shares!!!11!!")).queue();
                         return;
                     }
-                    up1 = set("credits", Rounding.round(doc.getDouble("credits") - price, 2));
+                    up1 = set("credits", Maths.Rounding.round(doc.getDouble("credits") - price, 2));
                     up2 = set("weeb", doc2.getInteger("weeb") + amt);
                     new CloudData().get_collection(CloudData.Database.Economy, CloudData.Collection.wallets).updateOne(filter, up1);
                     new CloudData().get_collection(CloudData.Database.Economy, CloudData.Collection.stocks).updateOne(filter, up2);
@@ -163,12 +163,12 @@ public class Buyorder extends Command {
                     msg.getChannel().sendMessage(embed).queue();
                 }
                 case "GOOGL" -> {
-                    price = Rounding.round((new webAPI().get_price("GOOGL") * amt), 2);
+                    price = Maths.Rounding.round((new webAPI().get_price("GOOGL") * amt), 2);
                     if (price > doc.getDouble("credits")) {
                         msg.getChannel().sendMessage(new Logging().error("ahHHHHHHhhhh u need **" + price + "** " + cr + " to afford **x" + amt + "** shares!!!11!!")).queue();
                         return;
                     }
-                    up1 = set("credits", Rounding.round(doc.getDouble("credits") - price, 2));
+                    up1 = set("credits", Maths.Rounding.round(doc.getDouble("credits") - price, 2));
                     up2 = set("wolf", doc2.getInteger("wolf") + amt);
                     new CloudData().get_collection(CloudData.Database.Economy, CloudData.Collection.wallets).updateOne(filter, up1);
                     new CloudData().get_collection(CloudData.Database.Economy, CloudData.Collection.stocks).updateOne(filter, up2);
@@ -179,12 +179,12 @@ public class Buyorder extends Command {
                     msg.getChannel().sendMessage(embed).queue();
                 }
                 case "CIH" -> {
-                    price = Rounding.round((new webAPI().get_price("CIH") * amt), 2);
+                    price = Maths.Rounding.round((new webAPI().get_price("CIH") * amt), 2);
                     if (price > doc.getDouble("credits")) {
                         msg.getChannel().sendMessage(new Logging().error("ahHHHHHHhhhh u need **" + price + "** " + cr + " to afford **x" + amt + "** shares!!!11!!")).queue();
                         return;
                     }
-                    up1 = set("credits", Rounding.round(doc.getDouble("credits") - price, 2));
+                    up1 = set("credits", Maths.Rounding.round(doc.getDouble("credits") - price, 2));
                     up2 = set("emo", doc2.getInteger("emo") + amt);
                     new CloudData().get_collection(CloudData.Database.Economy, CloudData.Collection.wallets).updateOne(filter, up1);
                     new CloudData().get_collection(CloudData.Database.Economy, CloudData.Collection.stocks).updateOne(filter, up2);

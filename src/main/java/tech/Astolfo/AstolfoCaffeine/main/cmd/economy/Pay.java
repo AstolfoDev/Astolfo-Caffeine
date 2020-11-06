@@ -10,7 +10,7 @@ import org.bson.Document;
 import org.bson.conversions.Bson;
 import tech.Astolfo.AstolfoCaffeine.main.db.CloudData;
 import tech.Astolfo.AstolfoCaffeine.main.msg.Logging;
-import tech.Astolfo.AstolfoCaffeine.main.util.maths.Rounding;
+import tech.Astolfo.AstolfoCaffeine.main.util.maths.Maths;
 
 import java.util.List;
 
@@ -57,7 +57,7 @@ public class Pay extends Command {
 
             double amt = Double.parseDouble(args[1]);
 
-            amt = Rounding.round(amt, 0);
+            amt = Maths.Rounding.round(amt, 0);
 
             if (amt < 1) {
                 msg.getChannel().sendMessage(new Logging().error("u canz send less than 1 credit!!!")).queue();
