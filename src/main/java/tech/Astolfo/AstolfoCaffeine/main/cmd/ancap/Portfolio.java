@@ -108,6 +108,8 @@ public class Portfolio extends Command {
                     }
             );
 
+            eb = portfolio_page(user, eb, embedFields, 1);
+
             // Fallback message if the user does not own any securities
             if (eb.getFields().size() < 1) {
                 eb.setDescription(user.getName() + " does not currently hold any shares.");
@@ -116,7 +118,7 @@ public class Portfolio extends Command {
             }
 
             // Constructs the EmbedBuilder into a sendable MessageEmbed
-            MessageEmbed embed = portfolio_page(user, eb, embedFields, 1).build();
+            MessageEmbed embed = eb.build();
             // Sends the final embed to the user
             Message message = msg.getChannel().sendMessage(embed).complete();
 
@@ -128,6 +130,7 @@ public class Portfolio extends Command {
             if (embedFields.size() > 6) {
                 message.addReaction("◀️").queue();
                 message.addReaction("▶️").queue();
+                portfolio_waiter(e, user, eb, message, embedFields, 1);
             }
 
 
@@ -137,11 +140,41 @@ public class Portfolio extends Command {
         }
     }
 
+    private void portfolio_waiter(CommandEvent e, User user, EmbedBuilder eb, Message message, List<String[]> embedFields, int page) {
+        int max_page = (int) Maths.Rounding.ceil(embedFields.size() / 6D, 0);
+
+        waiter.waitForEvent(
+                GuildMessageReactionAddEvent.class,
+                check -> e.getAuthor().getIdLong() == check.getUserIdLong() && message.getIdLong() == check.getMessageIdLong(),
+                action -> {
+                    action.getReaction().removeReaction(action.getUser()).queue();
+                    if (action.getReactionEmote().getName().equals("◀️")) {
+                        if (page == 1) {
+                            portfolio_waiter(e, user, eb, message, embedFields, page);
+                        } else {
+                            message.editMessage(portfolio_page(user, eb, embedFields, page - 1).build()).complete();
+                            portfolio_waiter(e, user, eb, message, embedFields, page - 1);
+                        }
+                    } else if (action.getReactionEmote().getName().equals("▶️")) {
+                        if (page == max_page) {
+                            portfolio_waiter(e, user, eb, message, embedFields, page);
+                        } else {
+                            message.editMessage(portfolio_page(user, eb, embedFields, page + 1).build()).complete();
+                            portfolio_waiter(e, user, eb, message, embedFields, page + 1);
+                        }
+                    } else {
+                        portfolio_waiter(e, user, eb, message, embedFields, page);
+                    }
+                }
+        );
+    }
+
     private EmbedBuilder portfolio_page(User user, EmbedBuilder eb, List<String[]> embedFields, int page) {
 
         int pages = (int) Maths.Rounding.ceil(embedFields.size() / 6D, 0);
 
         eb.setAuthor(String.format("AstolfoEx Portfolio (Page %1$d/%2$d)", page, pages), "https://astolfo.tech", user.getAvatarUrl());
+        eb.clearFields();
 
         int[] slots = {
                 Maths.Equation.astolfoTheory(page, 6, 6),
