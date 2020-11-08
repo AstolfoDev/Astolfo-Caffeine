@@ -36,7 +36,7 @@ public class App {
             jda = JDABuilder
                     .createLight(System.getenv("TOKEN"))
                     .enableCache(CacheFlag.EMOTE)
-                    .setActivity(Activity.watching("pokimane"))
+                    .setActivity(Activity.streaming("with pokimane", "https://www.twitch.tv/team_astolfo"))
                     .addEventListeners(new Listener())
                     .build();
 
@@ -56,6 +56,7 @@ public class App {
                 .setOwnerId(System.getenv("OWNER"))
                 .setActivity(Activity.streaming("with pokimane", "https://www.twitch.tv/team_astolfo"))
                 .setHelpWord("globglogabgalab")
+                .setPrefix(System.getenv("PREFIX"))
                 .addCommands(
                         // Ancap
                         new Market(),

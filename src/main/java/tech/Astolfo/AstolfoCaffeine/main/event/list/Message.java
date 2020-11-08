@@ -18,8 +18,8 @@ import java.util.concurrent.atomic.AtomicReference;
 public class Message {
     public void run(MessageReceivedEvent e) {
         astolfoAPI(e);
-        mentioned(e);
-        prefixHandler(e.getGuild(), e.getMessage().getContentRaw(), e);
+        //mentioned(e);
+        //prefixHandler(e.getGuild(), e.getMessage().getContentRaw(), e);
     }
 
     private void astolfoAPI(MessageReceivedEvent e) {
