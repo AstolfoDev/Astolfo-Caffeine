@@ -46,6 +46,10 @@ public class CloudData {
         if (collection.equals(Collection.company)) {
             filter = new BasicDBObject("members", new BasicDBObject("$in", Collections.singletonList(id)));
         }
+        // Check if the collection matches the "guild_settings" col and update query accordingly
+        else if (collection.equals(Collection.guild_settings)) {
+            filter = eq("gid", String.valueOf(id));
+        }
 
         // Use query to retrieve first document matching the query conditions
         Document query_data = get_collection(database, collection).find(filter).first();
@@ -134,6 +138,9 @@ public class CloudData {
             case tools -> new Document("userID", id)
                     .append("pick", 0);
 
+            // Return null value if settings do not exist
+            case guild_settings -> null;
+
             default -> throw new RuntimeException();
         };
 
@@ -146,7 +153,8 @@ public class CloudData {
 
     // An enum storing the different valid database types for the CloudData#get_database() method
     public enum Database {
-        Economy
+        Economy,
+        Guilds
     }
 
     // An enum storing the different valid collection types for the CloudData#get_data() method
@@ -154,7 +162,8 @@ public class CloudData {
         wallets,
         stocks,
         company,
-        tools
+        tools,
+        guild_settings
     }
 
 }
