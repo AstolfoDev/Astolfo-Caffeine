@@ -53,7 +53,6 @@ public class App {
         EventWaiter waiter = new EventWaiter();
 
         CommandClientBuilder builder = new CommandClientBuilder()
-                .setPrefix(System.getenv("PREFIX"))
                 .setOwnerId(System.getenv("OWNER"))
                 .setActivity(Activity.streaming("with pokimane", "https://www.twitch.tv/team_astolfo"))
                 .setHelpWord("globglogabgalab")
@@ -73,6 +72,7 @@ public class App {
                         new Leave(),
                         new SetImage(waiter),
                         new Transfer(),
+                        new CreateStocks(waiter),
                         new GoPublic(waiter),
 
                         // Economy
@@ -94,6 +94,7 @@ public class App {
                 );
 
         CommandClient client = builder.build();
+        Cache.client = client;
 
         jda.addEventListener(client);
         jda.addEventListener(waiter);
