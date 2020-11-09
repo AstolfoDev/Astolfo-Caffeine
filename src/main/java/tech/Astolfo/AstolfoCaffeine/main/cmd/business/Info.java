@@ -116,7 +116,7 @@ public class Info extends Command {
                     .setAuthor(docs.getString("name") + " (2/" + pages + ")", "https://astolfo.tech", docs.getString("logo"))
                     .setThumbnail(docs.getString("logo"))
                     .setDescription("Board of Directors")
-                    .addField("Chariman & CEO", e.getJDA().retrieveUserById(docs.getLong("owner")).complete().getAsMention(), true)
+                    .addField("Chairman & CEO", e.getJDA().retrieveUserById(docs.getLong("owner")).complete().getAsMention(), true)
                     .addField("Directors", String.valueOf(admins.size()), true)
                     .build();
 
