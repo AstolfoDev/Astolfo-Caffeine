@@ -97,7 +97,6 @@ public class CloudData {
      * @param collection The name of the collection where the document is being inserted into
      */
     public void set_data(Document data, Database database, Collection collection) {
-
         // Checks if the document for that user already exists and updates it instead of inserting a new document
         if (update_data(eq("userID", data.getLong("userID")), data, database, collection) >= 1) return;
 
